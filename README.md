@@ -53,3 +53,7 @@ The browser host is a static WebAssembly/WebGPU website. JavaScript is only the 
 The `.github/workflows/webgpu-test-build.yml` workflow fetches and hash-verifies only the original launcher and main SWFs, derives the compact runtime art, compiles Rust to `wasm32-unknown-unknown`, runs Node/WASM asset tests, and uploads a `webgpu-test-build` artifact containing a static website root. It does not download or bundle the large original media payload. The artifact is intended for static hosting over HTTPS, not double-clicked as `file://`. The workflow does not start or package a local HTTP server.
 
 R2's existing public custom domain is active and the original `bo1-press-kit/payload/` objects exist. Its current CORS allowlist is only `https://hok.houseofkublai.com`; when a different website origin is selected, add that exact origin to the bucket CORS allowlist (GET/HEAD only). No R2 bucket, CORS, DNS, or domain settings are modified by this code.
+
+
+### Remaining source-vector inventory
+The build now enumerates every reachable original DefineText/DefineText2 object through the menu's reusable sprites and button definitions, including decoded glyph strings where the original font code tables are present. This inventory is used to target the remaining welcome, wallpaper and sidebar labels for source-derived vector reconstruction rather than manually tracing raster screenshots. The diagnostic does not execute Flash scripts or alter the source SWF.

@@ -67,6 +67,10 @@ jobs:
           python tools/fetch_originals.py launcher "$RUNNER_TEMP/originals"
           python tools/fetch_originals.py presskit "$RUNNER_TEMP/originals"
 
+      - name: Inventory original vector text placements
+        working-directory: enhanced-rust
+        run: python tools/inspect_text_instances.py "$RUNNER_TEMP/originals/presskit.swf"
+
       - name: Prepare launcher and original embedded audio
         run: |
           mkdir -p "$RUNNER_TEMP/launcher-export" "$RUNNER_TEMP/reference/art/launcher" "$RUNNER_TEMP/reference/art/sounds"
