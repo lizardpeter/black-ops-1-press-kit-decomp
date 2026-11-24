@@ -36,6 +36,8 @@ def source(data, vector_menu=False):
             if vector_menu and c==39:
                 from extract_thumbnails import strip
                 d2=strip(d2)
+                from extract_labels import strip as strip_labels
+                d2=strip_labels(d2)
             defs.append(tag(c,d2))
         if c in (26,70):
             r=Bits(d);flags=r.u8();f2=r.u8() if c==70 else 0;depth=r.u16();old=live.get(depth) if flags&1 else None

@@ -25,6 +25,9 @@ fn midpoint(a:Point,b:Point)->Point{[(a[0]+b[0])*0.5,(a[1]+b[1])*0.5]}
 fn curve(a:Point,b:Point,c:Point,out:&mut Vec<Point>,depth:u8){let ab=midpoint(a,b);let bc=midpoint(b,c);let m=midpoint(ab,bc);let chord=midpoint(a,c);if depth>=12||((m[0]-chord[0]).abs()+(m[1]-chord[1]).abs())<=8.{out.push(c);return;}curve(a,ab,m,out,depth+1);curve(m,bc,c,out,depth+1);}
 fn contours(hex:&str)->Option<Vec<Vec<Point>>>{
  if hex.len()%2!=0{return None;}let bytes=(0..hex.len()).step_by(2).map(|i|u8::from_str_radix(&hex[i..i+2],16).ok()).collect::<Option<Vec<_>>>()?;
+ raw_contours(bytes)
+}
+fn raw_contours(bytes:Vec<u8>)->Option<Vec<Vec<Point>>>{
  let mut r=Bits{bytes,at:0};let nf=r.read(4)? as usize;let nl=r.read(4)? as usize;let mut at=[0.,0.];let mut paths=vec![];let mut p=vec![];
  loop{if r.read(1)?==1{let straight=r.read(1)?==1;let n=r.read(4)? as usize+2;if p.is_empty(){p.push(at);}if straight{if r.read(1)?==1{at[0]+=r.signed(n)?;at[1]+=r.signed(n)?;}else if r.read(1)?==1{at[1]+=r.signed(n)?;}else{at[0]+=r.signed(n)?;}p.push(at);}else{let b=[at[0]+r.signed(n)?,at[1]+r.signed(n)?];let c=[b[0]+r.signed(n)?,b[1]+r.signed(n)?];curve(at,b,c,&mut p,0);at=c;}}
  else{let flags=r.read(5)?;if flags==0{break;}if flags&16!=0{return None;}if flags&1!=0{if !p.is_empty(){paths.push(std::mem::take(&mut p));}let n=r.read(5)? as usize;at=[r.signed(n)?,r.signed(n)?];}if flags&2!=0{r.read(nf)?;}if flags&4!=0{r.read(nf)?;}if flags&8!=0{r.read(nl)?;}}}
@@ -35,6 +38,12 @@ fn tessellate(paths:&[Vec<Point>])->Option<Vec<Point>>{
  let mut ys:Vec<_>=paths.iter().flatten().map(|p|p[1]).collect();ys.sort_by(f64::total_cmp);ys.dedup();let mut edges=vec![];for p in paths{for e in p.windows(2){if e[0][1]!=e[1][1]{edges.push((e[0],e[1]));}}}
  let x_at=|e:(Point,Point),y:f64|e.0[0]+(e.1[0]-e.0[0])*(y-e.0[1])/(e.1[1]-e.0[1]);let mut out=vec![];
  for band in ys.windows(2){let (y0,y1)=(band[0],band[1]);let mid=(y0+y1)*0.5;let mut active:Vec<_>=edges.iter().copied().filter(|(a,b)|mid>a[1].min(b[1])&&mid<a[1].max(b[1])).collect();active.sort_by(|a,b|x_at(*a,mid).total_cmp(&x_at(*b,mid)));if active.len()%2!=0{return None;}for e in active.chunks_exact(2){let a=[x_at(e[0],y0),y0];let b=[x_at(e[1],y0),y0];let c=[x_at(e[0],y1),y1];let d=[x_at(e[1],y1),y1];out.extend([a,c,b,b,c,d]);}}Some(out)
+}
+pub(crate) fn glyph_mesh(bytes:&[u8])->Option<Vec<[f64;2]>>{
+ if bytes.len()>4096{return None;}
+ let paths=raw_contours(bytes.to_vec())?;
+ if paths.iter().map(Vec::len).sum::<usize>()>8192{return None;}
+ tessellate(&paths)
 }
 pub fn counter_mesh(text:&str,right:f64,top:f64,size:f64)->Option<Vec<[f32;2]>>{
  if !size.is_finite()||size<=0.||!right.is_finite()||!top.is_finite(){return None;}let scale=size/20480.;let width=text.chars().map(|c|glyph(c).map(|g|g.0)).collect::<Option<Vec<_>>>()?.iter().sum::<f64>()*scale;let mut x=right-width;let baseline=top+19360.*scale;let mut vertices=vec![];for c in text.chars(){let (advance,hex)=glyph(c)?;let triangles=tessellate(&contours(hex)?)?;vertices.extend(triangles.iter().map(|p|[(x+p[0]*scale) as f32,(baseline+p[1]*scale) as f32]));x+=advance*scale;}Some(vertices)

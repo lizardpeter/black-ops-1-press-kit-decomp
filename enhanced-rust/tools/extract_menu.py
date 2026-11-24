@@ -30,7 +30,7 @@ def pack(data,frames):
     assert hashlib.sha256(data).hexdigest()==EXPECTED
     raw=b'FWS'+data[3:8]+zlib.decompress(data[8:]);r=Bits(raw,8);r.rect()
     sprites={struct.unpack_from('<H',d)[0]:d for c,d in tags(raw,r.at//8+4) if c==39}
-    ts=dictionary(data);out=bytearray(b'PKM1');groups=[]
+    ts=dictionary(data);out=bytearray(b'PKM2');groups=[]
     for sid in BUTTONS:
         placements=button_placements(sprites[sid]);groups.append(placements)
         out.append(len(placements))
@@ -48,4 +48,6 @@ def pack(data,frames):
                 assert len(verts)%3==0 and verts
                 out+=struct.pack('<4BH',*rgba,len(verts))
                 for x,y in verts:out+=struct.pack('<ff',x/20,y/20)
+    from extract_labels import pack_labels
+    out+=pack_labels(ts,sprites)
     return bytes(out)
