@@ -2,13 +2,14 @@ mod media;
 use media::Media;
 use presskit_core::{App,Effect,Hit,Scene,Stage};
 use presskit_renderer::{Renderer,Layer};
+use presskit_renderer::control_pack::{ControlPack,ControlCache,ControlVisual};
 use std::{sync::Arc,path::PathBuf,time::Instant};
 use winit::{application::ApplicationHandler,event::{WindowEvent,ElementState,MouseButton},event_loop::{ActiveEventLoop,EventLoop},window::{Window,WindowId}};
 const VERTEX:&str=include_str!("../../../shaders/generated/vertex.wgsl");
 const FRAGMENT:&str=include_str!("../../../shaders/generated/fragment.wgsl");
 struct Gpu{
     window:Arc<Window>,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,config:wgpu::SurfaceConfiguration,renderer:Renderer,
-    art:Option<Layer>,bg:Option<Layer>,last_art:String,last_bg:u16,video:Option<Layer>,last_video:u64,chrome:Option<Layer>,chrome_kind:Scene
+    art:Option<Layer>,bg:Option<Layer>,last_art:String,last_bg:u16,video:Option<Layer>,last_video:u64,chrome:Option<Layer>,chrome_kind:Scene,pack:Option<ControlPack>,controls:ControlCache
 }
 impl Gpu{
     async fn new(window:Arc<Window>)->Self{
@@ -20,14 +21,14 @@ impl Gpu{
         if let Some(f)=caps.formats.iter().find(|f|f.is_srgb()){config.format=*f;}
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,config.format,VERTEX,FRAGMENT,"vertexMain","fragmentMain");
-        Self{window,surface,device,queue,config,renderer,art:None,bg:None,last_art:String::new(),last_bg:0,video:None,last_video:0,chrome:None,chrome_kind:Scene::Launcher}
+        Self{window,surface,device,queue,config,renderer,art:None,bg:None,last_art:String::new(),last_bg:0,video:None,last_video:0,chrome:None,chrome_kind:Scene::Launcher,pack:None,controls:ControlCache::default()}
     }
     fn resize(&mut self,w:u32,h:u32){if w>0&&h>0{self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     fn image(&self,path:&std::path::Path,rect:[f32;4])->Option<Layer>{
         let img=image::open(path).map_err(|e|eprintln!("{}: {e}",path.display())).ok()?.into_rgba8();
         Some(self.renderer.layer(&self.device,&self.queue,img.as_raw(),img.width(),img.height(),rect))
     }
-    fn draw(&mut self,root:&std::path::Path,app:&App,photo:&Option<String>,media:&Media){
+    fn draw(&mut self,root:&std::path::Path,app:&App,photo:&Option<String>,media:&Media,states:[u8;4]){
         let layered=root.join("art/foreground/75.png").is_file()&&root.join("art/background/221.png").is_file();
         let (path,rect)=match app.scene(){
             Scene::Launcher=>("art/launcher/1.png".to_string(),[390.,210.,500.,300.]),
@@ -44,23 +45,22 @@ impl Gpu{
         if media_on&&self.last_video!=media.revision{self.last_video=media.revision;if let Some(p)=&media.frame{
             if let Some(v)=&self.video{self.queue.write_texture(wgpu::TexelCopyTextureInfo{texture:&v.texture,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},p,wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(media::WIDTH*4),rows_per_image:Some(media::HEIGHT)},wgpu::Extent3d{width:media::WIDTH,height:media::HEIGHT,depth_or_array_layers:1});}else{self.video=Some(self.renderer.layer(&self.device,&self.queue,p,media::WIDTH,media::HEIGHT,[0.,0.,1280.,720.]));}
         }else{self.video=None;}}
-        if matches!(app.scene(),Scene::Video|Scene::Gallery){if self.chrome_kind!=app.scene(){self.chrome=self.image(&root.join(if app.scene()==Scene::Video{"art/video_controls/1.png"}else{"art/gallery_controls/1.png"}),[200.,app.controls.y as f32,880.,90.]);self.chrome_kind=app.scene();}if let Some(c)=&mut self.chrome{self.renderer.reposition(&self.device,c,[200.,app.controls.y as f32,880.,90.]);}}else{self.chrome=None;self.chrome_kind=Scene::Launcher;}
-        let vectors=if app.scene()==Scene::Video{
-            let mut v=self.renderer.video_vectors(&self.device,&self.queue,app.controls.y as f32,media.paused,if media.duration()>0.{(media.position()/media.duration())as f32}else{0.});
-            let text=format!("{}/{}",presskit_core::flash_time(media.position()),presskit_core::flash_time(media.duration()));
-            if let Some(t)=self.renderer.counter(&self.device,&self.queue,&text,app.controls.y as f32,false){v.push(t);}v
-        }else if app.scene()==Scene::Gallery{self.renderer.gallery_vectors(&self.device,&self.queue,app.controls.y as f32,&app.gallery.counter())}else{vec![]};
+        if self.pack.is_none()&&matches!(app.scene(),Scene::Video|Scene::Gallery){if self.chrome_kind!=app.scene(){self.chrome=self.image(&root.join(if app.scene()==Scene::Video{"art/video_controls/1.png"}else{"art/gallery_controls/1.png"}),[200.,app.controls.y as f32,880.,90.]);self.chrome_kind=app.scene();}if let Some(c)=&mut self.chrome{self.renderer.reposition(&self.device,c,[200.,app.controls.y as f32,880.,90.]);}}else{self.chrome=None;self.chrome_kind=Scene::Launcher;}
+        if matches!(app.scene(),Scene::Video|Scene::Gallery){
+            let gallery=app.scene()==Scene::Gallery;let text=if gallery{app.gallery.counter()}else{format!("{}/{}",presskit_core::flash_time(media.position()),presskit_core::flash_time(media.duration()))};
+            self.controls.update(self.pack.as_ref(),&self.renderer,&self.device,&self.queue,ControlVisual{y:app.controls.y as f32,gallery,paused:media.paused,progress:if media.duration()>0.{(media.position()/media.duration())as f32}else{0.},text,states});
+        }else{self.controls.clear();}
         let size=self.window.inner_size();if size.width==0||size.height==0{return;}
         let frame=match self.surface.get_current_texture(){Ok(f)=>f,Err(wgpu::SurfaceError::Lost|wgpu::SurfaceError::Outdated)=>{self.resize(size.width,size.height);return;},Err(e)=>{eprintln!("surface: {e}");return;}};
         let view=frame.texture.create_view(&Default::default());
         let mut encoder=self.device.create_command_encoder(&Default::default());
         let stage=Stage::fit(f64::from(size.width),f64::from(size.height));
-        let mut layers=vec![];if bg_on{if let Some(b)=&self.bg{layers.push(b);}}if let Some(a)=&self.art{layers.push(a);}if media_on{if let Some(v)=&self.video{layers.push(v);}}if let Some(c)=&self.chrome{layers.push(c);}layers.extend(vectors.iter());
+        let mut layers=vec![];if bg_on{if let Some(b)=&self.bg{layers.push(b);}}if let Some(a)=&self.art{layers.push(a);}if media_on{if let Some(v)=&self.video{layers.push(v);}}if let Some(c)=&self.chrome{layers.push(c);}layers.extend(self.controls.layers().iter());
         self.renderer.render(&mut encoder,&view,&layers,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
         self.queue.submit([encoder.finish()]);frame.present();
     }
 }
-struct Host{root:PathBuf,app:App,gpu:Option<Gpu>,pointer:(f64,f64),last:Instant,photo:Option<String>,media:Media}
+struct Host{root:PathBuf,app:App,gpu:Option<Gpu>,pointer:(f64,f64),last:Instant,photo:Option<String>,media:Media,pressed:bool}
 impl Host{
     fn dispatch(&mut self,event_loop:&ActiveEventLoop){
         for effect in self.app.effects(){match effect{
@@ -88,7 +88,7 @@ impl ApplicationHandler for Host{
     fn resumed(&mut self,ev:&ActiveEventLoop){
         if self.gpu.is_none(){
             let w=Arc::new(ev.create_window(Window::default_attributes().with_title("Black Ops Press Kit — Rust development").with_inner_size(winit::dpi::LogicalSize::new(1280.,720.))).expect("window"));
-            self.gpu=Some(pollster::block_on(Gpu::new(w)));self.last=Instant::now();
+            let mut gpu=pollster::block_on(Gpu::new(w));gpu.pack=std::fs::read(self.root.join("art/vector/controls.pkv")).ok().and_then(|b|ControlPack::read(&b).ok());self.gpu=Some(gpu);self.last=Instant::now();
         }
     }
     fn window_event(&mut self,ev:&ActiveEventLoop,_:WindowId,event:WindowEvent){
@@ -96,7 +96,8 @@ impl ApplicationHandler for Host{
             WindowEvent::CloseRequested=>ev.exit(),
             WindowEvent::Resized(s)=>if let Some(g)=&mut self.gpu{g.resize(s.width,s.height);},
             WindowEvent::CursorMoved{position,..}=>{self.pointer=(position.x,position.y);self.app.controls.activity();}
-            WindowEvent::MouseInput{state:ElementState::Released,button:MouseButton::Left,..}=>{
+            WindowEvent::MouseInput{state:ElementState::Pressed,button:MouseButton::Left,..}=>{self.pressed=true;}
+            WindowEvent::MouseInput{state:ElementState::Released,button:MouseButton::Left,..}=>{self.pressed=false;
                 if let Some(g)=&self.gpu{let s=g.window.inner_size();if let Some((x,y))=Stage::fit(s.width.into(),s.height.into()).point(self.pointer.0,self.pointer.1){let h=self.app.hit(x,y);self.app.activate(h,x);}}
             }
             WindowEvent::KeyboardInput{event,..} if event.state==ElementState::Pressed=>{
@@ -112,7 +113,7 @@ impl ApplicationHandler for Host{
             }
             WindowEvent::RedrawRequested=>{
                 let now=Instant::now();self.app.advance((now-self.last).as_secs_f64()*1000.);self.last=now;if self.media.update(){self.app.media_complete();self.media.stop();}self.dispatch(ev);
-                if let Some(g)=&mut self.gpu{g.draw(&self.root,&self.app,&self.photo,&self.media);}
+                if let Some(g)=&mut self.gpu{let size=g.window.inner_size();let hit=Stage::fit(size.width.into(),size.height.into()).point(self.pointer.0,self.pointer.1).map(|(x,y)|self.app.hit(x,y)).unwrap_or(Hit::None);g.draw(&self.root,&self.app,&self.photo,&self.media,presskit_core::control_states(hit,self.pressed));}
             }
             _=>{}
         }
@@ -123,5 +124,5 @@ impl ApplicationHandler for Host{
 fn main(){
     let root=std::env::args_os().nth(1).map(PathBuf::from).expect("usage: presskit-app <prepared assets>");
     let event_loop=EventLoop::new().expect("event loop");
-    let mut host=Host{root,app:App::default(),gpu:None,pointer:(0.,0.),last:Instant::now(),photo:None,media:Media::default()};event_loop.run_app(&mut host).expect("run");
+    let mut host=Host{root,app:App::default(),gpu:None,pointer:(0.,0.),last:Instant::now(),photo:None,media:Media::default(),pressed:false};event_loop.run_app(&mut host).expect("run");
 }

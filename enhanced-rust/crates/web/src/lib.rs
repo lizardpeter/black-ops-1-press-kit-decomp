@@ -1,6 +1,7 @@
 #![cfg(target_arch="wasm32")]
 use presskit_core::{App,Effect,Hit,Scene,Stage,flash_time};
 use presskit_renderer::{Layer,Renderer};
+use presskit_renderer::control_pack::{ControlPack,ControlCache,ControlVisual};
 use presskit_core::assets::AssetPlan;
 use wasm_bindgen::prelude::*;
 use web_sys::{HtmlCanvasElement,HtmlVideoElement,ImageBitmap};
@@ -14,7 +15,7 @@ fn pair(kind:&str,value:&str)->Array{Array::of2(&kind.into(),&value.into())}
 pub struct WebPlayer{
     app:App,canvas:HtmlCanvasElement,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,
     config:wgpu::SurfaceConfiguration,renderer:Renderer,images:HashMap<String,(Layer,u64)>,video:Option<Layer>,
-    photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,last_background:Option<String>,
+    photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,last_background:Option<String>,pack:Option<ControlPack>,controls:ControlCache,mouse:Option<(f64,f64)>,pressed:bool,
 }
 #[wasm_bindgen]
 impl WebPlayer{
@@ -28,7 +29,7 @@ impl WebPlayer{
         if render_format!=config.format{config.view_formats.push(render_format);}
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,render_format,VS,FS,"vertexMain","fragmentMain");
-        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,last_background:None})
+        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,last_background:None,pack:None,controls:ControlCache::default(),mouse:None,pressed:false})
     }
     pub fn resize(&mut self,w:u32,h:u32){let w=w.max(1);let h=h.max(1);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     pub fn advance(&mut self,ms:f64){self.app.advance(ms);}
@@ -38,6 +39,8 @@ impl WebPlayer{
     pub fn gallery_counter(&self)->String{self.app.gallery.counter()}
     pub fn media_time(&self,position:f64,duration:f64)->String{format!("{}/{}",flash_time(position),flash_time(duration))}
     pub fn pointer(&mut self){self.app.controls.activity();}
+    pub fn pointer_at(&mut self,x:f64,y:f64,pressed:bool){self.pointer();self.mouse=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y);self.pressed=pressed;}
+    pub fn install_controls(&mut self,bytes:&[u8])->Result<(),JsValue>{self.pack=Some(ControlPack::read(bytes).map_err(error)?);self.controls.clear();Ok(())}
     pub fn click(&mut self,x:f64,y:f64){self.pointer();if !self.input_ready(){return;}if let Some((x,y))=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y){let h=self.app.hit(x,y);self.app.activate(h,x);}}
     pub fn key(&mut self,key:&str){match key{
         "Enter" if self.app.scene()==Scene::Launcher=>self.app.activate(Hit::Accept,0.),
@@ -49,7 +52,7 @@ impl WebPlayer{
         let out=Array::new();for e in self.app.effects(){let p=match e{
             Effect::Fullscreen=>pair("fullscreen",""),Effect::Quit=>pair("quit",""),Effect::Play(p)=>{self.video=None;pair("play",p)},Effect::StopVideo=>{self.video=None;pair("stop","")},Effect::ToggleVideo=>pair("toggle",""),Effect::Seek(v)=>pair("seek",&v.to_string()),Effect::Music(on)=>pair("music",if on{"1"}else{"0"}),Effect::Sound(id)=>pair("sound",&id.to_string()),Effect::Open(p)=>pair("open",p),Effect::ReadXml(p)=>{self.photo.clear();pair("xml",p)},Effect::Image(p)=>{self.photo=p.clone();pair("image",&p)}};out.push(&p);}out
     }
-    fn plan(&self)->AssetPlan{AssetPlan::for_app(&self.app,self.layered,&self.photo)}
+    fn plan(&self)->AssetPlan{let mut p=AssetPlan::for_app(&self.app,self.layered,&self.photo);if self.pack.is_some(){p.current.retain(|s|!s.contains("_controls/"));p.ahead.retain(|s|!s.contains("_controls/"));}p}
     fn paths(&self)->Vec<String>{self.plan().current}
     pub fn needed(&self)->Array{self.paths().into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
     pub fn prefetch(&self)->Array{self.plan().ahead.into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
@@ -82,11 +85,11 @@ impl WebPlayer{
                 Renderer::copy_external(&self.queue,self.video.as_ref().unwrap(),source);
             }else{self.video=Some(self.renderer.external_layer(&self.device,&self.queue,source,[0.,0.,1280.,720.]));}
         }
-        let vectors=if self.app.scene()==Scene::Video{
-            let mut v=self.renderer.video_vectors(&self.device,&self.queue,self.app.controls.y as f32,paused,progress);
-            let text=self.media_time(video.current_time(),if video.duration().is_finite(){video.duration()}else{0.});
-            if let Some(t)=self.renderer.counter(&self.device,&self.queue,&text,self.app.controls.y as f32,false){v.push(t);}v
-        }else if self.app.scene()==Scene::Gallery{self.renderer.gallery_vectors(&self.device,&self.queue,self.app.controls.y as f32,&self.app.gallery.counter())}else{vec![]};
+        if matches!(self.app.scene(),Scene::Video|Scene::Gallery){
+            let gallery=self.app.scene()==Scene::Gallery;let text=if gallery{self.app.gallery.counter()}else{self.media_time(video.current_time(),if video.duration().is_finite(){video.duration()}else{0.})};
+            let hit=self.mouse.map(|(x,y)|self.app.hit(x,y)).unwrap_or(Hit::None);let states=presskit_core::control_states(hit,self.pressed);
+            self.controls.update(self.pack.as_ref(),&self.renderer,&self.device,&self.queue,ControlVisual{y:self.app.controls.y as f32,gallery,paused,progress,text,states});
+        }else{self.controls.clear();}
         let paths=self.visible_paths();self.serial+=1;
         for p in &paths{if let Some((layer,used))=self.images.get_mut(p){*used=self.serial;if p.contains("_controls/")&&self.control_y!=self.app.controls.y as f32{self.renderer.reposition(&self.device,layer,[200.,self.app.controls.y as f32,880.,90.]);}}}
         self.control_y=self.app.controls.y as f32;
@@ -95,7 +98,7 @@ impl WebPlayer{
         let stage=Stage::fit(self.config.width.into(),self.config.height.into());let mut layers=vec![];
         if media{if let Some(v)=&self.video{layers.push(v);}}
         for p in paths{if let Some((layer,_))=self.images.get(&p){layers.push(layer);}}
-        layers.extend(vectors.iter());
+        layers.extend(self.controls.layers().iter());
         self.renderer.render(&mut encoder,&view,&layers,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
         self.queue.submit([encoder.finish()]);frame.present();Ok(())
     }

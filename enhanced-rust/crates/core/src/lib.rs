@@ -36,3 +36,6 @@ pub fn flash_time(seconds: f64) -> String {
     let rounded = (seconds + 0.5).floor();
     format!("{:02}:{:02}", (rounded / 60.).floor() as i64, (rounded % 60.).floor() as i64)
 }
+
+/// Play/pause, close, previous, next: up=0, hover=1, pressed=2.
+pub fn control_states(hit:Hit,pressed:bool)->[u8;4]{let mut s=[0;4];let i=match hit{Hit::PlayPause=>0,Hit::Close=>1,Hit::Previous=>2,Hit::Next=>3,_=>return s};s[i]=if pressed{2}else{1};s}

@@ -2,6 +2,7 @@
 use wgpu::util::DeviceExt;
 pub mod vector;
 pub mod font;
+pub mod control_pack;
 #[repr(C)]
 #[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
 pub struct Vertex{pub pos:[f32;2],pub uv:[f32;2]}
