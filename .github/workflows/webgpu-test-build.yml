@@ -111,7 +111,7 @@ jobs:
         run: |
           sh tools/build_web.sh
           cargo test --offline -p presskit-core
-          cargo test --offline -p presskit-renderer --test background
+          cargo test -p presskit-renderer --test background
           node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/wasm-core.test.mjs
 
       - name: Assemble self-contained static website
