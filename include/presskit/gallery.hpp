@@ -13,6 +13,9 @@ struct Gallery {
     std::vector<std::string> images, descriptions;
     std::string content;
     bool select_thumbnail(int button);
+    std::optional<ImageRequest> key_down(int code);
+    std::optional<ImageRequest> previous_release();
+    std::optional<ImageRequest> next_release();
     std::optional<ImageRequest> xml_loaded(bool success, const std::vector<std::string>& first_child_values);
     std::optional<ImageRequest> next();
     std::optional<ImageRequest> previous();

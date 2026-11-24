@@ -44,4 +44,13 @@ std::optional<ImageRequest> Gallery::xml_loaded(bool success, const std::vector<
     total=static_cast<int>(images.size());
     return first();
 }
+// 3144803: left and right Flash key codes, no wrap.
+std::optional<ImageRequest> Gallery::key_down(int code) {
+    if(code==37)return previous();
+    if(code==39)return next();
+    return std::nullopt;
+}
+// 3144962, 3145004.
+std::optional<ImageRequest> Gallery::previous_release(){return previous();}
+std::optional<ImageRequest> Gallery::next_release(){return next();}
 }

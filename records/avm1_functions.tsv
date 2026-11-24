@@ -50,3 +50,18 @@ presskit	3142160	screens.scrn_20.onRelease	12	decompiled	src/gallery.cpp	play; s
 presskit	3143190	loadXML	216	decompiled	src/gallery.cpp	failure content; reset images/descriptions, extract first child text in order, set total, call firstImage
 presskit	3143033	checkCounter	102	decompiled	src/navigation.cpp	gallery copy same decoded operations as frame 95
 presskit	3143155	resetCounter	15	decompiled	src/navigation.cpp	gallery copy sets counter=0
+presskit	2726385	onMouseMove	48	decompiled	src/media.cpp	show mouse; Vmouse=1; counter=0
+presskit	2726447	onMouseDown	48	decompiled	src/media.cpp	same as move
+presskit	2726515	control.onEnterFrame	140	decompiled	src/media.cpp	checkCounter only when Vmouse==1; target y visible/hidden
+presskit	2726745	movctrl.close.onRelease	15	decompiled	src/media.cpp	install stopRoll2 callback
+presskit	2726798	vlistener.complete	15	decompiled	src/media.cpp	install stopRoll2 callback
+presskit	2727367	movctrl.onEnterFrame	505	decompiled	src/media.cpp	ceil easing and time strings; model host field updates
+presskit	3143953	onMouseMove	48	decompiled	src/media.cpp	gallery copy
+presskit	3144015	onMouseDown	48	decompiled	src/media.cpp	gallery copy
+presskit	3144083	control.onEnterFrame	140	decompiled	src/media.cpp	gallery copy
+presskit	3144313	scrctrl.close.onRelease	15	decompiled	src/media.cpp	install stopRoll2
+presskit	3144409	scrctrl.onEnterFrame	98	decompiled	src/media.cpp	ceil easing and mouse y offset
+presskit	3144803	listen.onKeyDown	109	decompiled	src/gallery.cpp	37 prev 39 next
+presskit	3144962	previous_btn.onRelease	16	decompiled	src/gallery.cpp	call prevImage
+presskit	3145004	next_btn.onRelease	16	decompiled	src/gallery.cpp	call nextImage
+presskit	3145040	onEnterFrame	192	decompiled	src/media.cpp	bytes total/loaded; progress; alpha increment while <500
