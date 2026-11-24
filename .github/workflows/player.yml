@@ -1,0 +1,50 @@
+name: native-player
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - runtime/**
+      - src/**
+      - include/**
+      - CMakeLists.txt
+      - tools/prepare_player_assets.py
+      - .github/workflows/player.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  player:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install native backend
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y qt6-base-dev qt6-multimedia-dev gstreamer1.0-plugins-good gstreamer1.0-libav
+      - name: Build native player and tests
+        run: |
+          cmake -S . -B build -DPRESSKIT_BUILD_PLAYER=ON -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j4
+          ctest --test-dir build --output-on-failure
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45450800876
+          name: original-frame-reference
+          path: /tmp/reference
+      - name: Prepare verified original media and art
+        run: |
+          python3 tools/fetch_payload.py --dest /tmp/original --manifest /tmp/original-hashes.tsv
+          python3 tools/prepare_player_assets.py /tmp/original /tmp/player --reference /tmp/reference
+      - name: Test native player with original media
+        env:
+          QT_QPA_PLATFORM: offscreen
+          QT_MEDIA_BACKEND: ffmpeg
+        run: timeout 60 build/presskit_player /tmp/player --smoke
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-player-linux
+          path: build/presskit_player
+          retention-days: 14
