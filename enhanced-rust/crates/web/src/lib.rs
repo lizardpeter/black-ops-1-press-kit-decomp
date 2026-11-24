@@ -136,3 +136,14 @@ pub fn wasm_core_smoke()->bool{
     app.activate(Hit::Previous,0.);
     app.scene()==Scene::Gallery&&app.gallery.counter()=="19 / 20"&&plan.ahead.contains(&"payload/screens/19.jpg".into())
 }
+
+ 
+/// Validate the actual runtime asset table in WASM without requiring a GPU adapter.
+#[wasm_bindgen]
+pub fn wasm_validate_foreground(timeline:&[u8], menu:&[u8])->Result<u32,JsValue>{
+    let t=ForegroundTimeline::read(timeline).map_err(error)?;
+    let jpeg_count=(0..t.count()).filter(|&i|t.filename(i).ends_with(".jpg")).count() as u32;
+    let mut art=ForegroundArt::new(t);
+    if art.needs_menu(){art.install_menu(menu).map_err(error)?;}
+    Ok(jpeg_count)
+}
