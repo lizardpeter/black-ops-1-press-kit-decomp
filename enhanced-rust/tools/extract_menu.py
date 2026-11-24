@@ -38,6 +38,10 @@ def pack(data,frames):
     # Three additional label-only groups: welcome/legal, sidebar, and wallpaper text.
     out.extend((0,0,0))
     frame_groups={157:1,220:2,62:3,111:4,136:5}
+    for frame_no,frame in enumerate(frames,1):
+        for cid,m,a,flt,_ in frame:
+            if cid in (62,111,136):
+                print(f"vector label placement: frame={frame_no} sprite={cid} matrix={m} alpha={a} filter_bytes={len(flt)}")
     for frame in frames:
         matches=[(cid,m,a,flt) for cid,m,a,flt,_ in frame if cid in frame_groups]
         assert len(matches)<=1,[(cid,a) for cid,_,a,_ in matches]
@@ -49,7 +53,7 @@ def pack(data,frames):
             assert [c for c,_,alpha,_,_ in frame if alpha][:4]==[96,80,99,cid]
             assert m==(1,1,0,0,10537,860) and a==256 and not flt
         else:
-            assert a==256 and not flt
+            if a!=256 or flt:raise ValueError(f"vector label sprite {cid} requires alpha/filter support (alpha={a}, filter_bytes={len(flt)}, matrix={m})")
         out.append(frame_groups[cid])
     for sid in BUTTONS:
         for state in range(3):
