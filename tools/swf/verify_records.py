@@ -19,3 +19,15 @@ for r in rows:
     if fn["name"] and fn["name"]!=r["name"]:
         raise SystemExit("named function mismatch: "+str(r))
 print("Verified",len(rows),"original function identities (offset and body length; not behavioral equivalence)")
+
+# Owner-approved scope: all function definitions outside Adobe DoInitAction blocks.
+expected=set()
+for b in ("launcher","presskit"):
+    blocks={r["offset"]:r for r in map(json.loads,(root/b/"action_blocks.jsonl").read_text().splitlines())}
+    for off,fn in indexes[b].items():
+        tag=int(fn["scope"].split("/tag@")[1].split("/")[0])
+        if blocks[tag]["tag"]==12:expected.add((b,off))
+actual={(r["build"],int(r["offset"])) for r in rows}
+if len(expected)!=73 or actual!=expected or len(rows)!=len(expected):
+    raise SystemExit(f"authored scope mismatch: expected {len(expected)}; missing {expected-actual}; extra {actual-expected}")
+print("Complete authored DoAction function inventory: 73/73; Adobe DoInitAction excluded")

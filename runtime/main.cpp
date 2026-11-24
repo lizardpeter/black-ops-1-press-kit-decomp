@@ -34,7 +34,9 @@ class PressKit : public QWidget {
     QVideoSink sink;
     QTimer timer;
     QElapsedTimer clock;
-    QCache<int,QImage> frames{10};
+    QCache<int,QImage> frames{10}, backgroundFrames{10};
+    QImage videoChrome, galleryChrome;
+    bool layered=false;
     QImage shell, videoImage, screenshot;
     bool launched=false,smoke=false,videoSeen=false;
     double frameCredit=0, controlsY=1356;
@@ -45,6 +47,8 @@ public:
         setWindowTitle("Call of Duty: Black Ops — Press Kit");
         resize(1280,720);setMouseTracking(true);setFocusPolicy(Qt::StrongFocus);
         shell.load(root+"/art/launcher/1.png");
+        layered=QFileInfo::exists(root+"/art/foreground/75.png")&&QFileInfo::exists(root+"/art/background/221.png");
+        videoChrome.load(root+"/art/video_controls/1.png");galleryChrome.load(root+"/art/gallery_controls/1.png");
         player.setAudioOutput(&audio);player.setVideoSink(&sink);
         music.setAudioOutput(&musicAudio);fx.setAudioOutput(&fxAudio);
         musicAudio.setVolume(0.65f);fxAudio.setVolume(0.85f);
@@ -118,8 +122,12 @@ protected:
         }else if(scene==Scene::gallery){
             if(!screenshot.isNull())p.drawImage(QRectF(0,0,1280,720),screenshot);
         }else {
+            if(layered&&timeline.frame>=56){
+                if(!backgroundFrames.contains(background.frame))backgroundFrames.insert(background.frame,new QImage(root+"/art/background/"+QString::number(background.frame)+".png"));
+                if(auto* img=backgroundFrames.object(background.frame))p.drawImage(QRectF(0,0,1280,720),*img);
+            }
             if(!frames.contains(timeline.frame)){
-                auto* img=new QImage(root+"/art/presskit/"+QString::number(timeline.frame)+".png");
+                auto* img=new QImage(root+(layered?"/art/foreground/":"/art/presskit/")+QString::number(timeline.frame)+".png");
                 frames.insert(timeline.frame,img);
             }
             if(auto* img=frames.object(timeline.frame))p.drawImage(QRectF(0,0,1280,720),*img);
@@ -257,17 +265,19 @@ private:
         // Interim native chrome. Button locations and animation use original values,
         // but original button artwork must be layered in a later pass.
         p.save();p.translate(200,controlsY);
-        p.fillRect(QRectF(0,-6,880,88),QColor(10,10,10,220));
+        const auto& chrome=scene==Scene::gallery?galleryChrome:videoChrome;
+        if(!chrome.isNull())p.drawImage(QPointF(0,0),chrome);
+        else p.fillRect(QRectF(0,-6,880,88),QColor(10,10,10,220));
         p.setPen(Qt::white);p.setFont(QFont("Sans Serif",14));
-        p.drawText(QRectF(761,0,103,31),Qt::AlignCenter,"CLOSE");
+        if(chrome.isNull())p.drawText(QRectF(761,0,103,31),Qt::AlignCenter,"CLOSE");
         if(scene==Scene::gallery){
-            p.drawText(QRectF(15,0,112,31),Qt::AlignCenter,"PREVIOUS");
-            p.drawText(QRectF(165,0,115,31),Qt::AlignCenter,"NEXT");
-            p.drawText(QRectF(300,0,440,31),Qt::AlignCenter,QString::fromStdString(picture_num(timeline.gallery.index,timeline.gallery.total)));
+            if(chrome.isNull())p.drawText(QRectF(15,0,112,31),Qt::AlignCenter,"PREVIOUS");
+            if(chrome.isNull())p.drawText(QRectF(165,0,115,31),Qt::AlignCenter,"NEXT");
+            p.drawText(chrome.isNull()?QRectF(300,0,440,31):QRectF(665,0,90,31),Qt::AlignCenter,QString::fromStdString(picture_num(timeline.gallery.index,timeline.gallery.total)));
         }else{
             p.drawText(QRectF(15,0,112,31),Qt::AlignCenter,player.playbackState()==QMediaPlayer::PlayingState?"PAUSE":"PLAY");
             auto v=video_control_frame(controlsY,timeline.controls.target_y,player.position()/1000.0,player.duration()/1000.0);
-            p.drawText(QRectF(300,0,440,31),Qt::AlignCenter,QString::fromStdString(v.display));
+            p.drawText(chrome.isNull()?QRectF(300,0,440,31):QRectF(628,0,126,31),Qt::AlignCenter,QString::fromStdString(v.display));
             p.fillRect(QRectF(41,56,785,5),QColor(90,90,90));
             if(player.duration()>0)p.fillRect(QRectF(41,56,785.0*player.position()/player.duration(),5),Qt::white);
         }
