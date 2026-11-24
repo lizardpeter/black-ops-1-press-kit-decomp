@@ -158,14 +158,14 @@ impl WebPlayer{
         self.control_y=self.app.controls.y as f32;
         let frame=match self.surface.get_current_texture(){Ok(f)=>f,Err(wgpu::SurfaceError::Lost|wgpu::SurfaceError::Outdated)=>{self.surface.configure(&self.device,&self.config);return Ok(());},Err(e)=>return Err(error(e))};
         let view=frame.texture.create_view(&wgpu::TextureViewDescriptor{format:Some(self.config.format.add_srgb_suffix()),..Default::default()});let mut encoder=self.device.create_command_encoder(&Default::default());
-        let stage=Stage::fit(self.config.width.into(),self.config.height.into());let mut layers=vec![];
+        let stage=Stage::fit(self.config.width.into(),self.config.height.into());let mut layers=vec![];let mut filters=vec![];
         if self.layered&&self.app.frame>=56&&!matches!(self.app.scene(),Scene::Video|Scene::Gallery){if let Some(bg)=&mut self.background{bg.update(&self.renderer,&self.device,&self.queue,self.app.background.frame);layers.extend(bg.layers(self.app.background.frame));}}
-        if fg_on{layers.extend(self.foreground.as_ref().unwrap().layers());}
+        if fg_on{let (fg,spans)=self.foreground.as_ref().unwrap().layers_and_filters();let offset=layers.len();filters.extend(spans.into_iter().map(|mut s|{s.start+=offset;s.end+=offset;s}));layers.extend(fg);}
         if media{if let Some(v)=&self.video{layers.push(v);}}
         for p in paths{if let Some((layer,_))=self.images.get(&p){layers.push(layer);}}
         if self.app.scene()==Scene::Launcher&&self.images.contains_key("art/launcher/1.png"){layers.extend(self.launcher.iter());}
         layers.extend(self.controls.layers().iter());
-        self.renderer.render(&mut encoder,&view,&layers,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
+        self.renderer.render_filtered(&mut encoder,&view,&layers,&filters,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
         self.queue.submit([encoder.finish()]);frame.present();Ok(())
     }
 }

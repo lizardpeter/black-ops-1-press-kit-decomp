@@ -10,7 +10,8 @@ pub mod menu;
 #[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
 pub struct Vertex{pub pos:[f32;2],pub uv:[f32;2],pub opacity:[f32;2],pub color:[f32;4]}
 pub struct Layer {pub binding:wgpu::BindGroup,pub vertices:wgpu::Buffer,pub texture:wgpu::Texture,pub count:u32}
-pub struct Renderer {pipeline:wgpu::RenderPipeline,presentation:wgpu::RenderPipeline,device:wgpu::Device,target_srgb:bool,stage_target:std::cell::RefCell<Option<Layer>>,layout:wgpu::BindGroupLayout,sampler:wgpu::Sampler,solid_texture:wgpu::Texture}
+#[derive(Clone,Copy,Debug,PartialEq)]pub struct FilterSpan{pub start:usize,pub end:usize,pub alpha:f32,pub blur_y:f32}
+pub struct Renderer {pipeline:wgpu::RenderPipeline,presentation:wgpu::RenderPipeline,group_pipeline:wgpu::RenderPipeline,blur_pipeline:wgpu::RenderPipeline,group_layout:wgpu::BindGroupLayout,filter_target:std::cell::RefCell<Option<wgpu::Texture>>,device:wgpu::Device,target_srgb:bool,stage_target:std::cell::RefCell<Option<Layer>>,layout:wgpu::BindGroupLayout,sampler:wgpu::Sampler,solid_texture:wgpu::Texture}
 impl Renderer{
     pub fn new(device:&wgpu::Device,queue:&wgpu::Queue,format:wgpu::TextureFormat,vertex:&str,fragment:&str,vs_entry:&str,fs_entry:&str)->Self{
         let vs=device.create_shader_module(wgpu::ShaderModuleDescriptor{label:Some("vertex"),source:wgpu::ShaderSource::Wgsl(vertex.into())});
@@ -27,10 +28,18 @@ impl Renderer{
             fragment:Some(wgpu::FragmentState{module:&fs,entry_point:Some(fs_entry),compilation_options:Default::default(),targets:&[Some(wgpu::ColorTargetState{format,blend,write_mask:wgpu::ColorWrites::ALL})]}),
             primitive:Default::default(),depth_stencil:None,multisample:Default::default(),multiview:None,cache:None});
         let pipeline=build_pipeline(wgpu::TextureFormat::Rgba8Unorm,Some(wgpu::BlendState::ALPHA_BLENDING));let presentation=build_pipeline(format,None);
+        let group_shader=device.create_shader_module(wgpu::ShaderModuleDescriptor{label:Some("padded group vertex"),source:wgpu::ShaderSource::Wgsl(include_str!("../../../shaders/filter.wgsl").into())});
+        let group_layout=device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor{label:Some("filter group scale"),entries:&[wgpu::BindGroupLayoutEntry{binding:0,visibility:wgpu::ShaderStages::VERTEX,ty:wgpu::BindingType::Buffer{ty:wgpu::BufferBindingType::Uniform,has_dynamic_offset:false,min_binding_size:None},count:None}]});
+        let group_pl=device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor{label:Some("padded group layout"),bind_group_layouts:&[&layout,&group_layout],push_constant_ranges:&[]});
+        let special=|vertex_module:&wgpu::ShaderModule,vertex_entry:&str,fragment_module:&wgpu::ShaderModule,fragment_entry:&str,layout:&wgpu::PipelineLayout,blend|device.create_render_pipeline(&wgpu::RenderPipelineDescriptor{
+            label:Some("presskit filter"),layout:Some(layout),vertex:wgpu::VertexState{module:vertex_module,entry_point:Some(vertex_entry),compilation_options:Default::default(),buffers:&[wgpu::VertexBufferLayout{array_stride:40,step_mode:wgpu::VertexStepMode::Vertex,attributes:&wgpu::vertex_attr_array![0=>Float32x2,2=>Float32x2,1=>Float32x2,3=>Float32x4]}]},
+            fragment:Some(wgpu::FragmentState{module:fragment_module,entry_point:Some(fragment_entry),compilation_options:Default::default(),targets:&[Some(wgpu::ColorTargetState{format:wgpu::TextureFormat::Rgba8Unorm,blend:Some(blend),write_mask:wgpu::ColorWrites::ALL})]}),primitive:Default::default(),depth_stencil:None,multisample:Default::default(),multiview:None,cache:None});
+        let group_pipeline=special(&group_shader,"groupVertex",&fs,fs_entry,&group_pl,wgpu::BlendState::ALPHA_BLENDING);
+        let blur_pipeline=special(&vs,vs_entry,&group_shader,"blurFragment",&pl,wgpu::BlendState::PREMULTIPLIED_ALPHA_BLENDING);
         let sampler=device.create_sampler(&wgpu::SamplerDescriptor{mag_filter:wgpu::FilterMode::Linear,min_filter:wgpu::FilterMode::Linear,..Default::default()});
         let solid_texture=device.create_texture(&wgpu::TextureDescriptor{label:Some("shared solid-vector texel"),size:wgpu::Extent3d{width:1,height:1,depth_or_array_layers:1},mip_level_count:1,sample_count:1,dimension:wgpu::TextureDimension::D2,format:wgpu::TextureFormat::Rgba8UnormSrgb,usage:wgpu::TextureUsages::TEXTURE_BINDING|wgpu::TextureUsages::COPY_DST,view_formats:&[]});
         queue.write_texture(wgpu::TexelCopyTextureInfo{texture:&solid_texture,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},&[255,255,255,255],wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(4),rows_per_image:Some(1)},wgpu::Extent3d{width:1,height:1,depth_or_array_layers:1});
-        Self{pipeline,presentation,device:device.clone(),target_srgb:format.is_srgb(),stage_target:std::cell::RefCell::new(None),layout,sampler,solid_texture}
+        Self{pipeline,presentation,group_pipeline,blur_pipeline,group_layout,filter_target:std::cell::RefCell::new(None),device:device.clone(),target_srgb:format.is_srgb(),stage_target:std::cell::RefCell::new(None),layout,sampler,solid_texture}
     }
     pub fn layer(&self,device:&wgpu::Device,queue:&wgpu::Queue,rgba:&[u8],width:u32,height:u32,rect:[f32;4])->Layer{
         let vertices=self.vertices(device,rect);
@@ -99,7 +108,8 @@ impl Renderer{
     }
     /// Blend in the original gamma-encoded color space, then present once.
     /// The intermediate is cached at the physical stage size.
-    pub fn render(&self,encoder:&mut wgpu::CommandEncoder,target:&wgpu::TextureView,layers:&[&Layer],viewport:[f32;4]){
+    pub fn render(&self,encoder:&mut wgpu::CommandEncoder,target:&wgpu::TextureView,layers:&[&Layer],viewport:[f32;4]){self.render_filtered(encoder,target,layers,&[],viewport);}
+    pub fn render_filtered(&self,encoder:&mut wgpu::CommandEncoder,target:&wgpu::TextureView,layers:&[&Layer],filters:&[FilterSpan],viewport:[f32;4]){
         let [x,y,w,h]=viewport;
         if !w.is_finite()||!h.is_finite()||w<1.||h<1.{return;}
         let width=w.round().max(1.) as u32;let height=h.round().max(1.) as u32;
@@ -112,12 +122,40 @@ impl Renderer{
             *intermediate=Some(Layer{binding,vertices,texture,count:6});
         }
         let stage=intermediate.as_ref().unwrap();let view=stage.texture.create_view(&Default::default());
-        self.pass(encoder,&view,&self.pipeline,layers,[0.,0.,width as f32,height as f32]);
+        if filters.is_empty(){self.pass(encoder,&view,&self.pipeline,layers,[0.,0.,width as f32,height as f32]);}
+        else{self.render_groups(encoder,&view,layers,filters,width,height);}
         self.pass(encoder,target,&self.presentation,&[stage],[x,y,w,h]);
     }
+    fn render_groups(&self,encoder:&mut wgpu::CommandEncoder,target:&wgpu::TextureView,layers:&[&Layer],filters:&[FilterSpan],width:u32,height:u32){
+        let stage=[0.,0.,width as f32,height as f32];
+        let limit=self.device.limits().max_texture_dimension_2d;
+        let pad=((height as f32/720.*16.).ceil() as u32).min(limit.saturating_sub(height)/2);
+        let padded=height+2*pad;let sy=height as f32/padded as f32;
+        let mut scratch=self.filter_target.borrow_mut();
+        if scratch.as_ref().is_none_or(|t|t.width()!=width||t.height()!=padded){
+            *scratch=Some(self.device.create_texture(&wgpu::TextureDescriptor{label:Some("transparent filter group"),size:wgpu::Extent3d{width,height:padded,depth_or_array_layers:1},mip_level_count:1,sample_count:1,dimension:wgpu::TextureDimension::D2,format:wgpu::TextureFormat::Rgba8Unorm,usage:wgpu::TextureUsages::RENDER_ATTACHMENT|wgpu::TextureUsages::TEXTURE_BINDING,view_formats:&[]}));
+        }
+        let scratch=scratch.as_ref().unwrap();let group_view=scratch.create_view(&Default::default());
+        let uniform=self.device.create_buffer_init(&wgpu::util::BufferInitDescriptor{label:Some("group scale"),contents:bytemuck::cast_slice(&[1f32,sy,0.,0.]),usage:wgpu::BufferUsages::UNIFORM});
+        let group_bind=self.device.create_bind_group(&wgpu::BindGroupDescriptor{label:None,layout:&self.group_layout,entries:&[wgpu::BindGroupEntry{binding:0,resource:uniform.as_entire_binding()}]});
+        let mut cursor=0usize;
+        for (index,group) in filters.iter().enumerate(){
+            assert!(cursor<=group.start&&group.start<group.end&&group.end<=layers.len());
+            self.pass_load(encoder,target,&self.pipeline,&layers[cursor..group.start],stage,if index==0{wgpu::LoadOp::Clear(wgpu::Color::BLACK)}else{wgpu::LoadOp::Load},None);
+            self.pass_load(encoder,&group_view,&self.group_pipeline,&layers[group.start..group.end],[0.,0.,width as f32,padded as f32],wgpu::LoadOp::Clear(wgpu::Color{r:0.,g:0.,b:0.,a:0.}),Some(&group_bind));
+            let vertices=self.device.create_buffer_init(&wgpu::util::BufferInitDescriptor{label:Some("filtered group composite quad"),contents:bytemuck::cast_slice(&Self::quad([0.,0.,1280.,720.],[group.alpha,group.blur_y*height as f32/720.],[1.,sy,0.,0.])),usage:wgpu::BufferUsages::VERTEX});
+            let layer=self.bind(&self.device,scratch.clone(),vertices);
+            self.pass_load(encoder,target,&self.blur_pipeline,&[&layer],stage,wgpu::LoadOp::Load,None);
+            cursor=group.end;
+        }
+        if cursor<layers.len(){self.pass_load(encoder,target,&self.pipeline,&layers[cursor..],stage,wgpu::LoadOp::Load,None);}
+    }
     fn pass(&self,encoder:&mut wgpu::CommandEncoder,target:&wgpu::TextureView,pipeline:&wgpu::RenderPipeline,layers:&[&Layer],viewport:[f32;4]){
-        let mut pass=encoder.begin_render_pass(&wgpu::RenderPassDescriptor{label:None,color_attachments:&[Some(wgpu::RenderPassColorAttachment{view:target,resolve_target:None,ops:wgpu::Operations{load:wgpu::LoadOp::Clear(wgpu::Color::BLACK),store:wgpu::StoreOp::Store}})],depth_stencil_attachment:None,timestamp_writes:None,occlusion_query_set:None});
-        let [x,y,w,h]=viewport;pass.set_viewport(x,y,w,h,0.,1.);pass.set_pipeline(pipeline);
+        self.pass_load(encoder,target,pipeline,layers,viewport,wgpu::LoadOp::Clear(wgpu::Color::BLACK),None);
+    }
+    fn pass_load(&self,encoder:&mut wgpu::CommandEncoder,target:&wgpu::TextureView,pipeline:&wgpu::RenderPipeline,layers:&[&Layer],viewport:[f32;4],load:wgpu::LoadOp<wgpu::Color>,extra:Option<&wgpu::BindGroup>){
+        let mut pass=encoder.begin_render_pass(&wgpu::RenderPassDescriptor{label:None,color_attachments:&[Some(wgpu::RenderPassColorAttachment{view:target,resolve_target:None,ops:wgpu::Operations{load,store:wgpu::StoreOp::Store}})],depth_stencil_attachment:None,timestamp_writes:None,occlusion_query_set:None});
+        let [x,y,w,h]=viewport;pass.set_viewport(x,y,w,h,0.,1.);pass.set_pipeline(pipeline);if let Some(b)=extra{pass.set_bind_group(1,b,&[]);}
         for layer in layers{pass.set_bind_group(0,&layer.binding,&[]);pass.set_vertex_buffer(0,layer.vertices.slice(..));pass.draw(0..layer.count,0..1);}
     }
 }

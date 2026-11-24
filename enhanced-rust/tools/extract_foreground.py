@@ -149,6 +149,34 @@ def native_buttons(data):
     assert [(x,y) for _,x,y in placements]==[(x,y) for x in (120,3080,6020,8980) for y in (8880,9600)]
     return quit_states,wallpaper_states,placements
 
+def blur_y(flt):
+    if not flt:return 0.
+    assert len(flt)==11 and flt[:2]==b'\x01\x01' and flt[10]==8
+    x,y=struct.unpack_from('<II',flt,2)
+    assert x==0 and y<=15*65536
+    return y/65536
+
+def nested_sidebar(data):
+    raw=b'FWS'+data[3:8]+zlib.decompress(data[8:]);r=Bits(raw,8);r.rect()
+    d=next(d for c,d in tags(raw,r.at//8+4) if c==39 and struct.unpack_from('<H',d)[0]==51)
+    assert struct.unpack_from('<H',d,2)[0]==4
+    f=1;found=[];removed=[]
+    for c,v in tags(d,4):
+        if c==1:f+=1
+        elif c==28 and struct.unpack('<H',v)[0]==3:removed.append(f)
+        elif c==70:
+            r=Bits(v);flags=r.u8();f2=r.u8();depth=r.u16()
+            if not flags&2:continue
+            cid=r.u16()
+            if cid!=50:continue
+            assert (flags,f2,depth,f)==(38,1,3,1)
+            m=r.matrix();assert m[:4]==(1,1,0,0)
+            while r.u8():pass
+            found.append((m[4],m[5],blur_y(v[r.at//8:])))
+    assert len(found)==1 and removed==[2]
+    assert found[0]==(639,14815,15.)
+    return found[0]
+
 def build(data,output,jar):
     version,defs,frames=source(data,vector_menu=True);output.mkdir(parents=True,exist_ok=True)
     from extract_menu import pack as pack_menu
@@ -156,7 +184,7 @@ def build(data,output,jar):
     native,overlays,splits,extra=native_art(data,frames)
     quit_states,wallpaper_states,wallpaper_places=native_buttons(data)
     from extract_sidebar import extract as sidebar_extract
-    sidebar=sidebar_extract(data)
+    sidebar=sidebar_extract(data);nested_x,nested_y,nested_blur=nested_sidebar(data)
     from extract_controls import tags as dictionary,render_character
     overlays[63999]=render_character(dictionary(data),132)
     for kind,key,value in sidebar:
@@ -165,10 +193,10 @@ def build(data,output,jar):
     variants=set()
     for frame in frames:
         for cid,_,alpha,flt,_ in frame:
-            if not alpha or (cid in native and not flt) or (cid in (50,115) and alpha==256 and not flt):continue
-            parts=splits.get(cid) if alpha==256 and not flt else None
+            if not alpha or cid in (50,51) or (cid in native and not flt) or (cid==115 and alpha==256 and not flt):continue
+            parts=splits.get(cid) if cid==62 or (alpha==256 and not flt) else None
             if parts:
-                variants.update((cid,flt,key) for kind,key in parts if kind=='raster')
+                variants.update((cid,b'',key) for kind,key in parts if kind=='raster')
             else:variants.add((cid,flt,cid))
     variants=sorted(variants)
     # Render all reusable source characters in one synthetic, script-free timeline.
@@ -213,20 +241,29 @@ def build(data,output,jar):
         direct[sid]=[]
         for cid,x,y,w,h,iw,ih,raw in rows:
             idx=len(metadata);metadata.append((iw,ih));(output/f'{idx}.jpg').write_bytes(raw);direct[sid].append((idx,x,y,w,h))
-    packed=bytearray(b'PFG6'+struct.pack('<HH',len(metadata),len(frames)))
+    packed=bytearray(b'PFG7'+struct.pack('<HH',len(metadata),len(frames)))
     mesh_ids=set(mesh_slots.values())|set(overlay_slots.values())
     for i,(w,h) in enumerate(metadata):packed+=struct.pack('<HHB',w,h,4 if i in sidebar_slots.values() else 3 if i in button_slots.values() else 2 if i in mesh_ids else int(i>=jpeg_start))
     for f,frame in enumerate(frames,1):
-        placements=[];menu_after=255
+        placements=[];menu_after=255;filters=[]
+        def group(start,alpha,blur):
+            if len(placements)>start and (alpha!=256 or blur):filters.append((start,len(placements),alpha,blur))
         for cid,mat,alpha,flt,born in frame:
             if not alpha:continue
             if cid in mesh_slots and not flt:
                 x,y=(0,0) if cid==77 else mat[4:]
                 placements.append((mesh_slots[cid],x,y,20,20,alpha));continue
-            if cid==50 and alpha==256 and not flt:
+            if cid in (50,51):
+                x,y=mat[4:];blur=blur_y(flt)
+                if cid==51:
+                    assert not flt
+                    if (f-born)%4!=0:continue
+                    x+=nested_x;y+=nested_y;blur=nested_blur
+                start=len(placements)
                 for kind,key,_ in sidebar:
                     slot=overlay_slots[key] if kind=='mesh' else sidebar_slots[key]
-                    placements.append((slot,mat[4],mat[5],20,20,256))
+                    placements.append((slot,x,y,20,20,256))
+                group(start,alpha,blur)
                 continue
             if cid==115 and alpha==256 and not flt:
                 placements.append((button_slots[255],mat[4],mat[5],20,20,256));continue
@@ -234,16 +271,18 @@ def build(data,output,jar):
                 assert alpha==256 and not flt
                 placements.extend((button_slots[i],mat[4]+x,mat[5]+y,20,20,256) for i,x,y in wallpaper_places)
             n=(f-born)%4 if cid==51 else 0
-            parts=splits.get(cid) if alpha==256 and not flt else None
+            parts=splits.get(cid) if cid==62 or (alpha==256 and not flt) else None
             if parts:
+                start=len(placements)
                 for kind,key in parts:
                     if kind=='mesh':
                         placements.append((overlay_slots[key],mat[4],mat[5],20,20,256))
                     else:
-                        a=assets[cid,flt,key,0]
+                        a=assets[cid,b'',key,0]
                         if a is None:continue
                         idx,x,y=a;w,h=metadata[idx]
                         placements.append((idx,mat[4]+20*x,mat[5]+20*y,w*20,h*20,256))
+                group(start,alpha,blur_y(flt))
                 continue
             a=assets[cid,flt,cid,n]
             if a is None:continue
@@ -256,8 +295,9 @@ def build(data,output,jar):
                 placements.append((overlay_slots[63999],mat[4],mat[5],20,20,256))
                 placements.extend((idx,mat[4]+x,mat[5]+y,w,h,alpha) for idx,x,y,w,h in direct[cid])
             if cid in (136,157,220):menu_after=len(placements)
-        packed+=struct.pack('<BB',len(placements),menu_after)
+        packed+=struct.pack('<BBB',len(placements),menu_after,len(filters))
         for a in placements:packed+=struct.pack('<HiiIIH',*a)
+        for span in filters:packed+=struct.pack('<BBHf',*span)
     for batches in meshes:
         packed+=struct.pack('<H',len(batches))
         for rgba,vertices in batches:

@@ -59,8 +59,8 @@ impl Gpu{
         let view=frame.texture.create_view(&Default::default());
         let mut encoder=self.device.create_command_encoder(&Default::default());
         let stage=Stage::fit(f64::from(size.width),f64::from(size.height));
-        let mut layers=vec![];if bg_on{if let Some(b)=&self.background{layers.extend(b.layers(app.background.frame));}}if fg_on{layers.extend(self.foreground.as_ref().unwrap().layers());}if let Some(a)=&self.art{layers.push(a);if app.scene()==Scene::Launcher{layers.extend(self.launcher.iter());}}if media_on{if let Some(v)=&self.video{layers.push(v);}}if let Some(c)=&self.chrome{layers.push(c);}layers.extend(self.controls.layers().iter());
-        self.renderer.render(&mut encoder,&view,&layers,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
+        let mut layers=vec![];let mut filters=vec![];if bg_on{if let Some(b)=&self.background{layers.extend(b.layers(app.background.frame));}}if fg_on{let(fg,spans)=self.foreground.as_ref().unwrap().layers_and_filters();let offset=layers.len();filters.extend(spans.into_iter().map(|mut s|{s.start+=offset;s.end+=offset;s}));layers.extend(fg);}if let Some(a)=&self.art{layers.push(a);if app.scene()==Scene::Launcher{layers.extend(self.launcher.iter());}}if media_on{if let Some(v)=&self.video{layers.push(v);}}if let Some(c)=&self.chrome{layers.push(c);}layers.extend(self.controls.layers().iter());
+        self.renderer.render_filtered(&mut encoder,&view,&layers,&filters,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
         self.queue.submit([encoder.finish()]);frame.present();
     }
 }

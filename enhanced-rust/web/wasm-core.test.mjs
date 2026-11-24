@@ -4,7 +4,7 @@ test('actual compiled WASM executes original application flow',async()=>{
  const module=await readFile(new URL('./pkg/presskit_web_bg.wasm',import.meta.url));initSync({module});assert.equal(wasm_core_smoke(),true);assert.equal(wasm_steady_menu_smoke(),true);
 });
 
-test('compiled WASM parses original PFG3–PFG6 JPEG placements and rejects corrupted assets', {skip:!process.env.PRESSKIT_FG_ASSETS},async()=>{
+test('compiled WASM parses original PFG3–PFG7 JPEG placements and rejects corrupted assets', {skip:!process.env.PRESSKIT_FG_ASSETS},async()=>{
  const root=process.env.PRESSKIT_FG_ASSETS;
  const timeline=await readFile(root+'/timeline.pfg'),menu=await readFile(root+'/menu.pkm');
  const module=await readFile(new URL('./pkg/presskit_web_bg.wasm',import.meta.url));initSync({module});
