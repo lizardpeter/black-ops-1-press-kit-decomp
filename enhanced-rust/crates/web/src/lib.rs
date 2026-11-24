@@ -17,7 +17,7 @@ fn pair(kind:&str,value:&str)->Array{Array::of2(&kind.into(),&value.into())}
 pub struct WebPlayer{
     app:App,canvas:HtmlCanvasElement,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,
     config:wgpu::SurfaceConfiguration,renderer:Renderer,images:HashMap<String,(Layer,u64)>,video:Option<Layer>,
-    photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,pack:Option<ControlPack>,controls:ControlCache,mouse:Option<(f64,f64)>,pressed:bool,
+    photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,pack:Option<ControlPack>,controls:ControlCache,mouse:Option<(f64,f64)>,pressed:bool,pending_menu:Option<Hit>,
 }
 #[wasm_bindgen]
 impl WebPlayer{
@@ -31,10 +31,18 @@ impl WebPlayer{
         if render_format!=config.format{config.view_formats.push(render_format);}
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,&queue,render_format,VS,FS,"vertexMain","fragmentMain");
-        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,controls:ControlCache::default(),mouse:None,pressed:false})
+        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,controls:ControlCache::default(),mouse:None,pressed:false,pending_menu:None})
     }
     pub fn resize(&mut self,w:u32,h:u32){let w=w.max(1);let h=h.max(1);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     pub fn advance(&mut self,ms:f64){
+        if let Some(hit)=self.pending_menu{
+            if let Some(target)=self.app.steady_menu_frame(hit){
+                if self.menu_target_missing(target).is_empty(){
+                    self.pending_menu=None;
+                    self.app.activate_steady_menu(hit);
+                }
+            }else{self.pending_menu=None;}
+        }
         let foreground_ready=self.foreground.as_ref().is_none_or(|fg|fg.ready_frame(self.app.frame));
         let background_ready=!self.layered||self.app.frame<56||self.background.as_ref().is_some_and(|bg|bg.ready_frame(self.app.background.frame));
         self.app.advance_when_ready(ms,foreground_ready&&background_ready);
@@ -50,7 +58,10 @@ impl WebPlayer{
     pub fn install_foreground(&mut self,bytes:&[u8])->Result<(),JsValue>{self.foreground=Some(ForegroundArt::new(ForegroundTimeline::read(bytes).map_err(error)?));Ok(())}
     pub fn install_menu(&mut self,bytes:&[u8])->Result<(),JsValue>{self.foreground.as_mut().ok_or_else(||JsValue::from_str("foreground missing"))?.install_menu(bytes).map_err(error)}
     pub fn install_controls(&mut self,bytes:&[u8])->Result<(),JsValue>{self.pack=Some(ControlPack::read(bytes).map_err(error)?);self.controls.clear();Ok(())}
-    pub fn click(&mut self,x:f64,y:f64){self.pointer();if !self.input_ready(){return;}if let Some((x,y))=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y){let h=self.app.hit(x,y);self.app.activate(h,x);}}
+    pub fn click(&mut self,x:f64,y:f64){self.pointer();if !self.input_ready(){return;}if let Some((x,y))=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y){let h=self.app.hit(x,y);
+            if self.app.steady_menu_frame(h).is_some(){self.pending_menu=Some(h);}
+            else{self.pending_menu=None;self.app.activate(h,x);}
+        }}
     pub fn key(&mut self,key:&str){match key{
         "Enter" if self.app.scene()==Scene::Launcher=>self.app.activate(Hit::Accept,0.),
         "Escape" if self.app.scene()==Scene::Intro=>self.media_complete(),
@@ -78,11 +89,30 @@ impl WebPlayer{
                 }
             }
         }
+        // Warm the settled menu frames during idle/menu playback. Do not
+        // request a single intentionally blank transition as a navigation target.
+        if matches!(self.app.scene(),Scene::Launcher|Scene::Intro|Scene::Welcome|Scene::Wallpapers|Scene::Videos|Scene::Screens){
+            for target in [81,91,101]{p.ahead.extend(self.menu_target_missing(target));}
+        }
         if self.pack.is_some(){p.current.retain(|s|!s.contains("_controls/"));p.ahead.retain(|s|!s.contains("_controls/"));}
         p
     }
+    fn menu_target_missing(&self,target:u16)->Vec<String>{
+        if let Some(fg)=&self.foreground{
+            fg.missing_frame(target).into_iter().map(|i|format!("art/foreground-source/{}",fg.filename(i))).collect()
+        }else{
+            let path=format!("art/{}/{}.png",if self.layered{"foreground"}else{"presskit"},target);
+            if self.images.contains_key(&path){vec![]}else{vec![path]}
+        }
+    }
     fn paths(&self)->Vec<String>{self.plan().current}
-    pub fn needed(&self)->Array{self.paths().into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
+    pub fn needed(&self)->Array{
+        let mut paths=self.paths();
+        if let Some(target)=self.pending_menu.and_then(|h|self.app.steady_menu_frame(h)){
+            paths.extend(self.menu_target_missing(target));
+        }
+        paths.into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()
+    }
     pub fn prefetch(&self)->Array{self.plan().ahead.into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
     pub fn ready(&self)->bool{self.paths().iter().all(|p|self.images.contains_key(p))&&(!self.layered||self.app.frame<56||matches!(self.app.scene(),Scene::Gallery|Scene::Video)||self.background.as_ref().is_some_and(|b|b.ready()))}
     fn input_ready(&self)->bool{
@@ -168,4 +198,14 @@ pub fn wasm_validate_foreground(timeline:&[u8], menu:&[u8])->Result<u32,JsValue>
     let mut art=ForegroundArt::new(t);
     if art.needs_menu(){art.install_menu(menu).map_err(error)?;}
     Ok(jpeg_count)
+}
+
+#[wasm_bindgen]
+pub fn wasm_steady_menu_smoke()->bool{
+    let mut app=App::default();app.launched=true;app.frame=75;
+    for (hit,target) in [(Hit::Wallpapers,81),(Hit::Videos,91),(Hit::Screens,101),(Hit::Videos,91),(Hit::Wallpapers,81)]{
+        if !app.activate_steady_menu(hit)||app.frame!=target||app.playing{return false;}
+        for _ in 0..5{app.tick();if app.frame!=target{return false;}}
+    }
+    true
 }

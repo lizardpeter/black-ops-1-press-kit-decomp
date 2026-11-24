@@ -63,3 +63,6 @@ The WebAssembly host now holds a transition on its last complete frame until the
 
 
 GitHub Pages artifacts are named with both the workflow run ID and attempt number. This avoids duplicate default Pages artifact names when a deployment job is retried, so deploy-pages selects the exact artifact from the current attempt. The build also runs a delayed-background GPU regression test when a software or hardware adapter is available.
+
+### Enhanced menu presentation: remove original strobe
+Original root depth 26 deliberately disappears on frames 76/78/80, 86/88/90 and 96/98/100, alternating with the target panel. The WebGPU host now holds the current complete menu while its target assets load and atomically selects the settled frame (81, 91, 101). This is an intentional enhanced behavior; the original timeline and media fades remain intact. The experimental five-group typography conversion is deferred until it supports simultaneous label groups, root alpha, filters and per-frame transforms. Its source remains in Git history; the proven PKM2 format is restored for builds.

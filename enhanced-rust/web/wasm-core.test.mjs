@@ -1,7 +1,7 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';
-import {initSync,wasm_core_smoke,wasm_validate_foreground} from './pkg/presskit_web.js';
+import {initSync,wasm_core_smoke,wasm_validate_foreground,wasm_steady_menu_smoke} from './pkg/presskit_web.js';
 test('actual compiled WASM executes original application flow',async()=>{
- const module=await readFile(new URL('./pkg/presskit_web_bg.wasm',import.meta.url));initSync({module});assert.equal(wasm_core_smoke(),true);
+ const module=await readFile(new URL('./pkg/presskit_web_bg.wasm',import.meta.url));initSync({module});assert.equal(wasm_core_smoke(),true);assert.equal(wasm_steady_menu_smoke(),true);
 });
 
 test('compiled WASM parses original PFG3 JPEG placements and rejects corrupted assets', {skip:!process.env.PRESSKIT_FG_ASSETS},async()=>{

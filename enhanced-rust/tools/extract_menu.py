@@ -30,31 +30,17 @@ def pack(data,frames):
     assert hashlib.sha256(data).hexdigest()==EXPECTED
     raw=b'FWS'+data[3:8]+zlib.decompress(data[8:]);r=Bits(raw,8);r.rect()
     sprites={struct.unpack_from('<H',d)[0]:d for c,d in tags(raw,r.at//8+4) if c==39}
-    ts=dictionary(data);out=bytearray(b'PKM3'+bytes([5]))
+    ts=dictionary(data);out=bytearray(b'PKM2');groups=[]
     for sid in BUTTONS:
-        placements=button_placements(sprites[sid])
+        placements=button_placements(sprites[sid]);groups.append(placements)
         out.append(len(placements))
         for row in placements:out+=struct.pack('<Bii',*row)
-    # Three additional label-only groups: welcome/legal, sidebar, and wallpaper text.
-    out.extend((0,0,0))
-    frame_groups={157:1,220:2,62:3,111:4,136:5}
-    for frame_no,frame in enumerate(frames,1):
-        for cid,m,a,flt,_ in frame:
-            if cid in (62,111,136):
-                print(f"vector label placement: frame={frame_no} sprite={cid} matrix={m} alpha={a} filter_bytes={len(flt)}")
     for frame in frames:
-        matches=[(cid,m,a,flt) for cid,m,a,flt,_ in frame if cid in frame_groups]
-        assert len(matches)<=1,[(cid,a) for cid,_,a,_ in matches]
-        if not matches:
-            out.append(0)
-            continue
-        cid,m,a,flt=matches[0]
-        if cid in BUTTONS:
-            assert [c for c,_,alpha,_,_ in frame if alpha][:4]==[96,80,99,cid]
-            assert m==(1,1,0,0,10537,860) and a==256 and not flt
-        else:
-            if a!=256 or flt:raise ValueError(f"vector label sprite {cid} requires alpha/filter support (alpha={a}, filter_bytes={len(flt)}, matrix={m})")
-        out.append(frame_groups[cid])
+        matches=[(cid,m,a,flt) for cid,m,a,flt,_ in frame if cid in BUTTONS]
+        assert len(matches)<=1
+        if not matches:out.append(0);continue
+        cid,m,a,flt=matches[0];assert [c for c,_,a,_,_ in frame if a][:4]==[96,80,99,cid];assert m==(1,1,0,0,10537,860) and a==256 and not flt
+        out.append(1 if cid==157 else 2)
     for sid in BUTTONS:
         for state in range(3):
             batches=render_button(ts,BUTTONS[sid][0],state);out.append(len(batches))
@@ -62,8 +48,6 @@ def pack(data,frames):
                 assert len(verts)%3==0 and verts
                 out+=struct.pack('<4BH',*rgba,len(verts))
                 for x,y in verts:out+=struct.pack('<ff',x/20,y/20)
-    # Label-only groups have no interactive button states.
-    out.extend((0,0,0,0,0,0,0,0,0))
     from extract_labels import pack_labels
     out+=pack_labels(ts,sprites)
     return bytes(out)

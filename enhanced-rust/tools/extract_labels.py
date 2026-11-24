@@ -4,7 +4,7 @@ No raster text or repeated tessellated glyphs in the runtime asset.
 import struct
 from extract_controls import Bits
 from extract_background import tags
-LABELS={157:(143,144,145,146,147,148,149,156),220:(213,214,215),62:(55,),111:(110,),136:(119,123,124,125,129,130,131,135)}
+LABELS={157:(143,144,145,146,147,148,149,156),220:(213,214,215)}
 
 def glyph_bytes(d,i):
     flags=d[2];p=5+d[4];count=struct.unpack_from('<H',d,p)[0];table=p+2;w=4 if flags&8 else 2

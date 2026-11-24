@@ -40,6 +40,22 @@ impl App{
         if !self.launched{return Scene::Launcher;}
         match self.frame{1=>Scene::Intro,75=>Scene::Welcome,81|85=>Scene::Wallpapers,91=>Scene::Videos,95=>Scene::Video,101=>Scene::Screens,105=>Scene::Gallery,_=>Scene::Transition}
     }
+    /// Enhanced presentation: target the settled menu frame, not the original
+    /// alternating blank/visible entry frames. The faithful activate() path
+    /// remains available for original timeline playback.
+    pub fn steady_menu_frame(&self,hit:Hit)->Option<u16>{
+        if !matches!(self.scene(),Scene::Welcome|Scene::Wallpapers|Scene::Videos|Scene::Screens){return None;}
+        match hit{Hit::Wallpapers=>Some(81),Hit::Videos=>Some(91),Hit::Screens=>Some(101),_=>None}
+    }
+    pub fn activate_steady_menu(&mut self,hit:Hit)->bool{
+        let Some(target)=self.steady_menu_frame(hit) else{return false;};
+        if self.frame!=target{
+            self.frame=target;self.playing=false;self.rewinding=false;
+            self.effects.push(Effect::Sound(2));
+            self.enter();
+        }
+        true
+    }
     pub fn effects(&mut self)->Vec<Effect>{std::mem::take(&mut self.effects)}
     pub fn hit(&self,x:f64,y:f64)->Hit{
         match self.scene(){Scene::Launcher=>hit_launcher(x,y),Scene::Gallery|Scene::Video=>hit_media(self.scene(),x,y,self.controls.y),s=>hit_menu(s,x,y)}
@@ -138,5 +154,33 @@ mod transition_tests {
         app.advance_when_ready(1000./24.,false);
         assert_eq!(app.frame,92);
         assert_eq!(app.scene(),Scene::Transition);
+    }
+}
+
+#[cfg(test)]
+mod steady_menu_tests {
+    use super::*;
+    #[test]
+    fn every_menu_pair_skips_original_blank_frames_and_retains_background(){
+        for start in [75,81,91,101]{
+            for (hit,target) in [(Hit::Wallpapers,81),(Hit::Videos,91),(Hit::Screens,101)]{
+                let mut app=App::default();app.launched=true;app.frame=start;
+                app.background.frame=110;
+                assert_eq!(app.steady_menu_frame(hit),Some(target));
+                assert!(app.activate_steady_menu(hit));
+                assert_eq!(app.frame,target);assert!(!app.playing);assert!(!app.rewinding);
+                assert_eq!(app.background.frame,110);
+                for _ in 0..8{app.tick();assert_eq!(app.frame,target);}
+            }
+        }
+    }
+    #[test]
+    fn original_timeline_and_media_fade_remain_available(){
+        let mut a=App::default();a.launched=true;a.frame=75;
+        a.activate(Hit::Videos,0.);assert_eq!(a.frame,86);
+        for _ in 0..5{a.tick();}assert_eq!(a.frame,91);
+        a.activate(Hit::Trailer(4),0.);
+        for expected in 92..=95{a.tick();assert_eq!(a.frame,expected);}
+        assert!(!a.activate_steady_menu(Hit::Screens));
     }
 }
