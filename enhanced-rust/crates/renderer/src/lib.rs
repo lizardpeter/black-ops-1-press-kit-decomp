@@ -65,11 +65,13 @@ impl Renderer{
         let triangles=vector::triangulate(points)?;
         self.mesh(device,queue,rgba,&triangles)
     }
-    pub fn mesh(&self,device:&wgpu::Device,_queue:&wgpu::Queue,rgba:[u8;4],triangles:&[[f32;2]])->Option<Layer>{
+    pub fn mesh(&self,device:&wgpu::Device,_queue:&wgpu::Queue,rgba:[u8;4],triangles:&[[f32;2]])->Option<Layer>{self.mesh_with_opacity(device,rgba,triangles,1.)}
+    pub fn mesh_with_opacity(&self,device:&wgpu::Device,rgba:[u8;4],triangles:&[[f32;2]],opacity:f32)->Option<Layer>{
+        if !opacity.is_finite()||!(0.0..=1.0).contains(&opacity){return None;}
         if triangles.is_empty()||triangles.len()%3!=0{return None;}
         let decode=|c:u8|{let s=f32::from(c)/255.;if s<=0.04045{s/12.92}else{((s+0.055)/1.055).powf(2.4)}};
         let color=[decode(rgba[0]),decode(rgba[1]),decode(rgba[2]),f32::from(rgba[3])/255.];
-        let verts:Vec<_>=triangles.iter().map(|p|Vertex{pos:[p[0]/640.-1.,1.-p[1]/360.],uv:[0.5,0.5],opacity:[1.,-1.],color}).collect();
+        let verts:Vec<_>=triangles.iter().map(|p|Vertex{pos:[p[0]/640.-1.,1.-p[1]/360.],uv:[0.5,0.5],opacity:[opacity,-1.],color}).collect();
         let vertices=device.create_buffer_init(&wgpu::util::BufferInitDescriptor{label:Some("vector mesh"),contents:bytemuck::cast_slice(&verts),usage:wgpu::BufferUsages::VERTEX|wgpu::BufferUsages::COPY_DST});
         let mut layer=self.bind(device,self.solid_texture.clone(),vertices);layer.count=verts.len() as u32;Some(layer)
     }

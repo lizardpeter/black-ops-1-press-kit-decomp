@@ -61,20 +61,63 @@ def source(data, vector_menu=False):
     assert len(frames)==105
     return b[3:4],b''.join(defs),frames
 
+def native_art(data,frames):
+    """Exact solid geometry and topmost unfiltered static text, not guessed art.
+    A cloned sprite strips only the migrated text for eligible root placements;
+    original nested/filtered uses of the sprite are left intact.
+    """
+    from extract_controls import tags as dictionary, render_character, transform
+    b=b'FWS'+data[3:8]+zlib.decompress(data[8:]);r=Bits(b,8);r.rect()
+    sprites={struct.unpack_from('<H',d)[0]:d for c,d in tags(b,r.at//8+4) if c==39}
+    ts=dictionary(data)
+    assert not any(i in sprites or i in ts for i in (65000,65001))
+    # #77 extends past the stage. The visible portion is exactly this rectangle.
+    native={77:[((0,0,0,255),[(0,0),(0,14400),(25600,0),(25600,0),(0,14400),(25600,14400)])]}
+    for sid,shape in ((53,23),(80,79),(99,98)):
+        # Only convert a single, identity-placed solid batch. Unsupported fill
+        # types, multi-fill group alpha, or filtered instances stay in raster.
+        rows=[d for c,d in tags(sprites[sid],4) if c==26]
+        assert len(rows)==1
+        r=Bits(rows[0]);assert r.u8()==6;r.u16();assert r.u16()==shape
+        assert r.matrix()==(1,1,0,0,0,0)
+        try:batches=render_character(ts,shape)
+        except ValueError:continue
+        if len(batches)==1 and batches[0][1]:native[sid]=batches
+    clones={};extra=bytearray();overlays={}
+    for sid,ids,clone in ((50,(47,49),65000),(111,(110,),65001)):
+        if not any(cid==sid and a==256 and not flt for frame in frames for cid,_,a,flt,_ in frame):continue
+        sprite=sprites[sid];children=[];rest=[]
+        for c,d in tags(sprite,4):
+            if c==26 and d[0]&2:
+                r=Bits(d);flags=r.u8();depth=r.u16();cid=r.u16()
+                children.append((depth,cid))
+                if cid in ids:
+                    assert flags==6
+                    m=r.matrix();assert r.at//8==len(d)
+                    overlays.setdefault(sid,[]).extend((rgba,[transform(m,p) for p in points]) for rgba,points in render_character(ts,cid) if points)
+                    continue
+            if c not in (12,59):rest.append(tag(c,d))
+        assert tuple(cid for _,cid in sorted(children)[-len(ids):])==ids
+        assert overlays.get(sid)
+        clones[sid]=clone;extra+=tag(39,struct.pack('<H',clone)+sprite[2:4]+b''.join(rest))
+    return native,overlays,clones,bytes(extra)
+
 def build(data,output,jar):
     version,defs,frames=source(data,vector_menu=True);output.mkdir(parents=True,exist_ok=True)
     from extract_menu import pack as pack_menu
     (output/'menu.pkm').write_bytes(pack_menu(data,frames))
-    variants=sorted({(cid,flt) for frame in frames for cid,_,alpha,flt,_ in frame if cid!=77 and alpha})
+    native,overlays,clones,extra=native_art(data,frames)
+    # Use a distinct raster variant for partially converted, opaque root sprites.
+    variants=sorted({(cid,flt,cid in clones and alpha==256 and not flt) for frame in frames for cid,_,alpha,flt,_ in frame if alpha and not(cid in native and not flt)})
     # Render all reusable source characters in one synthetic, script-free timeline.
-    body=bytearray(defs);keys=[]
-    for i,(cid,flt) in enumerate(variants):
+    body=bytearray(defs+extra);keys=[]
+    for i,(cid,flt,split) in enumerate(variants):
         if i:body+=tag(28,struct.pack('<H',1))
-        m=matrix(*ORIGIN)
-        if flt:body+=tag(70,struct.pack('<BBHH',6,1,1,cid)+m+flt)
-        else:body+=tag(26,struct.pack('<BHH',6,1,cid)+m)
+        m=matrix(*ORIGIN);export_id=clones[cid] if split else cid
+        if flt:body+=tag(70,struct.pack('<BBHH',6,1,1,export_id)+m+flt)
+        else:body+=tag(26,struct.pack('<BHH',6,1,export_id)+m)
         count=4 if cid==51 else 1
-        for n in range(count):body+=tag(1);keys.append((cid,flt,n))
+        for n in range(count):body+=tag(1);keys.append((cid,flt,split,n))
     body+=tag(0);header=rect(*SIZE)+struct.pack('<HH',24*256,len(keys));swf=b'FWS'+version+struct.pack('<I',8+len(header)+len(body))+header+body
     with tempfile.TemporaryDirectory() as tmp:
         tmp=Path(tmp);(tmp/'characters.swf').write_bytes(swf);(tmp/'frames').mkdir()
@@ -89,23 +132,29 @@ def build(data,output,jar):
             if digest not in digests:
                 idx=len(metadata);digests[digest]=idx;im.save(output/f'{idx}.png',optimize=True);metadata.append(im.size)
             assets[key]=(digests[digest],box[0]-ORIGIN[0],box[1]-ORIGIN[1])
-    # Original #77 is an opaque black rectangle extending beyond all four stage edges.
-    black=len(metadata);metadata.append((1,1));Image.new('RGBA',(1,1),(0,0,0,255)).save(output/f'{black}.png')
+    mesh_slots={};overlay_slots={};meshes=[]
+    for table,dest in ((native,mesh_slots),(overlays,overlay_slots)):
+        for cid,batches in sorted(table.items()):
+            dest[cid]=len(metadata);metadata.append((1,1));meshes.append(batches)
     from extract_thumbnails import extract as extract_thumbnails
     thumbnails=extract_thumbnails(data);jpeg_start=len(metadata);direct={}
     for sid,rows in thumbnails.items():
         direct[sid]=[]
         for cid,x,y,w,h,iw,ih,raw in rows:
             idx=len(metadata);metadata.append((iw,ih));(output/f'{idx}.jpg').write_bytes(raw);direct[sid].append((idx,x,y,w,h))
-    packed=bytearray(b'PFG3'+struct.pack('<HH',len(metadata),len(frames)))
-    for i,(w,h) in enumerate(metadata):packed+=struct.pack('<HHB',w,h,int(i>=jpeg_start))
+    packed=bytearray(b'PFG4'+struct.pack('<HH',len(metadata),len(frames)))
+    mesh_ids=set(mesh_slots.values())|set(overlay_slots.values())
+    for i,(w,h) in enumerate(metadata):packed+=struct.pack('<HHB',w,h,2 if i in mesh_ids else int(i>=jpeg_start))
     for f,frame in enumerate(frames,1):
         placements=[];menu_after=255
         for cid,mat,alpha,flt,born in frame:
             if not alpha:continue
-            if cid==77:placements.append((black,0,0,25600,14400,alpha));continue
+            if cid in mesh_slots and not flt:
+                x,y=(0,0) if cid==77 else mat[4:]
+                placements.append((mesh_slots[cid],x,y,20,20,alpha));continue
             n=(f-born)%4 if cid==51 else 0
-            a=assets[cid,flt,n]
+            split=cid in clones and alpha==256 and not flt
+            a=assets[cid,flt,split,n]
             if a is None:continue
             if cid in direct and cid!=136:
                 assert not flt and alpha==256
@@ -114,10 +163,19 @@ def build(data,output,jar):
             if cid==136:
                 assert not flt and alpha==256
                 placements.extend((idx,mat[4]+x,mat[5]+y,w,h,alpha) for idx,x,y,w,h in direct[cid])
+            if split:placements.append((overlay_slots[cid],mat[4],mat[5],20,20,256))
             if cid in (136,157,220):menu_after=len(placements)
         packed+=struct.pack('<BB',len(placements),menu_after)
         for a in placements:packed+=struct.pack('<HiiIIH',*a)
+    for batches in meshes:
+        packed+=struct.pack('<H',len(batches))
+        for rgba,vertices in batches:
+            assert vertices and len(vertices)%3==0
+            packed+=struct.pack('<4BI',*rgba,len(vertices))
+            for x,y in vertices:packed+=struct.pack('<ff',x/20,y/20)
+    assert len(packed)<=8*1024*1024
     (output/'timeline.pfg').write_bytes(packed)
+    print('native vector root characters:',sorted(mesh_slots),'split text overlays:',sorted(overlay_slots))
     print(f'{len(metadata)} reusable cropped textures, {len(keys)} source variants, {len(packed)} timeline bytes; {sum(p.stat().st_size for p in output.iterdir())} bytes total')
 
 def main():

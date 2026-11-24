@@ -6,7 +6,7 @@ fn source_foreground_gpu_matches_all_105_reference_frames(){
  let Ok(assets)=std::env::var("PRESSKIT_FG_ASSETS") else{eprintln!("set PRESSKIT_FG_ASSETS to art/foreground-source and PRESSKIT_FG_REFERENCE to art/foreground");return;};
  let reference=std::env::var("PRESSKIT_FG_REFERENCE").expect("PRESSKIT_FG_REFERENCE");
  let assets=Path::new(&assets);let reference=Path::new(&reference);let bytes=std::fs::read(assets.join("timeline.pfg")).unwrap();
- let timeline=ForegroundTimeline::read(&bytes).unwrap();if bytes[3]==b'3'{assert_eq!((0..timeline.count()).filter(|&i|timeline.filename(i).ends_with(".jpg")).count(),26);}else{assert_eq!(timeline.count(),49);}
+ let timeline=ForegroundTimeline::read(&bytes).unwrap();if matches!(bytes[3],b'3'|b'4'){assert_eq!((0..timeline.count()).filter(|&i|timeline.filename(i).ends_with(".jpg")).count(),26);}else{assert_eq!(timeline.count(),49);}
  pollster::block_on(async{
   let instance=wgpu::Instance::default();let adapter=instance.request_adapter(&Default::default()).await.unwrap();eprintln!("foreground GPU adapter: {:?}",adapter.get_info());
   let (d,q)=adapter.request_device(&wgpu::DeviceDescriptor::default(),None).await.unwrap();
@@ -30,7 +30,7 @@ fn source_foreground_gpu_matches_all_105_reference_frames(){
    let mae=sum/(1280.*720.*3.);if mae>worst.1{worst=(frame,mae);}
   }
   eprintln!("worst foreground GPU gamma MAE: frame {} {:.4}/255",worst.0,worst.1);assert!(worst.1<1.5);
-  if matches!(bytes[3],b'2'|b'3'){
+  if matches!(bytes[3],b'2'|b'3'|b'4'){
    let menu_bytes=std::fs::read(assets.join("menu.pkm")).unwrap();let pack=MenuPack::read(&menu_bytes).unwrap();
    if menu_bytes.starts_with(b"PKM3"){
     for frame in 1..=105u16{assert_eq!(pack.group(frame)==3,[77,79,81,82,83,84].contains(&frame));}
