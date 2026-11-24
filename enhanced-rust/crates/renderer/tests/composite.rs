@@ -47,3 +47,22 @@ fn original_control_pack_gpu() {
         }}
     });
 }
+
+#[test]
+fn direct_vector_mesh_uses_vertex_color_without_per_mesh_texture(){
+ pollster::block_on(async{
+  let instance=wgpu::Instance::default();let adapter=instance.request_adapter(&Default::default()).await.unwrap();let(d,q)=adapter.request_device(&wgpu::DeviceDescriptor::default(),None).await.unwrap();
+  let r=Renderer::new(&d,&q,wgpu::TextureFormat::Rgba8UnormSrgb,include_str!("../../../shaders/generated/vertex.wgsl"),include_str!("../../../shaders/generated/fragment.wgsl"),"vertexMain","fragmentMain");
+  let points=[[0.,0.],[1280.,0.],[0.,720.],[1280.,0.],[1280.,720.],[0.,720.]];
+  let opaque=r.mesh(&d,&q,[255,0,0,255],&points).unwrap();let translucent=r.mesh(&d,&q,[255,0,0,128],&points).unwrap();
+  assert_eq!(opaque.texture,translucent.texture);assert_eq!(opaque.count,6);
+  let size=wgpu::Extent3d{width:64,height:4,depth_or_array_layers:1};
+  let target=d.create_texture(&wgpu::TextureDescriptor{label:None,size,mip_level_count:1,sample_count:1,dimension:wgpu::TextureDimension::D2,format:wgpu::TextureFormat::Rgba8UnormSrgb,usage:wgpu::TextureUsages::RENDER_ATTACHMENT|wgpu::TextureUsages::COPY_SRC,view_formats:&[]});
+  let buffer=d.create_buffer(&wgpu::BufferDescriptor{label:None,size:1024,usage:wgpu::BufferUsages::COPY_DST|wgpu::BufferUsages::MAP_READ,mapped_at_creation:false});
+  for(layer,expected)in [(&opaque,[255,0,0,255]),(&translucent,[128,0,0,255])]{
+   let mut enc=d.create_command_encoder(&Default::default());r.render(&mut enc,&target.create_view(&Default::default()),&[layer],[0.,0.,64.,4.]);
+   enc.copy_texture_to_buffer(wgpu::TexelCopyTextureInfo{texture:&target,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},wgpu::TexelCopyBufferInfo{buffer:&buffer,layout:wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(256),rows_per_image:Some(4)}},size);q.submit([enc.finish()]);
+   let slice=buffer.slice(..);let(tx,rx)=std::sync::mpsc::channel();slice.map_async(wgpu::MapMode::Read,move|v|tx.send(v).unwrap());d.poll(wgpu::Maintain::Wait);rx.recv().unwrap().unwrap();let data=slice.get_mapped_range();assert_eq!(&data[0..4],&expected);drop(data);buffer.unmap();
+  }
+ });
+}
