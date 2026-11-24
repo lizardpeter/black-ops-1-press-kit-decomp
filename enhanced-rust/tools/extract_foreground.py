@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""Source-derived foreground display list. Rasterize reusable characters, not stage frames.
-Original root translations and opacity are retained at full twip precision.
-Nested artwork/blur variants use offline artwork rasterization, never AVM execution.
+"""Source-derived foreground display list, original bitmap fills and native triangles.
+The runtime asset build uses no offline rasterizer or AVM execution.
 """
 import argparse, hashlib, struct, subprocess, tempfile, zlib
 from pathlib import Path

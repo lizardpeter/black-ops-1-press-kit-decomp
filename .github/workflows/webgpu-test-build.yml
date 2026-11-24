@@ -99,6 +99,21 @@ jobs:
           mkdir -p enhanced-rust/web/assets
           cp -a "$RUNNER_TEMP/runtime/art" enhanced-rust/web/assets/
 
+      - name: Export original foreground reference for GPU parity
+        run: |
+          python tools/swf/layers.py "$RUNNER_TEMP/originals/presskit.swf" "$RUNNER_TEMP/reference-swfs"
+          mkdir -p "$RUNNER_TEMP/foreground-export" "$RUNNER_TEMP/reference/art/foreground"
+          java -Djava.awt.headless=true -jar "$FFDEC_JAR" -ignorebackground -format frame:png -export frame \
+            "$RUNNER_TEMP/foreground-export" "$RUNNER_TEMP/reference-swfs/foreground.swf"
+          python - <<'PY'
+          import os,sys
+          from pathlib import Path
+          sys.path.insert(0,'tools')
+          from prepare_player_assets import normalize
+          root=Path(os.environ['RUNNER_TEMP'])
+          normalize(root/'foreground-export',root/'reference/art/foreground',105)
+          PY
+
       - name: Download and verify all 44 original R2 payload files
         working-directory: enhanced-rust
         run: |
@@ -113,10 +128,12 @@ jobs:
         working-directory: enhanced-rust
         env:
           PRESSKIT_FG_ASSETS: ${{ runner.temp }}/runtime/art/foreground-source
+          PRESSKIT_FG_REFERENCE: ${{ runner.temp }}/reference/art/foreground
+          PRESSKIT_LAUNCHER_ASSETS: ${{ runner.temp }}/runtime/art
         run: |
           sh tools/build_web.sh
           cargo test --offline -p presskit-core
-          cargo test -p presskit-renderer --lib --test background
+          cargo test -p presskit-renderer --lib --test background --test foreground -- --nocapture
           node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/wasm-core.test.mjs
 
       - name: Assemble self-contained static website

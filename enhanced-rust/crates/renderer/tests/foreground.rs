@@ -22,6 +22,35 @@ fn source_foreground_gpu_matches_all_105_reference_frames(){
    enc.copy_texture_to_buffer(wgpu::TexelCopyTextureInfo{texture:&target,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},wgpu::TexelCopyBufferInfo{buffer:&buffer,layout:wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(5120),rows_per_image:Some(720)}},size);q.submit([enc.finish()]);
    let slice=buffer.slice(..);let(tx,rx)=std::sync::mpsc::channel();slice.map_async(wgpu::MapMode::Read,move|v|tx.send(v).unwrap());d.poll(wgpu::Maintain::Wait);rx.recv().unwrap().unwrap();let data=slice.get_mapped_range();let out=data.to_vec();drop(data);buffer.unmap();out
   };
+  if let Ok(root)=std::env::var("PRESSKIT_LAUNCHER_ASSETS"){
+   let bytes=std::fs::read(Path::new(&root).join("vector/launcher.pkv")).unwrap();
+   assert!(bytes.starts_with(b"PKL2"));
+   let mut launcher=presskit_renderer::launcher::LauncherArt::read(&bytes,&r,&d,&q).unwrap();
+   let normal=draw(&launcher.layers().collect::<Vec<_>>(),&[]);
+   let reference=image::open(Path::new(&root).join("launcher/1.png")).unwrap().into_rgba8();
+   assert_eq!(reference.dimensions(),(500,300));
+   let mut sum=0f64;
+   for y in 0..300usize{for x in 0..500usize{
+    let got=&normal[((210+y)*1280+390+x)*4..];let e=reference.get_pixel(x as u32,y as u32).0;
+    for c in 0..3{sum+=(f64::from(got[c])-f64::from(e[c])*f64::from(e[3])/255.).abs();}
+   }}
+   let mae=sum/(500.*300.*3.);eprintln!("native launcher MAE {mae:.4}/255");assert!(mae<1.5);
+   for selected in [1,2]{
+    launcher.update(&r,&q,selected,false);let hover=draw(&launcher.layers().collect::<Vec<_>>(),&[]);
+    launcher.update(&r,&q,selected,true);let down=draw(&launcher.layers().collect::<Vec<_>>(),&[]);
+    assert_ne!(hover,normal,"launcher hover bitmap state");assert_ne!(down,hover,"launcher press bitmap state");
+   }
+   launcher.update(&r,&q,0,false);assert_eq!(draw(&launcher.layers().collect::<Vec<_>>(),&[]),normal);
+  }
+  // Group alpha must be applied once, including when two opaque meshes overlap.
+  let a=r.layer(&d,&q,&[255,0,0,255],1,1,[100.,100.,100.,100.]);
+  let b=r.layer(&d,&q,&[255,0,0,255],1,1,[150.,100.,100.,100.]);
+  let span=presskit_renderer::FilterSpan{start:0,end:2,alpha:0.5,blur_y:0.};
+  let pixels=draw(&[&a,&b],&[span]);
+  let pixel=|x:usize,y:usize|pixels[(y*1280+x)*4];
+  assert!(pixel(125,125).abs_diff(128)<=1);assert!(pixel(175,125).abs_diff(128)<=1);
+  let blurred=draw(&[&a,&b],&[presskit_renderer::FilterSpan{blur_y:15.,..span}]);
+  assert!(blurred[(95*1280+175)*4]>0,"blur must extend above the original contour");
   let mut worst=(0u16,0.0f64);
   for frame in 1..=105u16{
    art.update(&r,&q,frame);art.update_menu(&r,&d,&q,0,false);let (layers,filters)=art.layers_and_filters();let got=draw(&layers,&filters);
