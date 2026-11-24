@@ -65,3 +65,6 @@ presskit	3144803	listen.onKeyDown	109	decompiled	src/gallery.cpp	37 prev 39 next
 presskit	3144962	previous_btn.onRelease	16	decompiled	src/gallery.cpp	call prevImage
 presskit	3145004	next_btn.onRelease	16	decompiled	src/gallery.cpp	call nextImage
 presskit	3145040	onEnterFrame	192	decompiled	src/media.cpp	bytes total/loaded; progress; alpha increment while <500
+presskit	485976	listener.complete	1	decompiled	src/timeline.cpp	play root timeline
+presskit	2724774	stopRoll2	1	decompiled	src/timeline.cpp	prevFrame while control persists until menu
+presskit	3141398	stopRoll2	1	decompiled	src/timeline.cpp	gallery copy prevFrame
