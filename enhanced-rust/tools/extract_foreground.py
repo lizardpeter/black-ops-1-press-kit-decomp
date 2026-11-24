@@ -40,6 +40,17 @@ def source(data, vector_menu=False):
                 d2=strip_labels(d2)
                 if struct.unpack_from('<H',d2)[0]==136:
                     d2=d2[:4]+b''.join(tag(k,v) for k,v in tags(d2,4) if not(k==26 and v[0]&2 and struct.unpack_from('<H',v,3)[0] in (118,132)))
+            if vector_menu and c==39 and struct.unpack_from('<H',d2)[0]==51:
+                # Retain the animated bitmap button at depth 1, but not the
+                # sidebar placement at depth 3, now rendered by the GPU.
+                kept=[];removed=0
+                for k,v in tags(d2,4):
+                    if k==70 and v[0]&2 and struct.unpack_from('<H',v,4)[0]==50:
+                        assert struct.unpack_from('<H',v,2)[0]==3;removed+=1;continue
+                    if k==28 and v==struct.pack('<H',3):removed+=1;continue
+                    kept.append(tag(k,v))
+                assert removed==2
+                d2=d2[:4]+b''.join(kept)
             defs.append(tag(c,d2))
         if c in (26,70):
             r=Bits(d);flags=r.u8();f2=r.u8() if c==70 else 0;depth=r.u16();old=live.get(depth) if flags&1 else None
@@ -193,7 +204,7 @@ def build(data,output,jar):
     variants=set()
     for frame in frames:
         for cid,_,alpha,flt,_ in frame:
-            if not alpha or cid in (50,51) or (cid in native and not flt) or (cid==115 and alpha==256 and not flt):continue
+            if not alpha or cid==50 or (cid in native and not flt) or (cid==115 and alpha==256 and not flt):continue
             parts=splits.get(cid) if cid==62 or (alpha==256 and not flt) else None
             if parts:
                 variants.update((cid,b'',key) for kind,key in parts if kind=='raster')
@@ -257,6 +268,9 @@ def build(data,output,jar):
                 x,y=mat[4:];blur=blur_y(flt)
                 if cid==51:
                     assert not flt
+                    a=assets[51,b'',51,(f-born)%4]
+                    if a is not None:
+                        idx,dx,dy=a;w,h=metadata[idx];placements.append((idx,x+20*dx,y+20*dy,w*20,h*20,alpha))
                     if (f-born)%4!=0:continue
                     x+=nested_x;y+=nested_y;blur=nested_blur
                 start=len(placements)

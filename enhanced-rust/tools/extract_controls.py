@@ -43,14 +43,17 @@ def tags(data):
         if c==0:break
     return out
 
-def edges(r,styles=None):
+def edges(r,styles=None,bitmap_fills=False):
     # Glyphs have an implicit solid fill 1; shapes provide explicit fill arrays.
     colors=[] if styles else [(0,0,0,255)];es={1:[]} if not styles else {};offset=0
     def read_styles():
         n=r.u8();n=r.u16() if n==255 and styles!=2 else n
         for _ in range(n):
-            if r.u8()!=0:raise ValueError('non-solid fill in visible control')
-            colors.append(tuple(r.u8() for _ in range(4 if styles==32 else 3)) + (() if styles==32 else (255,)));es[len(colors)]=[]
+            kind=r.u8()
+            if kind==0:colors.append(tuple(r.u8() for _ in range(4 if styles==32 else 3)) + (() if styles==32 else (255,)))
+            elif bitmap_fills and kind==0x43:colors.append(('bitmap',r.u16(),r.matrix()))
+            else:raise ValueError('non-solid fill in visible control')
+            es[len(colors)]=[]
         if r.u8():raise ValueError('stroke styles not supported in control subset')
         return r.read(4),r.read(4)
     nf,nl=read_styles() if styles else (r.read(4),r.read(4));x=y=0;f0=f1=0
