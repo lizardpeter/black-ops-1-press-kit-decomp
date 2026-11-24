@@ -193,6 +193,9 @@ def build(data,output,jar):
     from extract_menu import pack as pack_menu
     (output/'menu.pkm').write_bytes(pack_menu(data,frames))
     native,overlays,splits,extra=native_art(data,frames)
+    from extract_bitmap_art import extract as direct_art
+    bitmaps,solid_runs,static_roots=direct_art(data)
+    overlays.update(solid_runs)
     quit_states,wallpaper_states,wallpaper_places=native_buttons(data)
     from extract_sidebar import extract as sidebar_extract
     sidebar=sidebar_extract(data);nested_x,nested_y,nested_blur=nested_sidebar(data)
@@ -204,7 +207,7 @@ def build(data,output,jar):
     variants=set()
     for frame in frames:
         for cid,_,alpha,flt,_ in frame:
-            if not alpha or cid==50 or (cid in native and not flt) or (cid==115 and alpha==256 and not flt):continue
+            if not alpha or cid==50 or cid in static_roots or (cid in native and not flt) or (cid==115 and alpha==256 and not flt):continue
             parts=splits.get(cid) if cid==62 or (alpha==256 and not flt) else None
             if parts:
                 variants.update((cid,b'',key) for kind,key in parts if kind=='raster')
@@ -233,6 +236,9 @@ def build(data,output,jar):
             if digest not in digests:
                 idx=len(metadata);digests[digest]=idx;im.save(output/f'{idx}.png',optimize=True);metadata.append(im.size)
             assets[key]=(digests[digest],box[0]-ORIGIN[0],box[1]-ORIGIN[1])
+    bitmap_slots={}
+    for cid,im in sorted(bitmaps.items()):
+        idx=len(metadata);bitmap_slots[cid]=idx;metadata.append(im.size);im.save(output/f'{idx}.png',optimize=True)
     mesh_slots={};overlay_slots={};meshes=[]
     for table,dest in ((native,mesh_slots),(overlays,overlay_slots)):
         for cid,batches in sorted(table.items()):
@@ -261,6 +267,12 @@ def build(data,output,jar):
             if len(placements)>start and (alpha!=256 or blur):filters.append((start,len(placements),alpha,blur))
         for cid,mat,alpha,flt,born in frame:
             if not alpha:continue
+            if cid in static_roots:
+                start=len(placements)
+                for kind,key,x,y,w,h in static_roots[cid]:
+                    slot=bitmap_slots[key] if kind=='bitmap' else overlay_slots[key]
+                    placements.append((slot,mat[4]+x,mat[5]+y,w,h,256))
+                group(start,alpha,blur_y(flt));continue
             if cid in mesh_slots and not flt:
                 x,y=(0,0) if cid==77 else mat[4:]
                 placements.append((mesh_slots[cid],x,y,20,20,alpha));continue
