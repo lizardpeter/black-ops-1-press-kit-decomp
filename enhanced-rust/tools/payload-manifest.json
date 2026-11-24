@@ -1,0 +1,270 @@
+{
+  "version": 1,
+  "total_bytes": 409146676,
+  "files": [
+    {
+      "path": "BG/COD7-BG-_0000_WELCOME.jpg",
+      "size": 391567,
+      "etag": "faa01da1bd67148382124cff4789bf27",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "BG/COD7-BG-_0001_VIDEOS.jpg",
+      "size": 341959,
+      "etag": "6badf4683f764c79c30c7b430bb4cf2f",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "BG/COD7-BG-_0002_WALLPAPER.jpg",
+      "size": 378075,
+      "etag": "d519b811502ea1a6628f010f308f82b5",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "BG/COD7-BG-_0003_SCREENSHOTS.jpg",
+      "size": 383400,
+      "etag": "330cb74a198529c26e1b895cec0ab8b2",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "intro/IntroSeq.mp4",
+      "size": 20369224,
+      "etag": "1ea6607b940c698fc931136373cebeb2",
+      "content_type": "video/mp4"
+    },
+    {
+      "path": "movies/1.BlackOpsMPTeaser.mp4",
+      "size": 55961108,
+      "etag": "2e731e58c009be3a80c6b50186b96e02",
+      "content_type": "video/mp4"
+    },
+    {
+      "path": "movies/2.PrestigeEditionVideo.mp4",
+      "size": 30203862,
+      "etag": "bc0ad8094f1b0c38f2812ebb67b6dbaf",
+      "content_type": "video/mp4"
+    },
+    {
+      "path": "movies/4.UncutRevealTrailer.mp4",
+      "size": 63740177,
+      "etag": "bbb00dfc2426ad9243eb3add46675772",
+      "content_type": "video/mp4"
+    },
+    {
+      "path": "movies/5.DebutTeaseTrailer.mp4",
+      "size": 33208539,
+      "etag": "fee0d5ae74499c7b3950fd8144c83ac4",
+      "content_type": "video/mp4"
+    },
+    {
+      "path": "movies/6.Wagermatch.mp4",
+      "size": 117088094,
+      "etag": "0a72fba793d899379472b9d99bdbe034",
+      "content_type": "video/mp4"
+    },
+    {
+      "path": "screens/1.jpg",
+      "size": 408809,
+      "etag": "9f5a01b5197f06b7c900eb3be2b5ab51",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/10.jpg",
+      "size": 568942,
+      "etag": "1fe18c6e52ddd7bce0a88e0a8980a67b",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/11.jpg",
+      "size": 589518,
+      "etag": "fe6253c065b50504401e9cf1a8bcf11f",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/12.jpg",
+      "size": 745175,
+      "etag": "5b9ead491cfe310f203b62d00a80b7c4",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/13.jpg",
+      "size": 735374,
+      "etag": "ef78114883a68ed0e7888d1e81e625e2",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/14.jpg",
+      "size": 459825,
+      "etag": "c727b8d80d5d139fa4556d1740b20b78",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/15.jpg",
+      "size": 1044556,
+      "etag": "521665910be31e4d9da20b0411fe1bcc",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/16.jpg",
+      "size": 1083535,
+      "etag": "c304d2bb4bbefe35e5a95c2828273eac",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/17.jpg",
+      "size": 506111,
+      "etag": "5a99ac91d92a1164d33952dd6160166b",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/18.jpg",
+      "size": 590029,
+      "etag": "99d6bbfa86ce0e258f841c1c467032be",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/19.jpg",
+      "size": 646020,
+      "etag": "804d10423f5884e9a746303a9f1bf3f9",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/2.jpg",
+      "size": 336636,
+      "etag": "3627365cf9e71a3c1e5abb34e9326112",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/20.jpg",
+      "size": 593301,
+      "etag": "ed3ed970035cefc4474fcaf8cf3d5713",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/3.jpg",
+      "size": 532647,
+      "etag": "6c29a2f317df2aa5da367d33b5c9b164",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/4.jpg",
+      "size": 837021,
+      "etag": "8887d972dfc7d23f9b443cc0c424f22f",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/5.jpg",
+      "size": 522000,
+      "etag": "5db15093c58fae0b602b3bae277a9e1f",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/6.jpg",
+      "size": 521981,
+      "etag": "44317fb47e565ce643b29fa402b2c3b2",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/7.jpg",
+      "size": 350931,
+      "etag": "091a6085580342cd768f864bc574a95e",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/8.jpg",
+      "size": 612429,
+      "etag": "64772505b72613e10dd6e33ce767ea7b",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/9.jpg",
+      "size": 609673,
+      "etag": "294d1fbde57dc573ffe164b4f1c7fdf5",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "screens/screens.xml",
+      "size": 1045,
+      "etag": "7e30009c916a4f080cc28444eacfbcec",
+      "content_type": "text/xml; charset=utf-8"
+    },
+    {
+      "path": "sounds/8mmReel.wav",
+      "size": 6029648,
+      "etag": "d533724bd0f982055050668638cbd8ec",
+      "content_type": "audio/wav"
+    },
+    {
+      "path": "sounds/SingleBullet.wav",
+      "size": 79868,
+      "etag": "45615e6c8cf5da94079a73ccee74318c",
+      "content_type": "audio/wav"
+    },
+    {
+      "path": "sounds/explosion.wav",
+      "size": 610388,
+      "etag": "957890ab561ff599f8442385aede1cac",
+      "content_type": "audio/wav"
+    },
+    {
+      "path": "sounds/gunfight.wav",
+      "size": 63825092,
+      "etag": "534869f5ae2c2ff61b470d8e4064bc8a",
+      "content_type": "audio/wav"
+    },
+    {
+      "path": "sounds/reload.wav",
+      "size": 195410,
+      "etag": "21df57fcd99c673768a887f16b7cf644",
+      "content_type": "audio/wav"
+    },
+    {
+      "path": "wallpaper/1024x768/COD7-Wallpaper-1024x768.jpg",
+      "size": 314038,
+      "etag": "6f95e1efb7035c25cdf765f169136770",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "wallpaper/1280x1024/COD7-Wallpaper-1280x1024.jpg",
+      "size": 471718,
+      "etag": "7d7ccebf85475a47d51d52f64b734185",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "wallpaper/1280x800/COD7-Wallpaper-1280x800.jpg",
+      "size": 379367,
+      "etag": "0ee06cb0457c89c20241f6889eb985a9",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "wallpaper/1440x900/COD7-Wallpaper-1440x900.jpg",
+      "size": 384840,
+      "etag": "ddfad65a6735a24ed421c7e76723df88",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "wallpaper/1600x1200/COD7-Wallpaper-1600x1200.jpg",
+      "size": 536038,
+      "etag": "c68b9e440ddd1055926316a82753ba0c",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "wallpaper/1680x1050/COD7-Wallpaper-1680x1050.jpg",
+      "size": 490751,
+      "etag": "54645ab6eee917ce8e7f8c3694d542d7",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "wallpaper/1920x1200/COD7-Wallpaper-1920x1200.jpg",
+      "size": 600974,
+      "etag": "402dc31550c4849bcbb7a8392db5663e",
+      "content_type": "image/jpeg"
+    },
+    {
+      "path": "wallpaper/2560x1440/COD7-Wallpaper-2560x1440.jpg",
+      "size": 866981,
+      "etag": "42a9a43811db7c39c30b7c8f8e8faf0046",
+      "content_type": "image/jpeg"
+    }
+  ]
+}

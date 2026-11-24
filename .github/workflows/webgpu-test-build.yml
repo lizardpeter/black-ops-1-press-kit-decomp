@@ -16,10 +16,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: black-ops-1-webgpu-pages
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -79,7 +83,7 @@ jobs:
           sound_export(root/'originals/presskit.swf', root/'reference/art/sounds')
           PY
 
-      - name: Build compact runtime artwork without copying the R2 payload
+      - name: Build compact runtime artwork without copying external media
         run: |
           python enhanced-rust/tools/prepare_compact_assets.py \
             "$RUNNER_TEMP/originals/presskit.swf" \
@@ -90,15 +94,25 @@ jobs:
           mkdir -p enhanced-rust/web/assets
           cp -a "$RUNNER_TEMP/runtime/art" enhanced-rust/web/assets/
 
+      - name: Download and verify all 44 original R2 payload files
+        working-directory: enhanced-rust
+        run: |
+          python tools/test_fetch_payload.py
+          python tools/fetch_payload.py \
+            --manifest tools/payload-manifest.json \
+            --destination web/assets/payload \
+            --base-url https://r2.houseofkublai.com/bo1-press-kit/payload/ \
+            --workers 6
+
       - name: Compile Rust application to WebAssembly and test
         working-directory: enhanced-rust
         env:
-          PRESSKIT_FG_ASSETS: ${{ runner.temp }}/runtime/art/foreground-source
+          PRESSKIT_FG_ASSETS: ${ runner.temp }}/runtime/art/foreground-source
         run: |
           sh tools/build_web.sh
           node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/wasm-core.test.mjs
 
-      - name: Assemble static website
+      - name: Assemble self-contained static website
         working-directory: enhanced-rust
         run: |
           rm -rf dist
@@ -108,18 +122,69 @@ jobs:
           cp -a web/assets dist/assets
           touch dist/.nojekyll
           {
-            echo "Black Ops press kit — Rust/WebGPU browser build"
+            echo "Black Ops press kit — Rust/WebGPU self-contained browser build"
             echo "Commit: $GITHUB_SHA"
-            echo "Original media: https://r2.houseofkublai.com/bo1-press-kit/payload/"
-            echo "This is a static website root. Host the directory over HTTPS; no local server or proxy is included."
+            echo "Original payload: 44 files / 409,146,676 bytes"
+            echo "All media is same-origin and loaded on demand; no runtime R2 requests."
           } > dist/BUILD_INFO.txt
-          du -sh dist
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('dist')
+          total=sum(p.stat().st_size for p in root.rglob('*') if p.is_file())
+          print(f'Static site size: {total:,} bytes ({total/1048576:.2f} MiB)')
+          if total >= 1_000_000_000:
+              raise SystemExit('GitHub Pages 1 GB site limit exceeded')
+          payload=list((root/'assets/payload').rglob('*'))
+          files=[p for p in payload if p.is_file()]
+          if len(files)!=44:
+              raise SystemExit(f'Expected 44 original payload files, found {len(files)}')
+          PY
           find dist -type f | wc -l
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload self-contained browser build
+        uses: actions/upload-artifact@v4
         with:
-          name: webgpu-test-build
+          name: webgpu-self-contained-site
           path: enhanced-rust/dist/
           if-no-files-found: error
-          retention-days: 14
-          compression-level: 6
+          retention-days: 30
+          compression-level: 0
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download the exact tested site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: webgpu-self-contained-site
+          path: site
+
+      - name: Check GitHub Pages configuration
+        id: pages
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+
+      - name: Package site for GitHub Pages
+        if: steps.pages.outcome == 'success'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - name: Deploy website
+        if: steps.pages.outcome == 'success'
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Explain one-time Pages setting if not enabled
+        if: steps.pages.outcome != 'success'
+        run: |
+          echo "::notice title=GitHub Pages needs enabling::Open repository Settings → Pages → Build and deployment → Source, choose GitHub Actions, then rerun this workflow. The self-contained ZIP artifact is already available."
