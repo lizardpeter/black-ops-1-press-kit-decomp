@@ -1,0 +1,17 @@
+{"id": 1, "code": 21, "offset": 1810, "size": 38623, "scope": "root"}
+{"id": 2, "code": 2, "offset": 40439, "size": 42, "scope": "root", "bounds_twips": [0, 10000, 0, 6000]}
+{"id": 3, "code": 39, "offset": 40487, "size": 16, "scope": "root"}
+{"id": 4, "code": 39, "offset": 40530, "size": 8, "scope": "root"}
+{"id": 5, "code": 2, "offset": 40562, "size": 49, "scope": "root", "bounds_twips": [980, 8940, 4520, 5060]}
+{"id": 6, "code": 35, "offset": 40627, "size": 7468, "scope": "root"}
+{"id": 7, "code": 2, "offset": 48101, "size": 39, "scope": "root", "bounds_twips": [0, 3760, 0, 1080]}
+{"id": 8, "code": 34, "offset": 48146, "size": 30, "scope": "root"}
+{"id": 9, "code": 75, "offset": 48221, "size": 1303, "scope": "root"}
+{"id": 10, "code": 11, "offset": 49785, "size": 161, "scope": "root"}
+{"id": 11, "code": 35, "offset": 49970, "size": 5465, "scope": "root"}
+{"id": 12, "code": 2, "offset": 55441, "size": 40, "scope": "root", "bounds_twips": [0, 4140, 0, 1100]}
+{"id": 13, "code": 39, "offset": 55487, "size": 16, "scope": "root"}
+{"id": 14, "code": 75, "offset": 55509, "size": 637, "scope": "root"}
+{"id": 15, "code": 11, "offset": 56370, "size": 46, "scope": "root"}
+{"id": 16, "code": 11, "offset": 56440, "size": 44, "scope": "root"}
+{"id": 17, "code": 39, "offset": 56508, "size": 60, "scope": "root"}

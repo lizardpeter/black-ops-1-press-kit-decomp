@@ -1,0 +1,240 @@
+{"id": 1, "code": 14, "offset": 1322, "size": 480697, "scope": "root"}
+{"id": 2, "code": 14, "offset": 482044, "size": 1985, "scope": "root"}
+{"id": 4, "code": 2, "offset": 484052, "size": 33, "scope": "root", "bounds_twips": [0, 2000, 0, 2000]}
+{"id": 5, "code": 39, "offset": 484091, "size": 16, "scope": "root"}
+{"id": 6, "code": 60, "offset": 484113, "size": 10, "scope": "root"}
+{"id": 7, "code": 39, "offset": 484129, "size": 23, "scope": "root"}
+{"id": 8, "code": 20, "offset": 484180, "size": 1374, "scope": "root"}
+{"id": 9, "code": 2, "offset": 485560, "size": 37, "scope": "root", "bounds_twips": [0, 900, 0, 900]}
+{"id": 10, "code": 39, "offset": 485603, "size": 16, "scope": "root"}
+{"id": 11, "code": 39, "offset": 485640, "size": 82, "scope": "root"}
+{"id": 3, "code": 39, "offset": 486753, "size": 6, "scope": "root"}
+{"id": 12, "code": 39, "offset": 518982, "size": 6, "scope": "root"}
+{"id": 13, "code": 39, "offset": 550641, "size": 6, "scope": "root"}
+{"id": 14, "code": 39, "offset": 550907, "size": 6, "scope": "root"}
+{"id": 15, "code": 39, "offset": 552658, "size": 6, "scope": "root"}
+{"id": 16, "code": 39, "offset": 553891, "size": 6, "scope": "root"}
+{"id": 17, "code": 39, "offset": 584876, "size": 6, "scope": "root"}
+{"id": 18, "code": 39, "offset": 585512, "size": 6, "scope": "root"}
+{"id": 19, "code": 39, "offset": 590792, "size": 6, "scope": "root"}
+{"id": 20, "code": 39, "offset": 593496, "size": 6, "scope": "root"}
+{"id": 21, "code": 39, "offset": 607245, "size": 6, "scope": "root"}
+{"id": 22, "code": 35, "offset": 620746, "size": 17969, "scope": "root"}
+{"id": 23, "code": 2, "offset": 638721, "size": 43, "scope": "root", "bounds_twips": [0, 5420, 0, 40000]}
+{"id": 24, "code": 34, "offset": 638770, "size": 13, "scope": "root"}
+{"id": 25, "code": 2, "offset": 638789, "size": 34, "scope": "root", "bounds_twips": [12560, 15080, 0, 620]}
+{"id": 26, "code": 35, "offset": 638829, "size": 7468, "scope": "root"}
+{"id": 27, "code": 2, "offset": 646303, "size": 39, "scope": "root", "bounds_twips": [0, 3760, 0, 1080]}
+{"id": 28, "code": 14, "offset": 646348, "size": 1049, "scope": "root"}
+{"id": 29, "code": 34, "offset": 647403, "size": 30, "scope": "root"}
+{"id": 30, "code": 75, "offset": 647466, "size": 6051, "scope": "root"}
+{"id": 31, "code": 11, "offset": 654761, "size": 50, "scope": "root"}
+{"id": 32, "code": 75, "offset": 654835, "size": 1503, "scope": "root"}
+{"id": 33, "code": 11, "offset": 656619, "size": 119, "scope": "root"}
+{"id": 34, "code": 35, "offset": 656762, "size": 28106, "scope": "root"}
+{"id": 35, "code": 2, "offset": 684874, "size": 54, "scope": "root", "bounds_twips": [0, 3760, 2160, 6480]}
+{"id": 36, "code": 34, "offset": 684934, "size": 41, "scope": "root"}
+{"id": 37, "code": 6, "offset": 685014, "size": 11990, "scope": "root"}
+{"id": 38, "code": 2, "offset": 697010, "size": 54, "scope": "root", "bounds_twips": [0, 3760, 2160, 6480]}
+{"id": 39, "code": 34, "offset": 697070, "size": 41, "scope": "root"}
+{"id": 40, "code": 35, "offset": 697144, "size": 29183, "scope": "root"}
+{"id": 41, "code": 2, "offset": 726333, "size": 54, "scope": "root", "bounds_twips": [0, 3760, 2160, 6480]}
+{"id": 42, "code": 34, "offset": 726393, "size": 41, "scope": "root"}
+{"id": 43, "code": 35, "offset": 726467, "size": 5465, "scope": "root"}
+{"id": 44, "code": 2, "offset": 731938, "size": 40, "scope": "root", "bounds_twips": [0, 4140, 0, 1100]}
+{"id": 45, "code": 39, "offset": 731984, "size": 22, "scope": "root"}
+{"id": 46, "code": 75, "offset": 732012, "size": 1287, "scope": "root"}
+{"id": 47, "code": 11, "offset": 733521, "size": 27, "scope": "root"}
+{"id": 48, "code": 75, "offset": 733572, "size": 6580, "scope": "root"}
+{"id": 49, "code": 11, "offset": 741316, "size": 61, "scope": "root"}
+{"id": 50, "code": 39, "offset": 741401, "size": 249, "scope": "root"}
+{"id": 51, "code": 39, "offset": 741656, "size": 156, "scope": "root"}
+{"id": 52, "code": 14, "offset": 741832, "size": 136561, "scope": "root"}
+{"id": 53, "code": 39, "offset": 878995, "size": 22, "scope": "root"}
+{"id": 54, "code": 75, "offset": 879087, "size": 273, "scope": "root"}
+{"id": 55, "code": 11, "offset": 879446, "size": 1153, "scope": "root"}
+{"id": 56, "code": 35, "offset": 880623, "size": 388, "scope": "root"}
+{"id": 57, "code": 2, "offset": 881017, "size": 32, "scope": "root", "bounds_twips": [0, 160, 0, 160]}
+{"id": 58, "code": 39, "offset": 881055, "size": 22, "scope": "root"}
+{"id": 59, "code": 35, "offset": 881083, "size": 403, "scope": "root"}
+{"id": 60, "code": 2, "offset": 881492, "size": 31, "scope": "root", "bounds_twips": [0, 320, 0, 60]}
+{"id": 61, "code": 39, "offset": 881529, "size": 22, "scope": "root"}
+{"id": 62, "code": 39, "offset": 881557, "size": 47, "scope": "root"}
+{"id": 63, "code": 21, "offset": 882323, "size": 391569, "scope": "root"}
+{"id": 64, "code": 2, "offset": 1273898, "size": 42, "scope": "root", "bounds_twips": [0, 25600, 0, 14400]}
+{"id": 65, "code": 39, "offset": 1273946, "size": 22, "scope": "root"}
+{"id": 66, "code": 21, "offset": 1273974, "size": 341961, "scope": "root"}
+{"id": 67, "code": 2, "offset": 1615941, "size": 42, "scope": "root", "bounds_twips": [0, 25600, 0, 14400]}
+{"id": 68, "code": 39, "offset": 1615989, "size": 22, "scope": "root"}
+{"id": 69, "code": 21, "offset": 1616017, "size": 378077, "scope": "root"}
+{"id": 70, "code": 2, "offset": 1994100, "size": 42, "scope": "root", "bounds_twips": [0, 25600, 0, 14400]}
+{"id": 71, "code": 39, "offset": 1994148, "size": 22, "scope": "root"}
+{"id": 72, "code": 21, "offset": 1994176, "size": 383402, "scope": "root"}
+{"id": 73, "code": 2, "offset": 2377584, "size": 42, "scope": "root", "bounds_twips": [0, 25600, 0, 14400]}
+{"id": 74, "code": 39, "offset": 2377632, "size": 22, "scope": "root"}
+{"id": 75, "code": 39, "offset": 2377660, "size": 2064, "scope": "root"}
+{"id": 76, "code": 2, "offset": 2379747, "size": 31, "scope": "root", "bounds_twips": [0, 1740, 0, 580]}
+{"id": 77, "code": 39, "offset": 2379784, "size": 33, "scope": "root"}
+{"id": 78, "code": 35, "offset": 2380034, "size": 11086, "scope": "root"}
+{"id": 79, "code": 2, "offset": 2391126, "size": 38, "scope": "root", "bounds_twips": [0, 12740, 0, 11660]}
+{"id": 80, "code": 39, "offset": 2391170, "size": 22, "scope": "root"}
+{"id": 81, "code": 35, "offset": 2391571, "size": 4362, "scope": "root"}
+{"id": 82, "code": 2, "offset": 2395939, "size": 41, "scope": "root", "bounds_twips": [0, 12740, 0, 1920]}
+{"id": 83, "code": 39, "offset": 2395986, "size": 22, "scope": "root"}
+{"id": 84, "code": 35, "offset": 2396014, "size": 1263, "scope": "root"}
+{"id": 85, "code": 22, "offset": 2397283, "size": 207, "scope": "root", "bounds_twips": [0, 660, 0, 660]}
+{"id": 86, "code": 39, "offset": 2397496, "size": 22, "scope": "root"}
+{"id": 87, "code": 35, "offset": 2397524, "size": 1457, "scope": "root"}
+{"id": 88, "code": 2, "offset": 2398987, "size": 37, "scope": "root", "bounds_twips": [0, 1280, 0, 400]}
+{"id": 89, "code": 39, "offset": 2399030, "size": 22, "scope": "root"}
+{"id": 90, "code": 35, "offset": 2399058, "size": 1499, "scope": "root"}
+{"id": 91, "code": 2, "offset": 2400563, "size": 37, "scope": "root", "bounds_twips": [0, 1420, 0, 360]}
+{"id": 92, "code": 39, "offset": 2400606, "size": 22, "scope": "root"}
+{"id": 93, "code": 35, "offset": 2400634, "size": 4512, "scope": "root"}
+{"id": 94, "code": 2, "offset": 2405152, "size": 39, "scope": "root", "bounds_twips": [0, 6680, 0, 380]}
+{"id": 95, "code": 39, "offset": 2405197, "size": 22, "scope": "root"}
+{"id": 96, "code": 39, "offset": 2405225, "size": 68, "scope": "root"}
+{"id": 97, "code": 35, "offset": 2405342, "size": 11502, "scope": "root"}
+{"id": 98, "code": 2, "offset": 2416850, "size": 38, "scope": "root", "bounds_twips": [0, 12060, 0, 10100]}
+{"id": 99, "code": 39, "offset": 2416894, "size": 22, "scope": "root"}
+{"id": 100, "code": 35, "offset": 2417186, "size": 4708, "scope": "root"}
+{"id": 101, "code": 2, "offset": 2421900, "size": 38, "scope": "root", "bounds_twips": [0, 11460, 0, 9660]}
+{"id": 102, "code": 39, "offset": 2421944, "size": 22, "scope": "root"}
+{"id": 103, "code": 6, "offset": 2421972, "size": 47561, "scope": "root"}
+{"id": 104, "code": 2, "offset": 2469539, "size": 38, "scope": "root", "bounds_twips": [0, 11420, 0, 9620]}
+{"id": 105, "code": 39, "offset": 2469583, "size": 22, "scope": "root"}
+{"id": 106, "code": 39, "offset": 2469611, "size": 32, "scope": "root"}
+{"id": 107, "code": 35, "offset": 2469649, "size": 31218, "scope": "root"}
+{"id": 108, "code": 2, "offset": 2500873, "size": 40, "scope": "root", "bounds_twips": [0, 6260, 0, 3080]}
+{"id": 109, "code": 39, "offset": 2500919, "size": 22, "scope": "root"}
+{"id": 110, "code": 11, "offset": 2500947, "size": 41, "scope": "root"}
+{"id": 111, "code": 39, "offset": 2501012, "size": 51, "scope": "root"}
+{"id": 112, "code": 83, "offset": 2501450, "size": 54, "scope": "root", "bounds_twips": [-10, 311, -10, 311]}
+{"id": 113, "code": 83, "offset": 2501510, "size": 48, "scope": "root", "bounds_twips": [-10, 311, -10, 311]}
+{"id": 114, "code": 83, "offset": 2501564, "size": 86, "scope": "root", "bounds_twips": [-10, 311, -10, 311]}
+{"id": 115, "code": 34, "offset": 2501656, "size": 27, "scope": "root"}
+{"id": 116, "code": 32, "offset": 2501765, "size": 32, "scope": "root", "bounds_twips": [0, 1740, 0, 580]}
+{"id": 117, "code": 32, "offset": 2501803, "size": 32, "scope": "root", "bounds_twips": [0, 1740, 0, 580]}
+{"id": 118, "code": 34, "offset": 2501841, "size": 27, "scope": "root"}
+{"id": 119, "code": 11, "offset": 2501901, "size": 60, "scope": "root"}
+{"id": 120, "code": 6, "offset": 2501985, "size": 304, "scope": "root"}
+{"id": 121, "code": 2, "offset": 2502295, "size": 38, "scope": "root", "bounds_twips": [0, 3440, 0, 20]}
+{"id": 122, "code": 39, "offset": 2502339, "size": 22, "scope": "root"}
+{"id": 123, "code": 11, "offset": 2502367, "size": 62, "scope": "root"}
+{"id": 124, "code": 11, "offset": 2502453, "size": 27, "scope": "root"}
+{"id": 125, "code": 11, "offset": 2502504, "size": 113, "scope": "root"}
+{"id": 126, "code": 6, "offset": 2502641, "size": 338, "scope": "root"}
+{"id": 127, "code": 2, "offset": 2502985, "size": 40, "scope": "root", "bounds_twips": [0, 10600, 0, 20]}
+{"id": 128, "code": 39, "offset": 2503031, "size": 22, "scope": "root"}
+{"id": 129, "code": 11, "offset": 2503059, "size": 62, "scope": "root"}
+{"id": 130, "code": 11, "offset": 2503145, "size": 64, "scope": "root"}
+{"id": 131, "code": 11, "offset": 2503233, "size": 64, "scope": "root"}
+{"id": 132, "code": 2, "offset": 2503321, "size": 35, "scope": "root", "bounds_twips": [120, 10720, 1880, 7840]}
+{"id": 133, "code": 21, "offset": 2503362, "size": 85635, "scope": "root"}
+{"id": 134, "code": 2, "offset": 2589003, "size": 55, "scope": "root", "bounds_twips": [260, 10580, 2020, 7700]}
+{"id": 135, "code": 11, "offset": 2589064, "size": 349, "scope": "root"}
+{"id": 136, "code": 39, "offset": 2589437, "size": 441, "scope": "root"}
+{"id": 137, "code": 21, "offset": 2590810, "size": 21383, "scope": "root"}
+{"id": 138, "code": 21, "offset": 2612199, "size": 25687, "scope": "root"}
+{"id": 139, "code": 21, "offset": 2637892, "size": 23292, "scope": "root"}
+{"id": 140, "code": 21, "offset": 2661190, "size": 30117, "scope": "root"}
+{"id": 141, "code": 21, "offset": 2691313, "size": 26732, "scope": "root"}
+{"id": 142, "code": 22, "offset": 2718051, "size": 235, "scope": "root", "bounds_twips": [123, 10723, 3300, 8680]}
+{"id": 143, "code": 11, "offset": 2718292, "size": 51, "scope": "root"}
+{"id": 144, "code": 11, "offset": 2718367, "size": 27, "scope": "root"}
+{"id": 145, "code": 11, "offset": 2718418, "size": 41, "scope": "root"}
+{"id": 146, "code": 11, "offset": 2718483, "size": 61, "scope": "root"}
+{"id": 147, "code": 11, "offset": 2718568, "size": 67, "scope": "root"}
+{"id": 148, "code": 11, "offset": 2718659, "size": 62, "scope": "root"}
+{"id": 149, "code": 11, "offset": 2718745, "size": 60, "scope": "root"}
+{"id": 150, "code": 32, "offset": 2718829, "size": 74, "scope": "root", "bounds_twips": [0, 3440, 0, 1920]}
+{"id": 151, "code": 2, "offset": 2718909, "size": 48, "scope": "root", "bounds_twips": [0, 3440, 0, 1920]}
+{"id": 152, "code": 32, "offset": 2718963, "size": 74, "scope": "root", "bounds_twips": [0, 3440, 0, 1920]}
+{"id": 153, "code": 22, "offset": 2719043, "size": 72, "scope": "root", "bounds_twips": [0, 3440, 0, 1920]}
+{"id": 154, "code": 14, "offset": 2719121, "size": 5105, "scope": "root"}
+{"id": 155, "code": 34, "offset": 2724232, "size": 34, "scope": "root"}
+{"id": 156, "code": 11, "offset": 2724308, "size": 60, "scope": "root"}
+{"id": 157, "code": 39, "offset": 2724392, "size": 247, "scope": "root"}
+{"id": 158, "code": 32, "offset": 2725233, "size": 33, "scope": "root", "bounds_twips": [0, 2000, 0, 2000]}
+{"id": 159, "code": 39, "offset": 2725272, "size": 22, "scope": "root"}
+{"id": 160, "code": 2, "offset": 2728226, "size": 47, "scope": "root", "bounds_twips": [0, 17600, 1220, 1320]}
+{"id": 161, "code": 22, "offset": 2728279, "size": 76, "scope": "root", "bounds_twips": [0, 1320, 0, 620]}
+{"id": 162, "code": 39, "offset": 2728361, "size": 22, "scope": "root"}
+{"id": 163, "code": 32, "offset": 2728417, "size": 32, "scope": "root", "bounds_twips": [0, 1320, 0, 620]}
+{"id": 164, "code": 39, "offset": 2728455, "size": 22, "scope": "root"}
+{"id": 165, "code": 22, "offset": 2728513, "size": 76, "scope": "root", "bounds_twips": [0, 1320, 0, 620]}
+{"id": 166, "code": 39, "offset": 2728595, "size": 22, "scope": "root"}
+{"id": 167, "code": 22, "offset": 2728649, "size": 76, "scope": "root", "bounds_twips": [0, 1320, 0, 620]}
+{"id": 168, "code": 39, "offset": 2728731, "size": 22, "scope": "root"}
+{"id": 169, "code": 39, "offset": 2728785, "size": 306, "scope": "root"}
+{"id": 170, "code": 22, "offset": 2729119, "size": 54, "scope": "root", "bounds_twips": [0, 1320, 0, 620]}
+{"id": 171, "code": 39, "offset": 2729179, "size": 22, "scope": "root"}
+{"id": 172, "code": 22, "offset": 2729234, "size": 54, "scope": "root", "bounds_twips": [0, 1320, 0, 620]}
+{"id": 173, "code": 39, "offset": 2729294, "size": 22, "scope": "root"}
+{"id": 174, "code": 22, "offset": 2729347, "size": 54, "scope": "root", "bounds_twips": [0, 1320, 0, 620]}
+{"id": 175, "code": 39, "offset": 2729407, "size": 22, "scope": "root"}
+{"id": 176, "code": 39, "offset": 2729460, "size": 22, "scope": "root"}
+{"id": 177, "code": 39, "offset": 2729517, "size": 302, "scope": "root"}
+{"id": 178, "code": 39, "offset": 2729846, "size": 55, "scope": "root"}
+{"id": 179, "code": 32, "offset": 2729933, "size": 36, "scope": "root", "bounds_twips": [0, 17440, 0, 200]}
+{"id": 180, "code": 39, "offset": 2729975, "size": 22, "scope": "root"}
+{"id": 181, "code": 2, "offset": 2730029, "size": 31, "scope": "root", "bounds_twips": [0, 1500, 0, 200]}
+{"id": 182, "code": 39, "offset": 2730066, "size": 48, "scope": "root"}
+{"id": 183, "code": 39, "offset": 2730144, "size": 214, "scope": "root"}
+{"id": 184, "code": 22, "offset": 2730382, "size": 65, "scope": "root", "bounds_twips": [0, 2059, 0, 620]}
+{"id": 185, "code": 11, "offset": 2730453, "size": 39, "scope": "root"}
+{"id": 186, "code": 32, "offset": 2730516, "size": 115, "scope": "root", "bounds_twips": [0, 2059, 0, 620]}
+{"id": 187, "code": 32, "offset": 2730637, "size": 115, "scope": "root", "bounds_twips": [0, 2059, 0, 620]}
+{"id": 188, "code": 22, "offset": 2730758, "size": 169, "scope": "root", "bounds_twips": [0, 2059, 0, 620]}
+{"id": 189, "code": 34, "offset": 2730933, "size": 44, "scope": "root"}
+{"id": 190, "code": 37, "offset": 2731010, "size": 160, "scope": "root"}
+{"id": 191, "code": 39, "offset": 2731194, "size": 116, "scope": "root"}
+{"id": 192, "code": 21, "offset": 2731380, "size": 18202, "scope": "root"}
+{"id": 193, "code": 21, "offset": 2749588, "size": 19423, "scope": "root"}
+{"id": 194, "code": 21, "offset": 2769017, "size": 15739, "scope": "root"}
+{"id": 195, "code": 21, "offset": 2784762, "size": 19409, "scope": "root"}
+{"id": 196, "code": 21, "offset": 2804177, "size": 20743, "scope": "root"}
+{"id": 197, "code": 21, "offset": 2824926, "size": 22156, "scope": "root"}
+{"id": 198, "code": 21, "offset": 2847088, "size": 18569, "scope": "root"}
+{"id": 199, "code": 21, "offset": 2865663, "size": 21649, "scope": "root"}
+{"id": 200, "code": 21, "offset": 2887318, "size": 15941, "scope": "root"}
+{"id": 201, "code": 21, "offset": 2903265, "size": 23381, "scope": "root"}
+{"id": 202, "code": 21, "offset": 2926652, "size": 21173, "scope": "root"}
+{"id": 203, "code": 21, "offset": 2947831, "size": 19269, "scope": "root"}
+{"id": 204, "code": 21, "offset": 2967106, "size": 22700, "scope": "root"}
+{"id": 205, "code": 21, "offset": 2989812, "size": 22629, "scope": "root"}
+{"id": 206, "code": 21, "offset": 3012447, "size": 18403, "scope": "root"}
+{"id": 207, "code": 21, "offset": 3030856, "size": 24129, "scope": "root"}
+{"id": 208, "code": 21, "offset": 3054991, "size": 21973, "scope": "root"}
+{"id": 209, "code": 21, "offset": 3076970, "size": 22557, "scope": "root"}
+{"id": 210, "code": 21, "offset": 3099533, "size": 21738, "scope": "root"}
+{"id": 211, "code": 21, "offset": 3121277, "size": 17905, "scope": "root"}
+{"id": 212, "code": 22, "offset": 3139188, "size": 909, "scope": "root", "bounds_twips": [123, 10723, 2300, 9800]}
+{"id": 213, "code": 11, "offset": 3140103, "size": 28, "scope": "root"}
+{"id": 214, "code": 11, "offset": 3140155, "size": 84, "scope": "root"}
+{"id": 215, "code": 11, "offset": 3140263, "size": 54, "scope": "root"}
+{"id": 216, "code": 32, "offset": 3140341, "size": 72, "scope": "root", "bounds_twips": [0, 2040, 0, 1800]}
+{"id": 217, "code": 2, "offset": 3140419, "size": 46, "scope": "root", "bounds_twips": [0, 2040, 0, 1800]}
+{"id": 218, "code": 32, "offset": 3140471, "size": 72, "scope": "root", "bounds_twips": [0, 2040, 0, 1800]}
+{"id": 219, "code": 34, "offset": 3140549, "size": 34, "scope": "root"}
+{"id": 220, "code": 39, "offset": 3140616, "size": 548, "scope": "root"}
+{"id": 221, "code": 32, "offset": 3145248, "size": 39, "scope": "root", "bounds_twips": [0, 38400, 0, 21600]}
+{"id": 222, "code": 39, "offset": 3145293, "size": 22, "scope": "root"}
+{"id": 223, "code": 22, "offset": 3145349, "size": 115, "scope": "root", "bounds_twips": [0, 17600, 0, 1320]}
+{"id": 224, "code": 22, "offset": 3145470, "size": 91, "scope": "root", "bounds_twips": [0, 2240, 0, 620]}
+{"id": 225, "code": 11, "offset": 3145567, "size": 32, "scope": "root"}
+{"id": 226, "code": 32, "offset": 3145623, "size": 59, "scope": "root", "bounds_twips": [0, 2240, 0, 620]}
+{"id": 227, "code": 32, "offset": 3145688, "size": 59, "scope": "root", "bounds_twips": [0, 2240, 0, 620]}
+{"id": 228, "code": 22, "offset": 3145753, "size": 109, "scope": "root", "bounds_twips": [0, 2240, 0, 620]}
+{"id": 229, "code": 75, "offset": 3145868, "size": 555, "scope": "root"}
+{"id": 230, "code": 11, "offset": 3146600, "size": 30, "scope": "root"}
+{"id": 231, "code": 34, "offset": 3146654, "size": 54, "scope": "root"}
+{"id": 232, "code": 22, "offset": 3146741, "size": 91, "scope": "root", "bounds_twips": [0, 2292, 0, 620]}
+{"id": 233, "code": 11, "offset": 3146838, "size": 32, "scope": "root"}
+{"id": 234, "code": 32, "offset": 3146894, "size": 60, "scope": "root", "bounds_twips": [0, 2292, 0, 620]}
+{"id": 235, "code": 32, "offset": 3146960, "size": 60, "scope": "root", "bounds_twips": [0, 2292, 0, 620]}
+{"id": 236, "code": 22, "offset": 3147026, "size": 109, "scope": "root", "bounds_twips": [0, 2292, 0, 620]}
+{"id": 237, "code": 11, "offset": 3147141, "size": 30, "scope": "root"}
+{"id": 238, "code": 34, "offset": 3147195, "size": 54, "scope": "root"}
+{"id": 239, "code": 37, "offset": 3147282, "size": 148, "scope": "root"}
+{"id": 240, "code": 39, "offset": 3147436, "size": 132, "scope": "root"}

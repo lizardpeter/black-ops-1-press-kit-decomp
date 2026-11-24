@@ -1,0 +1,10 @@
+{
+  "bounds_twips": [
+    0,
+    25600,
+    0,
+    14400
+  ],
+  "errors": [],
+  "coverage": "PlaceObject2/3, RemoveObject2, root and sprite frames, affine/color transforms; filter and clip-action payloads not interpreted"
+}

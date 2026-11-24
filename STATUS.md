@@ -64,4 +64,4 @@ Native projector analysis is independent.
 | medium | 0 | 0 | 1 |
 | low | 0 | 0 | 0 |
 
-1 findings: 1 logic.
+1 findings: logic 1.
