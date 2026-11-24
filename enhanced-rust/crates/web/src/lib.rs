@@ -2,6 +2,7 @@
 use presskit_core::{App,Effect,Hit,Scene,Stage,flash_time};
 use presskit_renderer::{Layer,Renderer};
 use presskit_renderer::background::{BackgroundArt,BackgroundTimeline};
+use presskit_renderer::foreground::{ForegroundArt,ForegroundTimeline};
 use presskit_renderer::control_pack::{ControlPack,ControlCache,ControlVisual};
 use presskit_core::assets::AssetPlan;
 use wasm_bindgen::prelude::*;
@@ -16,7 +17,7 @@ fn pair(kind:&str,value:&str)->Array{Array::of2(&kind.into(),&value.into())}
 pub struct WebPlayer{
     app:App,canvas:HtmlCanvasElement,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,
     config:wgpu::SurfaceConfiguration,renderer:Renderer,images:HashMap<String,(Layer,u64)>,video:Option<Layer>,
-    photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,background:Option<BackgroundArt>,pack:Option<ControlPack>,controls:ControlCache,mouse:Option<(f64,f64)>,pressed:bool,
+    photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,pack:Option<ControlPack>,controls:ControlCache,mouse:Option<(f64,f64)>,pressed:bool,
 }
 #[wasm_bindgen]
 impl WebPlayer{
@@ -30,7 +31,7 @@ impl WebPlayer{
         if render_format!=config.format{config.view_formats.push(render_format);}
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,render_format,VS,FS,"vertexMain","fragmentMain");
-        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,pack:None,controls:ControlCache::default(),mouse:None,pressed:false})
+        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,controls:ControlCache::default(),mouse:None,pressed:false})
     }
     pub fn resize(&mut self,w:u32,h:u32){let w=w.max(1);let h=h.max(1);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     pub fn advance(&mut self,ms:f64){self.app.advance(ms);}
@@ -42,6 +43,7 @@ impl WebPlayer{
     pub fn pointer(&mut self){self.app.controls.activity();}
     pub fn pointer_at(&mut self,x:f64,y:f64,pressed:bool){self.pointer();self.mouse=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y);self.pressed=pressed;}
     pub fn install_background(&mut self,bytes:&[u8])->Result<(),JsValue>{self.background=Some(BackgroundArt::new(BackgroundTimeline::read(bytes).map_err(error)?));Ok(())}
+    pub fn install_foreground(&mut self,bytes:&[u8])->Result<(),JsValue>{self.foreground=Some(ForegroundArt::new(ForegroundTimeline::read(bytes).map_err(error)?));Ok(())}
     pub fn install_controls(&mut self,bytes:&[u8])->Result<(),JsValue>{self.pack=Some(ControlPack::read(bytes).map_err(error)?);self.controls.clear();Ok(())}
     pub fn click(&mut self,x:f64,y:f64){self.pointer();if !self.input_ready(){return;}if let Some((x,y))=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y){let h=self.app.hit(x,y);self.app.activate(h,x);}}
     pub fn key(&mut self,key:&str){match key{
@@ -54,7 +56,8 @@ impl WebPlayer{
         let out=Array::new();for e in self.app.effects(){let p=match e{
             Effect::Fullscreen=>pair("fullscreen",""),Effect::Quit=>pair("quit",""),Effect::Play(p)=>{self.video=None;pair("play",p)},Effect::StopVideo=>{self.video=None;pair("stop","")},Effect::ToggleVideo=>pair("toggle",""),Effect::Seek(v)=>pair("seek",&v.to_string()),Effect::Music(on)=>pair("music",if on{"1"}else{"0"}),Effect::Sound(id)=>pair("sound",&id.to_string()),Effect::Open(p)=>pair("open",p),Effect::ReadXml(p)=>{self.photo.clear();pair("xml",p)},Effect::Image(p)=>{self.photo=p.clone();pair("image",&p)}};out.push(&p);}out
     }
-    fn plan(&self)->AssetPlan{let mut p=AssetPlan::for_app(&self.app,self.layered,&self.photo);if let Some(bg)=&self.background{for i in bg.missing(){p.ahead.insert(0,format!("art/background-source/{i}.jpg"));}}if self.pack.is_some(){p.current.retain(|s|!s.contains("_controls/"));p.ahead.retain(|s|!s.contains("_controls/"));}p}
+    fn foreground_on(&self)->bool{self.layered&&self.foreground.is_some()&&matches!(self.app.scene(),Scene::Transition|Scene::Welcome|Scene::Wallpapers|Scene::Videos|Scene::Screens)}
+    fn plan(&self)->AssetPlan{let mut p=AssetPlan::for_app(&self.app,self.layered,&self.photo);if let Some(bg)=&self.background{for i in bg.missing(){p.ahead.insert(0,format!("art/background-source/{i}.jpg"));}}if let Some(fg)=&self.foreground{p.current.retain(|s|!s.starts_with("art/foreground/"));p.ahead.retain(|s|!s.starts_with("art/foreground/"));if self.foreground_on(){for i in fg.missing_frame(self.app.frame){p.current.push(format!("art/foreground-source/{i}.png"));}}for i in fg.missing(){p.ahead.push(format!("art/foreground-source/{i}.png"));}}if self.pack.is_some(){p.current.retain(|s|!s.contains("_controls/"));p.ahead.retain(|s|!s.contains("_controls/"));}p}
     fn paths(&self)->Vec<String>{self.plan().current}
     pub fn needed(&self)->Array{self.paths().into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
     pub fn prefetch(&self)->Array{self.plan().ahead.into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
@@ -75,6 +78,7 @@ impl WebPlayer{
         let rect=if path=="art/launcher/1.png"{[390.,210.,500.,300.]}else if path.contains("_controls/"){[200.,self.app.controls.y as f32,880.,90.]}else{[0.,0.,1280.,720.]};
         let layer=self.renderer.external_layer(&self.device,&self.queue,wgpu::ExternalImageSource::ImageBitmap(bitmap),rect);
         if let Some(i)=path.strip_prefix("art/background-source/").and_then(|s|s.strip_suffix(".jpg")).and_then(|s|s.parse::<usize>().ok()){if let Some(bg)=&mut self.background{let _=bg.install(i,layer);}return;}
+        if let Some(i)=path.strip_prefix("art/foreground-source/").and_then(|s|s.strip_suffix(".png")).and_then(|s|s.parse::<usize>().ok()){if let Some(fg)=&mut self.foreground{let _=fg.install(i,layer);}return;}
         self.serial+=1;self.images.insert(path,(layer,self.serial));
         while self.images.len()>32||self.cache_bytes()>96.*1024.*1024.{let used=self.paths();let victim=self.images.iter().filter(|(k,_)|!used.contains(k)&&self.last_foreground.as_ref()!=Some(*k)).min_by_key(|(_,(_,s))|*s).map(|(k,_)|k.clone());if let Some(key)=victim{self.images.remove(&key);}else{break;}}
     }
@@ -93,6 +97,7 @@ impl WebPlayer{
             let hit=self.mouse.map(|(x,y)|self.app.hit(x,y)).unwrap_or(Hit::None);let states=presskit_core::control_states(hit,self.pressed);
             self.controls.update(self.pack.as_ref(),&self.renderer,&self.device,&self.queue,ControlVisual{y:self.app.controls.y as f32,gallery,paused,progress,text,states});
         }else{self.controls.clear();}
+        let fg_on=self.foreground_on();if fg_on{self.foreground.as_mut().unwrap().update(&self.renderer,&self.queue,self.app.frame);}
         let paths=self.visible_paths();self.serial+=1;
         for p in &paths{if let Some((layer,used))=self.images.get_mut(p){*used=self.serial;if p.contains("_controls/")&&self.control_y!=self.app.controls.y as f32{self.renderer.reposition(&self.device,layer,[200.,self.app.controls.y as f32,880.,90.]);}}}
         self.control_y=self.app.controls.y as f32;
@@ -100,6 +105,7 @@ impl WebPlayer{
         let view=frame.texture.create_view(&wgpu::TextureViewDescriptor{format:Some(self.config.format.add_srgb_suffix()),..Default::default()});let mut encoder=self.device.create_command_encoder(&Default::default());
         let stage=Stage::fit(self.config.width.into(),self.config.height.into());let mut layers=vec![];
         if self.layered&&self.app.frame>=56&&!matches!(self.app.scene(),Scene::Video|Scene::Gallery){if let Some(bg)=&mut self.background{bg.update(&self.renderer,&self.device,&self.queue,self.app.background.frame);layers.extend(bg.layers(self.app.background.frame));}}
+        if fg_on{layers.extend(self.foreground.as_ref().unwrap().layers());}
         if media{if let Some(v)=&self.video{layers.push(v);}}
         for p in paths{if let Some((layer,_))=self.images.get(&p){layers.push(layer);}}
         layers.extend(self.controls.layers().iter());
