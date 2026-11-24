@@ -1,0 +1,32 @@
+name: Private original media handoff
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/media-handoff.yml']
+permissions:
+  contents: read
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve verified originals (no compilation)
+        run: |
+          python3 tools/fetch_payload.py --dest /tmp/original --manifest /tmp/original-hashes.tsv
+          mkdir -p /tmp/media/art
+          cp -r /tmp/original/payload /tmp/media/
+          python3 - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0,'tools')
+          from prepare_player_assets import sound_export
+          sound_export(Path('/tmp/original/COD7-DVD.swf'),Path('/tmp/media/art/sounds'))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: original-media-handoff
+          path: /tmp/media
+          retention-days: 3
+          compression-level: 0
