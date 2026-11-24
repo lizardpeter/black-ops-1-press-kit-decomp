@@ -10,4 +10,4 @@ See [AGENTS.md](AGENTS.md), [target.toml](target.toml), [STATUS.md](STATUS.md), 
 
 Build and test: `cmake -S . -B build && cmake --build build && ctest --test-dir build --output-on-failure`.
 
-Native Ghidra analysis and SWF analysis run independently in Actions. The reconstructed library is not yet a playable application.
+Native Ghidra analysis and SWF analysis run independently in Actions. The SWF workflow exports AVM1 timelines, bytecode and FFDec ActionScript into a restricted-retention artifact. The reconstructed library is not yet a playable application.

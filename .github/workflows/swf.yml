@@ -1,0 +1,53 @@
+name: swf
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - target.toml
+      - tools/swf/**
+      - tools/fetch_originals.py
+      - .github/workflows/swf.yml
+permissions:
+  contents: read
+concurrency:
+  group: swf
+  cancel-in-progress: false
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install pinned FFDec
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download version26.5.0 --repo jindrapetrik/jpexs-decompiler --pattern ffdec_26.5.0.zip --dir /tmp
+          mkdir /tmp/ffdec
+          unzip -q /tmp/ffdec_26.5.0.zip -d /tmp/ffdec
+          find /tmp/ffdec -name ffdec.jar -print -quit > /tmp/ffdec-jar
+          test -s /tmp/ffdec-jar
+      - name: Verify originals and export application code
+        run: |
+          mkdir -p /tmp/originals
+          python3 tools/fetch_originals.py windows_projector /tmp/originals
+          python3 tools/fetch_originals.py launcher /tmp/originals
+          python3 tools/fetch_originals.py presskit /tmp/originals
+          python3 tools/swf/verify_projector.py /tmp/originals/windows_projector.exe /tmp/originals/launcher.swf
+          for b in launcher presskit; do
+            mkdir -p /tmp/avm1/$b
+            python3 tools/swf/analyze.py /tmp/originals/$b.swf /tmp/avm1/$b
+            java -jar "$(cat /tmp/ffdec-jar)" -export script /tmp/avm1/$b/scripts /tmp/originals/$b.swf
+            test -n "$(find /tmp/avm1/$b/scripts -type f -name '*.as' -print -quit)"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: avm1-analysis
+          path: /tmp/avm1/
+          retention-days: 14

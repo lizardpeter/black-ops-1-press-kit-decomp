@@ -3,6 +3,6 @@ launcher	1529	onEnterFrame	104	decompiled	src/launcher.cpp	stage dimensions; cen
 launcher	1656	yes.onRelease	105	decompiled	src/launcher.cpp	load main SWF, fullscreen, hide four controls
 launcher	1781	no.onRelease	19	decompiled	src/launcher.cpp	FSCommand quit
 presskit	3143802	picture_num	37	decompiled	src/gallery.cpp	scr+1 concatenated with separator and total
-presskit	3143432	nextImage	126	located		bounded increment; load conditional on loaded==filesize; verify double operand
-presskit	3143575	prevImage	104	located		bounded decrement; no load equality test; verify double operand
-presskit	3143696	firstImage	88	located		load conditional on loaded==filesize; verify double operand
+presskit	3143432	nextImage	126	decompiled	src/gallery.cpp	increment before load equality guard; alpha 1; loadMovie image and 1; counter
+presskit	3143575	prevImage	104	decompiled	src/gallery.cpp	zero bound; decrement and load regardless of prior load completion
+presskit	3143696	firstImage	88	decompiled	src/gallery.cpp	load equality guard; no index reset
