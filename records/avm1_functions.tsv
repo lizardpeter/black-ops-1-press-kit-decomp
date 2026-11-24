@@ -68,3 +68,7 @@ presskit	3145040	onEnterFrame	192	decompiled	src/media.cpp	bytes total/loaded; p
 presskit	485976	listener.complete	1	decompiled	src/timeline.cpp	play root timeline
 presskit	2724774	stopRoll2	1	decompiled	src/timeline.cpp	prevFrame while control persists until menu
 presskit	3141398	stopRoll2	1	decompiled	src/timeline.cpp	gallery copy prevFrame
+presskit	2377744	Play	19	decompiled	src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
+presskit	2378254	Play	19	decompiled	src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
+presskit	2378764	Play	19	decompiled	src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
+presskit	2379274	Play	19	decompiled	src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
