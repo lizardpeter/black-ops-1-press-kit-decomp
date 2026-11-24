@@ -103,7 +103,7 @@ def native_art(data,frames):
                 overlays[key]=[batch for batches in run for batch in batches]
             parts.append((kind,key));run=[]
         for c,d in tags(sprite,4):
-            if c in (0,1,12,59):continue
+            if c in (0,1,12,45,59):continue # original SoundStreamHead2 has no drawing effect
             # These three source sprites use only fresh PlaceObject2 records.
             assert c==26
             r=Bits(d);flags=r.u8();depth=r.u16();cid=r.u16()
