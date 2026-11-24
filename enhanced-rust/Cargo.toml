@@ -1,0 +1,18 @@
+[workspace]
+resolver = "3"
+members = ["crates/core", "crates/renderer", "crates/app"]
+default-members = ["crates/core", "crates/app"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.100"
+
+[workspace.dependencies]
+presskit-core = { path = "crates/core" }
+presskit-renderer = { path = "crates/renderer" }
+wgpu = "=24.0.5"
+winit = "=0.30.12"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+pollster = "0.4"
+bytemuck = { version = "1", features = ["derive"] }
