@@ -1,0 +1,31 @@
+{
+  "sha256": "dc6d49c1629998abd4ddd10538aa081d84ac4779fdd9315ee987f5114e50d1d9",
+  "version": 10,
+  "uncompressed_size": 56597,
+  "frame_rate": 25.0,
+  "frame_count": 1,
+  "file_attributes": [
+    16
+  ],
+  "tag_counts": {
+    "0": 5,
+    "1": 5,
+    "2": 4,
+    "9": 1,
+    "11": 3,
+    "12": 1,
+    "21": 1,
+    "26": 12,
+    "34": 1,
+    "35": 2,
+    "39": 4,
+    "69": 1,
+    "73": 2,
+    "74": 3,
+    "75": 2,
+    "77": 1,
+    "88": 2
+  },
+  "labels": [],
+  "coverage": "DoAction and DoInitAction including sprite timelines and nested function bodies; clip/button/try/with actions need FFDec or further parser work"
+}

@@ -1,0 +1,73 @@
+{
+  "sha256": "1521acdea7d20691da8d917c0e306ce9e39208406377c836b68bc457400c8d8e",
+  "version": 10,
+  "uncompressed_size": 3147604,
+  "frame_rate": 24.0,
+  "frame_count": 105,
+  "file_attributes": [
+    16
+  ],
+  "tag_counts": {
+    "0": 65,
+    "1": 385,
+    "2": 33,
+    "6": 4,
+    "8": 1,
+    "9": 1,
+    "11": 30,
+    "12": 20,
+    "14": 5,
+    "15": 2,
+    "17": 11,
+    "20": 1,
+    "21": 30,
+    "22": 17,
+    "26": 357,
+    "28": 27,
+    "32": 16,
+    "34": 12,
+    "35": 16,
+    "37": 2,
+    "39": 64,
+    "43": 4,
+    "45": 50,
+    "56": 30,
+    "59": 13,
+    "60": 1,
+    "69": 1,
+    "70": 53,
+    "73": 6,
+    "74": 31,
+    "75": 6,
+    "77": 1,
+    "83": 3,
+    "88": 6
+  },
+  "labels": [
+    {
+      "offset": 2417139,
+      "scope": "root",
+      "frame": 69,
+      "label": "Welcome"
+    },
+    {
+      "offset": 2501747,
+      "scope": "root",
+      "frame": 76,
+      "label": "Wallpaper"
+    },
+    {
+      "offset": 2590795,
+      "scope": "root",
+      "frame": 86,
+      "label": "Videos"
+    },
+    {
+      "offset": 2731364,
+      "scope": "root",
+      "frame": 96,
+      "label": "Screens"
+    }
+  ],
+  "coverage": "DoAction and DoInitAction including sprite timelines and nested function bodies; clip/button/try/with actions need FFDec or further parser work"
+}

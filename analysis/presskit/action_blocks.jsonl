@@ -1,0 +1,33 @@
+{"offset": 485650, "action_offset": 485656, "size": 2, "scope": "root/11", "frame": 1, "tag": 12}
+{"offset": 485756, "action_offset": 485762, "size": 698, "scope": "root", "frame": 1, "tag": 12}
+{"offset": 486807, "action_offset": 486815, "size": 32167, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 3}
+{"offset": 519036, "action_offset": 519044, "size": 31597, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 12}
+{"offset": 550694, "action_offset": 550702, "size": 205, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 13}
+{"offset": 550966, "action_offset": 550974, "size": 1684, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 14}
+{"offset": 552711, "action_offset": 552719, "size": 1172, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 15}
+{"offset": 553943, "action_offset": 553951, "size": 30925, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 16}
+{"offset": 584927, "action_offset": 584935, "size": 577, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 17}
+{"offset": 585566, "action_offset": 585574, "size": 5218, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 18}
+{"offset": 590846, "action_offset": 590854, "size": 2642, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 19}
+{"offset": 593548, "action_offset": 593556, "size": 13689, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 20}
+{"offset": 607303, "action_offset": 607311, "size": 13252, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 21}
+{"offset": 620563, "action_offset": 620571, "size": 77, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 7}
+{"offset": 620648, "action_offset": 620656, "size": 77, "scope": "root", "frame": 1, "tag": 59, "sprite_id": 11}
+{"offset": 620739, "action_offset": 620745, "size": 1, "scope": "root", "frame": 2, "tag": 12}
+{"offset": 882042, "action_offset": 882048, "size": 275, "scope": "root", "frame": 56, "tag": 12}
+{"offset": 2377692, "action_offset": 2377698, "size": 104, "scope": "root/75", "frame": 2, "tag": 12}
+{"offset": 2378202, "action_offset": 2378208, "size": 104, "scope": "root/75", "frame": 57, "tag": 12}
+{"offset": 2378712, "action_offset": 2378718, "size": 104, "scope": "root/75", "frame": 112, "tag": 12}
+{"offset": 2379222, "action_offset": 2379228, "size": 104, "scope": "root/75", "frame": 167, "tag": 12}
+{"offset": 2501124, "action_offset": 2501130, "size": 306, "scope": "root", "frame": 75, "tag": 12}
+{"offset": 2589928, "action_offset": 2589934, "size": 749, "scope": "root", "frame": 81, "tag": 12}
+{"offset": 2590775, "action_offset": 2590781, "size": 2, "scope": "root", "frame": 85, "tag": 12}
+{"offset": 2724689, "action_offset": 2724695, "size": 491, "scope": "root", "frame": 91, "tag": 12}
+{"offset": 2725368, "action_offset": 2725374, "size": 54, "scope": "root", "frame": 94, "tag": 12}
+{"offset": 2725445, "action_offset": 2725451, "size": 2476, "scope": "root", "frame": 95, "tag": 12}
+{"offset": 2728801, "action_offset": 2728807, "size": 196, "scope": "root/169", "frame": 1, "tag": 12}
+{"offset": 2729533, "action_offset": 2729539, "size": 192, "scope": "root/177", "frame": 1, "tag": 12}
+{"offset": 2730160, "action_offset": 2730166, "size": 150, "scope": "root/183", "frame": 1, "tag": 12}
+{"offset": 3141214, "action_offset": 3141220, "size": 962, "scope": "root", "frame": 101, "tag": 12}
+{"offset": 3142298, "action_offset": 3142304, "size": 54, "scope": "root", "frame": 104, "tag": 12}
+{"offset": 3142375, "action_offset": 3142381, "size": 2861, "scope": "root", "frame": 105, "tag": 12}
