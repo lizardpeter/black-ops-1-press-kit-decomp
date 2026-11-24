@@ -3,7 +3,7 @@
 namespace presskit {
 // BG sprite 75, frames 2/57/112/167. Independent of root playback.
 struct Background {
-    static constexpr int fps=24, last_frame=220;
+    static constexpr int fps=24, last_frame=221;
     static constexpr auto pause=std::chrono::milliseconds(2000);
     int frame=1;
     bool playing=true, interval_active=false;

@@ -1,5 +1,6 @@
 #include "presskit/background.hpp"
 #include <cstdlib>
+#include <initializer_list>
 using namespace presskit;
 static void check(bool b){if(!b)std::abort();}
 int main(){
@@ -8,5 +9,5 @@ int main(){
     b.advance(1);check(b.playing&&!b.interval_active&&b.frame==2);
     b.advance(42);check(b.frame==3);
     for(int f:{57,112,167}){b.enter_frame(f);check(!b.playing&&b.remaining_ms==2000);b.play_callback();check(b.playing&&!b.interval_active);}
-    b.enter_frame(220);b.frame_credit=0;b.advance(42);check(b.frame==1);
+    b.enter_frame(221);b.frame_credit=0;b.advance(42);check(b.frame==1);
 }
