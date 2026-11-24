@@ -11,7 +11,7 @@ const VERTEX:&str=include_str!("../../../shaders/generated/vertex.wgsl");
 const FRAGMENT:&str=include_str!("../../../shaders/generated/fragment.wgsl");
 struct Gpu{
     window:Arc<Window>,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,config:wgpu::SurfaceConfiguration,renderer:Renderer,
-    art:Option<Layer>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,last_art:String,video:Option<Layer>,last_video:u64,chrome:Option<Layer>,chrome_kind:Scene,pack:Option<ControlPack>,launcher:Vec<Layer>,controls:ControlCache
+    art:Option<Layer>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,last_art:String,video:Option<Layer>,last_video:u64,chrome:Option<Layer>,chrome_kind:Scene,pack:Option<ControlPack>,launcher:Vec<Layer>,native_launcher:Option<presskit_renderer::launcher::LauncherArt>,controls:ControlCache
 }
 impl Gpu{
     async fn new(window:Arc<Window>)->Self{
@@ -23,7 +23,7 @@ impl Gpu{
         if let Some(f)=caps.formats.iter().find(|f|f.is_srgb()){config.format=*f;}
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,&queue,config.format,VERTEX,FRAGMENT,"vertexMain","fragmentMain");
-        Self{window,surface,device,queue,config,renderer,art:None,background:None,foreground:None,last_art:String::new(),video:None,last_video:0,chrome:None,chrome_kind:Scene::Launcher,pack:None,launcher:vec![],controls:ControlCache::default()}
+        Self{window,surface,device,queue,config,renderer,art:None,background:None,foreground:None,last_art:String::new(),video:None,last_video:0,chrome:None,chrome_kind:Scene::Launcher,pack:None,launcher:vec![],native_launcher:None,controls:ControlCache::default()}
     }
     fn resize(&mut self,w:u32,h:u32){if w>0&&h>0{self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     fn image(&self,path:&std::path::Path,rect:[f32;4])->Option<Layer>{
@@ -34,7 +34,7 @@ impl Gpu{
         let layered=(self.foreground.is_some()||root.join("art/foreground/75.png").is_file())&&self.background.as_ref().is_some_and(|b|b.ready());
         let fg_on=layered&&self.foreground.is_some()&&matches!(app.scene(),Scene::Transition|Scene::Welcome|Scene::Wallpapers|Scene::Videos|Scene::Screens);
         let (path,rect)=match app.scene(){
-            Scene::Launcher=>("art/launcher/1.png".to_string(),[390.,210.,500.,300.]),
+            Scene::Launcher=>(if self.native_launcher.is_some(){String::new()}else{"art/launcher/1.png".to_string()},[390.,210.,500.,300.]),
             Scene::Gallery=>(photo.clone().unwrap_or_default(),[0.,0.,1280.,720.]),
             Scene::Intro|Scene::Video=>(String::new(),[0.,0.,1280.,720.]),
             _ if fg_on=>(String::new(),[0.,0.,1280.,720.]),
@@ -54,12 +54,13 @@ impl Gpu{
             let gallery=app.scene()==Scene::Gallery;let text=if gallery{app.gallery.counter()}else{format!("{}/{}",presskit_core::flash_time(media.position()),presskit_core::flash_time(media.duration()))};
             self.controls.update(self.pack.as_ref(),&self.renderer,&self.device,&self.queue,ControlVisual{y:app.controls.y as f32,gallery,paused:media.paused,progress:if media.duration()>0.{(media.position()/media.duration())as f32}else{0.},text,states});
         }else{self.controls.clear();}
+        if app.scene()==Scene::Launcher{if let Some(a)=&mut self.native_launcher{a.update(&self.renderer,&self.queue,match hit{Hit::Accept=>1,Hit::Decline=>2,_=>0},pressed);}}
         let size=self.window.inner_size();if size.width==0||size.height==0{return;}
         let frame=match self.surface.get_current_texture(){Ok(f)=>f,Err(wgpu::SurfaceError::Lost|wgpu::SurfaceError::Outdated)=>{self.resize(size.width,size.height);return;},Err(e)=>{eprintln!("surface: {e}");return;}};
         let view=frame.texture.create_view(&Default::default());
         let mut encoder=self.device.create_command_encoder(&Default::default());
         let stage=Stage::fit(f64::from(size.width),f64::from(size.height));
-        let mut layers=vec![];let mut filters=vec![];if bg_on{if let Some(b)=&self.background{layers.extend(b.layers(app.background.frame));}}if fg_on{let(fg,spans)=self.foreground.as_ref().unwrap().layers_and_filters();let offset=layers.len();filters.extend(spans.into_iter().map(|mut s|{s.start+=offset;s.end+=offset;s}));layers.extend(fg);}if let Some(a)=&self.art{layers.push(a);if app.scene()==Scene::Launcher{layers.extend(self.launcher.iter());}}if media_on{if let Some(v)=&self.video{layers.push(v);}}if let Some(c)=&self.chrome{layers.push(c);}layers.extend(self.controls.layers().iter());
+        let mut layers=vec![];let mut filters=vec![];if bg_on{if let Some(b)=&self.background{layers.extend(b.layers(app.background.frame));}}if fg_on{let(fg,spans)=self.foreground.as_ref().unwrap().layers_and_filters();let offset=layers.len();filters.extend(spans.into_iter().map(|mut s|{s.start+=offset;s.end+=offset;s}));layers.extend(fg);}if let Some(a)=&self.art{layers.push(a);}if app.scene()==Scene::Launcher{if let Some(a)=&self.native_launcher{layers.extend(a.layers());}else if self.art.is_some(){layers.extend(self.launcher.iter());}}if media_on{if let Some(v)=&self.video{layers.push(v);}}if let Some(c)=&self.chrome{layers.push(c);}layers.extend(self.controls.layers().iter());
         self.renderer.render_filtered(&mut encoder,&view,&layers,&filters,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
         self.queue.submit([encoder.finish()]);frame.present();
     }
@@ -92,7 +93,7 @@ impl ApplicationHandler for Host{
     fn resumed(&mut self,ev:&ActiveEventLoop){
         if self.gpu.is_none(){
             let w=Arc::new(ev.create_window(Window::default_attributes().with_title("Black Ops Press Kit — Rust development").with_inner_size(winit::dpi::LogicalSize::new(1280.,720.))).expect("window"));
-            let mut gpu=pollster::block_on(Gpu::new(w));if let Ok(bytes)=std::fs::read(self.root.join("art/vector/launcher.pkv")){if let Ok(p)=ControlPack::read_launcher(&bytes){gpu.launcher=p.launcher_layers(&gpu.renderer,&gpu.device,&gpu.queue);}}gpu.pack=std::fs::read(self.root.join("art/vector/controls.pkv")).ok().and_then(|b|ControlPack::read(&b).ok());if let Ok(bytes)=std::fs::read(self.root.join("art/background-source/timeline.pbg")){if let Ok(t)=BackgroundTimeline::read(&bytes){let mut bg=BackgroundArt::new(t);for i in 0..4{if let Some(l)=gpu.image(&self.root.join(format!("art/background-source/{i}.jpg")),[0.,0.,1280.,720.]){let _=bg.install(i,l);}}if bg.ready(){gpu.background=Some(bg);}}}if let Ok(bytes)=std::fs::read(self.root.join("art/foreground-source/timeline.pfg")){if let Ok(t)=ForegroundTimeline::read(&bytes){let mut fg=ForegroundArt::new(t);if fg.needs_menu(){if let Ok(b)=std::fs::read(self.root.join("art/foreground-source/menu.pkm")){let _=fg.install_menu(&b);}}for i in fg.missing(){if let Some(l)=gpu.image(&self.root.join(format!("art/foreground-source/{}",fg.filename(i))),[0.,0.,1.,1.]){let _=fg.install(i,l);}}if fg.missing().is_empty()&&!fg.needs_menu(){gpu.foreground=Some(fg);}}}self.gpu=Some(gpu);self.last=Instant::now();
+            let mut gpu=pollster::block_on(Gpu::new(w));if let Ok(bytes)=std::fs::read(self.root.join("art/vector/launcher.pkv")){if bytes.starts_with(b"PKL2"){gpu.native_launcher=presskit_renderer::launcher::LauncherArt::read(&bytes,&gpu.renderer,&gpu.device,&gpu.queue).ok();}else if let Ok(p)=ControlPack::read_launcher(&bytes){gpu.launcher=p.launcher_layers(&gpu.renderer,&gpu.device,&gpu.queue);}}gpu.pack=std::fs::read(self.root.join("art/vector/controls.pkv")).ok().and_then(|b|ControlPack::read(&b).ok());if let Ok(bytes)=std::fs::read(self.root.join("art/background-source/timeline.pbg")){if let Ok(t)=BackgroundTimeline::read(&bytes){let mut bg=BackgroundArt::new(t);for i in 0..4{if let Some(l)=gpu.image(&self.root.join(format!("art/background-source/{i}.jpg")),[0.,0.,1280.,720.]){let _=bg.install(i,l);}}if bg.ready(){gpu.background=Some(bg);}}}if let Ok(bytes)=std::fs::read(self.root.join("art/foreground-source/timeline.pfg")){if let Ok(t)=ForegroundTimeline::read(&bytes){let mut fg=ForegroundArt::new(t);if fg.needs_menu(){if let Ok(b)=std::fs::read(self.root.join("art/foreground-source/menu.pkm")){let _=fg.install_menu(&b);}}for i in fg.missing(){if let Some(l)=gpu.image(&self.root.join(format!("art/foreground-source/{}",fg.filename(i))),[0.,0.,1.,1.]){let _=fg.install(i,l);}}if fg.missing().is_empty()&&!fg.needs_menu(){gpu.foreground=Some(fg);}}}self.gpu=Some(gpu);self.last=Instant::now();
         }
     }
     fn window_event(&mut self,ev:&ActiveEventLoop,_:WindowId,event:WindowEvent){

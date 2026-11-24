@@ -6,6 +6,7 @@ pub mod control_pack;
 pub mod background;
 pub mod foreground;
 pub mod menu;
+pub mod launcher;
 #[repr(C)]
 #[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
 pub struct Vertex{pub pos:[f32;2],pub uv:[f32;2],pub opacity:[f32;2],pub color:[f32;4]}
