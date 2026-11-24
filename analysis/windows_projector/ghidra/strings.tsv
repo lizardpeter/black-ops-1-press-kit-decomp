@@ -1,0 +1,4089 @@
+va	type	value
+0071B90E	string	o@ignore
+0071B918	string	color
+0071B920	string	clamp
+0071B994	string	flash.filters.DropShadowFilter
+0071BA07	string	@flash.filters.GlowFilter
+0071BA48	string	flash.filters.BlurFilter
+0071BA88	string	flash.filters.BevelFilter
+0071BAC8	string	flash.filters.GradientGlowFilter
+0071BAEC	string	flash.filters.GradientBevelFilter
+0071BB34	string	flash.filters.ConvolutionFilter
+0071BBCC	string	flash.filters.DisplacementMapFilter
+0071BC27	string	@outer
+0071BC30	string	inner
+0071BC64	string	flash.filters.ColorMatrixFilter
+0071BC8B	string	Gunknown
+0071BCC0	string	flash.filters.ShaderFilter
+0071BCDC	string	hardlight
+0071BCE8	string	overlay
+0071BCF0	string	erase
+0071BCF8	string	alpha
+0071BD00	string	invert
+0071BD08	string	subtract
+0071BD18	string	difference
+0071BD24	string	darken
+0071BD2C	string	lighten
+0071BD34	string	screen
+0071BD3C	string	multiply
+0071BD48	string	layer
+0071BD50	string	normal
+0071BD58	string	opaque
+0071BF98	string	Origin
+0071BFA0	string	Proxy-Connection
+0071BFB4	string	Request-Range
+0071BFCC	string	Cookie
+0071BFD4	string	CONNECT
+0071BFDC	string	User-Agent
+0071BFE8	string	Keep-Alive
+0071BFF4	string	Expect
+0071C004	string	Accept-Encoding
+0071C014	string	Accept-Charset
+0071C024	string	x-flash-version
+0071C034	string	TRACE
+0071C03C	string	OPTIONS
+0071C044	string	DELETE
+0071C05C	string	Referer
+0071C064	string	WWW-Authenticate
+0071C078	string	Warning
+0071C090	string	Upgrade
+0071C098	string	Transfer-Encoding
+0071C0AC	string	Trailer
+0071C0B8	string	Server
+0071C0C0	string	Retry-After
+0071C0CC	string	Range
+0071C0D4	string	Public
+0071C0DC	string	Proxy-Authorization
+0071C0F0	string	Proxy-Authenticate
+0071C104	string	Max-Forwards
+0071C114	string	Location
+0071C120	string	Last-Modified
+0071C140	string	Content-Range
+0071C150	string	Content-Location
+0071C164	string	Content-Length
+0071C174	string	Connection
+0071C180	string	Allowed
+0071C188	string	Allow
+0071C194	string	Accept-Ranges
+0071C1AC	string	focusEnabled
+0071C1C4	string	false
+0071C1D4	string	onResolveFailure
+0071C1E8	string	onResolveSuccess
+0071C220	string	Content-type
+0071C230	string	application/x-www-form-urlencoded
+0071C25C	string	attrs
+0071C264	string	empty
+0071C26C	string	value
+0071C2B0	string	target
+0071C2B8	string	width
+0071C2BE	string	height
+0071C2C5	string	smoothing
+0071C2CF	string	deblocking
+0071C2DC	string	FSCommand:showmenu
+0071C2F0	string	showAll
+0071C2F8	string	noScale
+0071C300	string	exactFit
+0071C30C	string	noBorder
+0071C318	string	fullScreen
+0071C324	string	asfunction:
+0071C330	string	bytesTotal
+0071C33C	string	bytesLoaded
+0071C348	string	_level
+0071C350	string	checkPolicyFile
+0071C360	string	_listeners
+0071C36C	string	onData
+0071C374	string	_bytesTotal
+0071C380	string	_bytesLoaded
+0071C390	string	loaded
+0071C398	string	_customHeaders
+0071C3A8	string	contentType
+0071C3B4	string	[object Object]
+0071C3C4	string	[type Function]
+0071C3D4	string	flash.geom.Rectangle
+0071C3EC	string	flash.geom.Point
+0071C400	string	miter
+0071C408	string	bevel
+0071C410	string	square
+0071C420	string	horizontal
+0071C42C	string	vertical
+0071C468	string	matrixType
+0071C474	string	linear
+0071C47C	string	radial
+0071C484	string	linearRGB
+0071C490	string	repeat
+0071C498	string	reflect
+0071C4A3	string	Bflash.geom.Transform
+0071C4BC	string	never
+0071C4C4	string	always
+0071C4D4	string	onID3
+0071C518	string	genre
+0071C520	string	track
+0071C528	string	comment
+0071C538	string	album
+0071C540	string	artist
+0071C548	string	songname
+0071C55F	string	@onLoad
+0071C568	string	duration
+0071C571	string	position
+0071C596	string	R@printAsBitmap
+0071C5A8	string	landscape
+0071C5B4	string	portrait
+0071C5C0	string	paperHeight
+0071C5CC	string	paperWidth
+0071C5D7	string	pageHeight
+0071C5E2	string	pageWidth
+0071C5EC	string	orientation
+0071C5FC	string	flash.display.BitmapData
+0071C62C	string	prototype
+0071C638	string	flash.geom.Matrix
+0071C64C	string	flash.geom.ColorTransform
+0071C668	string	tabIndex
+0071C6B6	string	$@Camera
+0071C704	string	defaultcamera
+0071C720	string	height
+0071C728	string	width
+0071C730	string	Object
+0071C740	string	999999
+0071C7A8	string	nativeModes
+0071C7B4	string	keyFrameInterval
+0071C7C8	string	bandwidth
+0071C7D4	string	motionLevel
+0071C7E0	string	motionTimeout
+0071C7F0	string	quality
+0071C7F8	string	loopback
+0071C804	string	activityLevel
+0071C814	string	muted
+0071C81C	string	currentFps
+0071C830	string	index
+0071C838	string	onActivity
+0071C858	string	<AdobeIP#A0000663>
+0071C870	string	Author
+0071C878	string	LocalSecurityPrompt
+0071C8B8	string	default
+0071C8C6	string	G@http://www.macromedia.com
+0071C8E4	string	https://www.macromedia.com/support/flashplayer/sys/
+0071C938	string	OverrideGPUValidation
+0071C950	string	AssetCacheSize
+0071C960	string	DisableAVM1Loading
+0071C974	string	AS3SSE
+0071C97C	string	AS3CSE
+0071C984	string	DisableDeviceFontEnumeration
+0071C9A4	string	ScriptStuckTimeout
+0071C9B8	string	ThirdPartyStorage
+0071C9CC	string	DisableIncrementalGC
+0071C9E4	string	EnableIncrementalValidation
+0071CA00	string	Convert8kAnd16kAudio
+0071CA18	string	AllowUserLocalTrust
+0071CA34	string	allow
+0071CA3C	string	LocalFileLegacyAction
+0071CA54	string	CrashLogEnable
+0071CA64	string	OverrideUserInvokedActions
+0071CA80	string	FullScreenDisable
+0071CA94	string	WindowlessDisable
+0071CAA8	string	LegacyDomainMatching
+0071CAC0	string	LocalStorageLimit
+0071CAD4	string	[default]
+0071CAE0	string	ProductDownloadBaseUrl
+0071CAFC	string	ProductDisabled
+0071CB0C	string	CodeSignLogFile
+0071CB1C	string	DisableProductDownload
+0071CB34	string	CodeSignRootCert
+0071CB48	string	AutoUpdateVersionUrl
+0071CB60	string	AutoUpdateInterval
+0071CB74	string	AutoUpdateDisable
+0071CB88	string	FileDownloadEnabledDomain
+0071CBA4	string	FileUploadEnabledDomain
+0071CBBC	string	FileDownloadDisable
+0071CBD0	string	FileUploadDisable
+0071CBE4	string	EnableSocketsTo
+0071CBF4	string	DisableSockets
+0071CC04	string	RTMFPTURNProxy
+0071CC14	string	RTMFPP2PDisable
+0071CC24	string	AVHardwareEnabledDomain
+0071CC3C	string	LocalFileReadDisable
+0071CC54	string	AVHardwareDisable
+0071CC68	string	.macromedia.com
+0071CC80	string	.macromedia.com/support/flashplayer/sys/
+0071CCB8	string	SettingsSubdomain
+0071CCCC	string	mms.cfg
+0071CCD4	string	FlashPlayerTrust
+0071CCE8	string	FlashAuthor.cfg
+0071CCF8	string	#Security
+0071CD14	string	secureCrossDomainCacheSize
+0071CD57	string	?cacheSize.txt
+0071CD68	string	AssetCache
+0071CD9C	string	$deleteMe
+0071CDAC	string	__constructor__
+0071CDBC	string	constructor
+0071CE6F	string	@Invalid Date
+0071CE80	string	%3 %3 %d %2:%2:%2 GMT%c%2%2 %d
+0071CEA0	string	SunMonTueWedThuFriSat
+0071D194	string	" TARGET="
+0071D1A0	string	<A HREF="
+0071D1AC	string	 KERNING="0"
+0071D1BC	string	 KERNING="1"
+0071D1CC	string	 LETTERSPACING="
+0071D1E0	string	 COLOR="#
+0071D1EC	string	 SIZE="
+0071D1F4	string	</FONT>
+0071D1FC	string	 FACE="
+0071D204	string	<FONT
+0071D234	string	clipper-o-Depth
+0071D244	string	_self
+0071D24C	string	event:
+0071D264	string	</LI>
+0071D27C	string	<P ALIGN="
+0071D290	string	 TABSTOPS="
+0071D29C	string	 BLOCKINDENT="
+0071D2AC	string	 LEADING="
+0071D2B8	string	 INDENT="
+0071D2C4	string	 RIGHTMARGIN="
+0071D2D4	string	 LEFTMARGIN="
+0071D2E4	string	<TEXTFORMAT
+0071D2F0	string	</TEXTFORMAT>
+0071D308	string	RIGHT
+0071D310	string	CENTER
+0071D318	string	JUSTIFY
+0071D320	string	_styles
+0071D32C	string	Times New Roman
+0071D33C	string	A:hover
+0071D344	string	A:active
+0071D358	string	_blank
+0071D360	string	" CHECKPOLICYFILE="true
+0071D378	string	" HSPACE="
+0071D384	string	hspace
+0071D38C	string	" VSPACE="
+0071D398	string	vspace
+0071D3A0	string	" ALIGN="left
+0071D3B0	string	" ALIGN="right
+0071D3C0	string	right
+0071D3C8	string	" ID="
+0071D3D4	string	" ALT="
+0071D3E0	string	" HEIGHT="
+0071D3EC	string	" WIDTH="
+0071D438	string	<IMG SRC="
+0071D450	string	kerning
+0071D458	string	letterspacing
+0071D488	string	A:link
+0071D495	string	right
+0071D49B	string	center
+0071D4A2	string	justify
+0071D4AC	string	align
+0071D4C0	string	leading
+0071D4C8	string	tabstops
+0071D4D4	string	blockindent
+0071D4E0	string	indent
+0071D4E8	string	rightmargin
+0071D4F4	string	leftmargin
+0071D500	string	textformat
+0071D50C	string	class
+0071D53D	string	/font
+0071D54A	string	textformat
+0071D555	string	/textformat
+0071D56E	string	/span
+0071D6B0	string	function __flash__arrayToXML(obj) {  var s = "<array>";  for (var i=0; i<obj.length; i++) {   s += "<property id=\\"" + i + "\\">" + __flash__toXML(obj[i]) + "</property>";  }  return s+"</array>"; } function __flash__argumentsToXML(obj,index) {  var s = "<arguments>";  for (var i=index; i<obj.length; i++) {   s += __flash__toXML(obj[i]);  }  return s+"</arguments>"; } function __flash__objectToXML(obj) {  var s = "<object>";  for (var prop in obj) {   s += "<property id=\\"" + prop + "\\">" + __flash__toXML(obj[prop]) + "</property>";  }  return s+"</object>"; } function __flash__escapeXML(s) {  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;"); } function __flash__toXML(value) {    var type = typeof(value);  if (type == "string") {   return "<string>" + __flash__escapeXML(value) + "</string>";  } else if (type == "undefined") {         return "<undefined/>";  } else if (type == "number") {         return "<number>" + value + "</number>";  } else if (value == null) {         return "<null/>";  } else if (type == "boolean") {         return value ? "<true/>" : "<false/>";  } else if (value instanceof Date) {         return "<date>" + value.getTime() + "</date>";    } else if (value instanceof Array) {        return __flash__arrayToXML(value);    } else if (type == "object") {        return __flash__objectToXML(value);    } else {      return "<null/>"; //???  } } 
+0071DCA0	string	&apos;
+0071DCA8	string	&quot;
+0071DCB0	string	&amp;
+0071DCC4	string	onStatus
+0071DCD0	string	details
+0071DCD8	string	description
+0071DCEC	string	level
+0071DCF4	string	status
+0071DCFC	string	error
+0071DD04	string	Client.Header.MustUnderstand
+0071DD24	string	Client.Data.UnderFlow
+0071DD3C	string	NetConnection.Call.BadVersion
+0071DD5C	string	_global.System
+0071DD6C	string	onError
+0071DD74	string	onResult
+0071DD80	string	onSelect
+0071DD8C	string	onCancel
+0071DD98	string	onSecurityError
+0071DDA8	string	securitySandboxError
+0071DDC0	string	Filedata
+0071DE84	string	Content-Type: multipart/form-data; boundary=
+0071DEB4	string	Content-Type: application/octet-stream    
+0071DEE4	string	filename="
+0071DEF4	string	"    
+0071DEFC	string	Content-Disposition: form-data; name="
+0071DF24	string	Content-Disposition: form-data; name="Filename"    
+0071DF5C	string	Submit Query  
+0071DF6C	string	Content-Disposition: form-data; name="Upload"    
+0071DFB8	string	onProgress
+0071DFC4	string	onIOError
+0071DFD0	string	onComplete
+0071DFDC	string	onOpen
+0071DFE4	string	macType
+0071DFEC	string	extension
+0071DFF8	string	fileList
+0071E004	string	FileReference
+0071E014	string	flash.net.FileReference
+0071E044	string	postData
+0071E050	string	creator
+0071E058	string	creationDate
+0071E068	string	modificationDate
+0071E118	string	NetStream.Play.StreamNotFound
+0071E138	string	NetStream.Play.Failed
+0071E150	string	NetStream.Play.NoSupportedTrackFound
+0071E178	string	NetStream.Play.FileStructureInvalid
+0071E19C	string	NetStream.Play.Stop
+0071E1B0	string	NetStream.Seek.Notify
+0071E1C8	string	NetStream.Seek.InvalidTime
+0071E1E4	string	NetStream.Play.Start
+0071EAA4	string	::ffff:
+0071EAB8	string	ftp://
+0071EAC0	string	xmlsocket://
+0071ED6C	string	affinity
+0071ED80	string	timestamp
+0071ED8C	string	proxyinfo
+0071ED98	string	fpadresp
+0071EDA8	string	Macromedia Flash Proxy Auto-Discovery
+0071EDD0	string	Adobe Flash Proxy Auto-Discovery
+0071EDF4	string	tag=%s;timestamp=%d;zone=%d;uri=%s
+0071EE18	string	fpadreq
+0071EF74	string	GIF89a
+0071EF7C	string	GIF87a
+0071F07C	string	_OutCoord
+0071F088	string	defaultValue
+0071F268	string	.macromedia.com/
+0071F3A4	string	https:
+0071F3B8	string	%s%sdescription.xml
+0071F3CC	string	%s%s.xml
+0071F3D8	string	%s%s.z
+0071F3E0	string	&what=digest
+0071F3F0	string	&what=appl
+0071F3FC	string	%s?product=%s&signed=true&%s%s
+0071F41C	string	%s&product=%s&signed=true&%s%s
+0071F43C	string	http://fpdownload2.macromedia.com/get/
+0071F464	string	https://fpdownload.macromedia.com/get/
+0071F48C	string	https://www.macromedia.com/bin/flashdownload.cgi
+0071F4E0	string	-fromUserEvent=
+0071F4F0	string	-https=
+0071F4F8	string	-securityDomain=
+0071F50C	string	remote
+0071F514	string	-sandboxType=
+0071F528	string	10,0,22,87
+0071F534	string	-playerVersion=
+0071F54C	string	useCGI
+0071F554	string	param
+0071F55C	string	domain
+0071F564	string	www.macromedia.com
+0071F57C	string	length
+0071F584	string	position
+0071F590	string	finish
+0071F598	string	start
+0071F5A0	string	Download.Complete
+0071F5B4	string	Download.Cancelled
+0071F5C8	string	Download.Failed
+0071F654	string	connect
+0071F664	string	close
+0071F66C	string	allowDomain
+0071F678	string	allowInsecureDomain
+0071F694	string	localhost
+0071F89F	string	?unknown URL
+0071F8B6	string	$?Content-Type: 
+0071F8C8	string	NetConnection.Connect.CertificateAPIError
+0071F8F4	string	NetConnection.Connect.CertificateInvalid
+0071F920	string	NetConnection.Connect.CertificateRevoked
+0071F94C	string	NetConnection.Connect.CertificateUntrustedSigner
+0071F980	string	NetConnection.Connect.CertificatePrincipalMismatch
+0071F9B4	string	NetConnection.Connect.CertificateExpired
+0071F9E0	string	NetConnection.Connect.SSLHandshakeFailed
+0071FA0C	string	NetConnection.Connect.SSLNotAvailable
+0071FA34	string	NetConnection.Connect.ProxyAuthFailed
+0071FA64	string	CONNECT %s:%d HTTP/1.1     
+0071FA80	string	rtmpt
+0071FA88	string	rtmpte
+0071FA90	string	rtmps
+0071FAA0	string	rtmpe
+0071FAA8	string	rtmfp
+0071FAB0	string	/close
+0071FABC	string	/send
+0071FAC4	string	/idle
+0071FAD8	string	/open/1
+0071FAE0	string	/fcs/ident2
+0071FAEC	string	127.0.0.1
+0071FAF8	string	fpadWait
+0071FB04	string	fpadOnly
+0071FB10	string	fpadZone
+0071FB20	string	fpadPort
+0071FB2C	string	combinePackets
+0071FB4C	string	proxyType
+0071FB98	string	speex
+0071FBB8	string	echosuppression
+0071FBC8	string	nellymoser
+0071FBD4	string	defaultmicrophone
+0071FBF6	string	t@The codec string was unknown.
+0071FC18	string	Microphone
+0071FC74	string	silenceLevel
+0071FC84	string	silenceTimeout
+0071FC9C	string	useEchoSuppression
+0071FCB0	string	codec
+0071FCB8	string	framesPerPacket
+0071FCC8	string	encodeQuality
+0071FD0C	string	trackid
+0071FD14	string	onImageData
+0071FD20	string	bottom
+0071FD34	string	textbox
+0071FD3C	string	wrapflag
+0071FD48	string	textcolor
+0071FD54	string	fontsize
+0071FD60	string	facestyleflags
+0071FD70	string	fontid
+0071FD78	string	style
+0071FD80	string	hypertext
+0071FD8C	string	endtime
+0071FD94	string	starttime
+0071FDA0	string	karaoke
+0071FDA8	string	highlight
+0071FDB4	string	dropshadowalpha
+0071FDC4	string	highlightcolor
+0071FDD4	string	dropshadowoffsety
+0071FDE8	string	dropshadowoffsetx
+0071FDFC	string	endchar
+0071FE04	string	startchar
+0071FE10	string	blink
+0071FE18	string	scrolldelay
+0071FE2C	string	onTextData
+0071FE38	string	onXMPData
+0071FE44	string	fontname
+0071FE50	string	fonttable
+0071FE5C	string	defaultstyle
+0071FE6C	string	defaulttextbox
+0071FE7C	string	backgroundcolor
+0071FE8C	string	verticaljustification
+0071FEA4	string	horizontaljustification
+0071FEBC	string	displayflags
+0071FECC	string	sampletype
+0071FED8	string	sampledescription
+0071FEEC	string	language
+0071FEF8	string	timescale
+0071FF04	string	trackinfo
+0071FF10	string	initialdelay
+0071FF20	string	progressivedownloadinfo
+0071FF38	string	title
+0071FF40	string	chapters
+0071FF54	string	audiochannels
+0071FF64	string	audiosamplerate
+0071FF74	string	offset
+0071FF84	string	seekpoints
+0071FF90	string	videoframerate
+0071FFA0	string	aacaot
+0071FFA8	string	avclevel
+0071FFB4	string	avcprofile
+0071FFC0	string	audiocodecid
+0071FFD0	string	videocodecid
+0071FFE0	string	moovposition
+0071FFF0	string	duration
+0071FFFC	string	onMetaData
+0072001C	string	xmlns
+00720024	string	ignoreWhite
+00720030	string	attributes
+0072003B	string	childNodes
+00720046	string	firstChild
+00720051	string	lastChild
+0072005B	string	nextSibling
+00720067	string	nodeName
+00720070	string	nodeType
+00720079	string	nodeValue
+00720083	string	parentNode
+0072008E	string	previousSibling
+0072009E	string	prefix
+007200A5	string	localName
+007200AF	string	namespaceURI
+007200C0	string	XMLNode
+007200DC	string	contentType
+007200E8	string	docTypeDecl
+007200F4	string	ignoreWhite
+00720100	string	loaded
+00720107	string	status
+0072010E	string	xmlDecl
+00720118	string	idMap
+00720220	string	1.2.3
+00720234	string	layout
+0072023C	string	krequest
+00720248	string	kcurrent
+00720254	string	GetSetting
+00720260	string	SetSetting
+0072026C	string	Commit
+00720274	string	panel
+0072027C	string	providerDomain
+0072028C	string	accessorDomain
+0072029C	string	crossdomainAllow
+007202B0	string	crossdomainAlways
+007202C4	string	always_
+007202CC	string	safefullscreen
+007202DC	string	trustedPaths
+007202EC	string	allowThirdPartyLSOAccess
+00720308	string	windowlessDisable
+0072031C	string	defaultalways
+0072032C	string	defaultklimit
+0072033C	string	klimit
+00720344	string	/go/player_settings_
+0072035C	string	.Unmuted
+00720368	string	.Muted
+00720370	string	Camera.Unmuted
+00720380	string	Camera.Muted
+00720390	string	Microphone.Unmuted
+007203A4	string	Microphone.Muted
+007203B8	string	&lang=
+007203C0	string	?panel=
+007203C8	string	/bin/flashhelp.cgi
+007203DC	string	inputState
+007203EC	string	response
+007203F8	string	query
+00720400	string	closeNow
+0072040C	string	AlertResponseFullScreen
+00720424	string	AlertResponse
+00720874	string	Adobe Flash Player; 
+00720898	string	setPeerInfo
+007208A4	string	Windgdings
+007208B0	string	Webdings
+007208BC	string	Verdana
+007208C4	string	Tw Cen MT
+007208D0	string	Trebuchet MS
+007208E0	string	Tahoma
+007208E8	string	Script MT Bold
+007208F8	string	Rockwell
+00720904	string	Perpetua Titling MT Light
+00720920	string	Perpetua
+0072092C	string	Palace Script MT
+00720948	string	Old English Text MT
+0072095C	string	OCR A Extended
+0072096C	string	Matura MT Script Capitals
+00720988	string	Lucida Sans Regular
+0072099C	string	Lucida Console
+007209AC	string	Imprint MT Shadow
+007209C0	string	Impact
+007209C8	string	Helvetica
+007209D4	string	Gill Sans MT
+007209E4	string	Georgia
+007209EC	string	Garamond
+007209F8	string	Forte
+00720A00	string	Footlight MT Light
+00720A14	string	Felix Titling
+00720A24	string	Engravers MT
+00720A40	string	Courier New
+00720A4C	string	Comic Sans MS
+00720A5C	string	Colona MT
+00720A68	string	Century Schoolbook
+00720A7C	string	Century Gothic
+00720A8C	string	Centaur
+00720A94	string	Castellar
+00720AA0	string	Calisto MT
+00720AAC	string	Bookman OS
+00720AB8	string	Bodoni MT
+00720AC4	string	Bernard MT Condensed
+00720ADC	string	Bell MT
+00720AE4	string	Arial Black
+00720AF0	string	Arial Italic
+00720B00	string	Arial
+00720B08	string	Andale Mono IPA
+00720B5F	string	?CSMSettings
+00720B6C	string	outsideCutoff
+00720B7C	string	insideCutoff
+00720B8C	string	fontSize
+00720BE0	string	light
+00720C04	string	italic
+00720C0C	string	bolditalic
+00720DF8	string	instance
+00720E04	string	enabled
+00720E0C	string	mailto:
+00720E14	string	print:
+00720E1C	string	PrintAsBitmap:
+00720E2C	string	Print:
+00720E34	string	_level0
+00720E3C	string	#ERROR#
+00720E58	string	_user
+00720E60	string	_author
+00720E68	string	/go/settmgr_locsecy_
+00720E80	string	localSecPathTime
+00720E94	string	localSecPath
+00720EA4	string	localTrusted
+00720EB4	string	localWithNetwork
+00720EC8	string	localWithFile
+00720EE0	string	/[[DYNAMIC]]/
+00720EF0	string	<unknown>
+00720EFC	string	http:
+00720F04	string	undefined
+00720F10	string	[[IMPORT]]/
+00720F1C	string	^ ( [A-Za-z0-9]+ : /* ) [^/]+ /
+00720F48	string	master-only
+00720F54	string	by-ftp-filename
+00720F64	string	by-content-type
+00720FCC	string	cross-domain-policy
+00720FE0	string	none-this-response
+00721010	string	/crossdomain.xml
+00721024	string	/allow-http-request-headers-from
+00721048	string	headers
+00721050	string	allow-http-request-headers-from
+00721070	string	/allow-access-from
+00721084	string	to-ports
+00721090	string	secure
+00721098	string	allow-access-from
+007210AC	string	permitted-cross-domain-policies
+007210CC	string	site-control
+007210DC	string	/cross-domain-policy
+007210F4	string	text/cross-domain-policy
+00721110	string	text/x-cross-domain-policy
+0072112C	string	<policy-file-request/>
+00721144	string	Permitted-Cross-Domain-Policies
+00721164	string	X-Permitted-Cross-Domain-Policies
+00721188	string	application/xhtml+xml
+007211A0	string	application/xml
+007211B0	string	text/
+007211B8	string	Content-Type
+007211F8	string	phase
+00721238	string	texdepth
+00721254	string	texm3x2depth
+007212B0	string	reserved0
+00721324	string	texcoord
+00721348	string	break
+00721350	string	endif
+00721368	string	endrep
+00721374	string	sincos
+00721394	string	label
+0072139C	string	endloop
+00721908	string	input
+0072193C	string	#SharedObjects
+00721954	string	~&\\;:"',<>? #
+00721964	string	/pub/central
+00721974	string	macromedia.com
+007219A4	string	#localhost
+007219B0	string	#localWithNet
+007219C0	string	/support/flashplayer/sys/
+007219DC	string	file:///localWithNet
+007219F4	string	file:///
+00721A00	string	file:///local
+00721A10	string	file://
+00721A18	string	dummy
+00721A24	string	onSync
+00721A2C	string	delete
+00721A34	string	success
+00721A3C	string	oldValue
+00721A48	string	reject
+00721A50	string	change
+00721A58	string	clear
+00721A60	string	flush
+00721A68	string	getSize
+00721A70	string	setFps
+00721A78	string	deleteAll
+00721A84	string	getDiskUsage
+00721A94	string	SharedObject.Flush.Failed
+00721AB0	string	SharedObject.Flush.Success
+00721ACC	string	Could not create shared object.
+00721AEC	string	SharedObject.Failed
+00721B00	string	http://%s
+00721B0C	string	http://a.
+00721B18	string	SharedObject.BadPersistence
+00721B34	string	pending
+00721B3C	string	SharedObject.UriMismatch
+00721E28	string	corner0x
+00721E34	string	selected
+00721E40	string	matrix_ty
+00721E4C	string	matrix_tx
+00721E58	string	matrix_d
+00721E64	string	matrix_c
+00721E70	string	matrix_b
+00721E7C	string	matrix_a
+00721E88	string	indexInRun
+00721E94	string	trackAsMenu
+00721F8C	string	attachment
+00721F98	string	Content-Disposition
+00721FF0	string	boldItalic
+00721FFC	string	regular
+00722108	string	internal
+00722114	string	sameDomain
+00722120	string	rtmp://
+0072212E	string	_xscale
+00722136	string	_yscale
+0072213E	string	_currentframe
+0072214C	string	_totalframes
+00722160	string	_visible
+00722170	string	_height
+00722178	string	_rotation
+00722182	string	_target
+0072218A	string	_framesloaded
+00722198	string	_name
+0072219E	string	_droptarget
+007221AF	string	_highquality
+007221BC	string	_focusrect
+007221C7	string	_soundbuftime
+007221D5	string	_quality
+007221DE	string	_xmouse
+007221E6	string	_ymouse
+00722226	string	'7_global
+00722234	string	MEDIUM
+00722250	string	StandAlone
+0072225C	string	WIN 10,0,22,87
+00722274	string	_parent
+00722280	string	 ; \\s* boundary \\s* = \\s*  " ( [\\ \\'\\(\\)\\+\\,\\-\\.\\/0-9\\:\\=\\?A-Z\\_a-z]{1,70} ) "  ( ; | $ ) 
+007222E0	string	 ; \\s* boundary \\s* = \\s*  ( [\\'\\+\\-\\.0-9A-Z\\_a-z]{1,70} )  ( ; | $ ) 
+0072232C	string	 (?<! \\x0D) \\x0A 
+00722340	string	 \\x0D (?! \\x0A) 
+00722370	string	FlashTmp
+007223A4	string	-Infinity
+007223B0	string	Infinity
+007223CC	string	.maxscroll
+007223D8	string	.scroll
+007223E0	string	_flash
+007223E8	string	A=%b&SA=%b&SV=%b&EV=%b&MP3=%b&AE=%b&VE=%b&ACC=%b&PR=%b&SP=%b&SB=%b&DEB=%b&V=%s%s&PT=%s&AVD=%b&LFD=%b&WD=%b&TLS=%b&ML=%s
+00722464	string	http://%s/
+00722470	string	fscommand
+0072247C	string	script
+00722484	string	 -- %s -- [\\ \\t]* [^\\x0D\\x0A\\ \\t]+ 
+007224A8	string	 -- %s ( [\\ \\t]* [^\\x0D\\x0A\\ \\t]+ ) 
+007224D4	string	 (?<= [^\\x0D\\x0A] ) -- %s 
+007224F0	string	filename
+007224FC	string	 ^ \\s* Content-Disposition \\s* : \\s* ( .* ) 
+0072252C	string	multipart
+0072253C	string	\\x0D\\x0A
+0072254C	string	 \\x0D\\x0A [^\\:\\x0D\\x0A]+ \\x0D\\x0A 
+00722570	string	  \\x0D\\x0A [\\ \\t]+ 
+00722584	string	 ^ ( .+? \\x0D\\x0A )  ( \\x0D\\x0A | $ ) 
+007225AC	string	 ^ \\x0D\\x0A 
+007225BC	string	rtsp:
+007225C4	string	pop3:
+007225CC	string	wais:
+007225D4	string	snews:
+007225DC	string	nntp:
+007225E4	string	imap:
+007225EC	string	gopher:
+007225F4	string	news:
+007225FC	string	telnet:
+0072260C	string	ms-help:
+0072261C	string	ms-itss:
+00722628	string	ms-its:
+00722638	string	vshelp:
+00722640	string	local:
+00722648	string	shell:
+00722664	string	Copy link location
+00722678	string	Open in new window
+00722694	string	Select All
+007226A0	string	Delete
+007226A8	string	Paste
+007226C4	string	Debugger
+007226D0	string	Show Redraw Regions
+007226E4	string	Print
+007226EC	string	About
+007226F4	string	Settings
+00722700	string	Movie not loaded
+0072271C	string	Forward
+00722724	string	Rewind
+0072273C	string	Quality
+00722744	string	Show All
+00722758	string	Zoom Out
+00722764	string	Zoom In
+00722780	string	useCodepage
+0072278C	string	tabEnabled
+00722798	string	 ( \\x0D\\x0A )?  -- %s  ( -- )?  [\\ \\t]*  ( \\x0D\\x0A )? 
+007227D0	string	_root
+007227D8	string	useHandCursor
+007227E8	string	NetConnection.Call.Failed
+00722804	string	Failed
+0072280C	string	Status 
+00722814	string	HTTP: 
+0072281C	string	tabChildren
+00722828	string	isEmbeddedInAcrobat
+0072283C	string	maxLevelIDC
+00722848	string	hasTLS
+00722850	string	localFileReadDisable
+00722868	string	avHardwareDisable
+0072287C	string	playerType
+00722888	string	isDebugger
+00722894	string	hasScreenBroadcast
+007228A8	string	hasScreenPlayback
+007228BC	string	hasPrinting
+007228C8	string	hasAccessibility
+007228DC	string	hasVideoEncoder
+007228EC	string	hasAudioEncoder
+007228FC	string	hasMP3
+00722904	string	hasEmbeddedVideo
+00722918	string	hasStreamingVideo
+0072292C	string	hasStreamingAudio
+00722940	string	hasAudio
+0072294C	string	version
+00722954	string	serverString
+0072296C	string	[type Object]
+0072297C	string	toString
+00722988	string	Adobe
+00722990	string	Flash Player
+007229A0	string	Macromedia
+007229AC	string	ASconstructor
+007229BC	string	ASnative
+007229C8	string	onLoadInit
+007229D4	string	onLoadProgress
+007229E4	string	onLoadError
+007229F0	string	onLoadComplete
+00722A00	string	onLoadStart
+00722A0C	string	onScroller
+00722A18	string	onChanged
+00722A24	string	onConstruct
+00722A30	string	onDragOut
+00722A3C	string	onDragOver
+00722A48	string	onRollOut
+00722A54	string	onRollOver
+00722A60	string	onReleaseOutside
+00722A74	string	onRelease
+00722A80	string	onPress
+00722A88	string	onInitialize
+00722A98	string	onKeyUp
+00722AA0	string	onKeyDown
+00722AAC	string	onMouseUp
+00722AB8	string	onMouseDown
+00722AC4	string	onMouseMove
+00722AD0	string	onUnload
+00722ADC	string	onEnterFrame
+00722AEC	string	closeStream
+00722AF8	string	deleteStream
+00722B08	string	hitArea
+00722B10	string	maxscroll
+00722B1C	string	scroll
+00722B24	string	__resolve
+00722B30	string	Function
+00722B3C	string	arguments
+00722B48	string	super
+00722B58	string	caller
+00722B60	string	callee
+00722B68	string	number
+00722B70	string	function
+00722B7C	string	movieclip
+00722B88	string	object
+00722B90	string	string
+00722B98	string	boolean
+00722BA0	string	__proto__
+00722BAC	string	$version
+00722CB0	string	String
+00722CB8	string	Boolean
+00722CC0	string	Number
+00722CC8	string	Array
+00722CD0	string	Video
+00722CD8	string	TextField
+00722CE4	string	Button
+00722CEC	string	MovieClip
+00722CF8	string	#bmax
+00722D00	string	#bframe
+00722D0E	string	W@valueOf
+00722D18	string	visible
+00722D20	string	separatorBefore
+00722D30	string	caption
+00722D38	string	customItems
+00722D44	string	print
+00722D4C	string	forward_back
+00722D5C	string	rewind
+00722D74	string	builtInItems
+00722D84	string	onSelect
+00722D90	string	onSoundComplete
+00722DA0	string	broadcastMessage
+00722DC0	string	Stage
+00722DC8	string	onResize
+00722E18	string	AUTOLOW
+00722E20	string	AUTOMEDIUM
+00722E2C	string	AUTOHIGH
+00722E38	string	Selection
+00722E44	string	onSetFocus
+00722E50	string	onKillFocus
+00722E77	string	@_changed
+00722E84	string	FSCommand:quit
+00722E94	string	Mouse
+00722E9C	string	onMouseWheel
+00722EB0	string	FSCommand:
+00722EBC	string	url_stream_port
+00722ECC	string	url_stream_host
+00722EDC	string	url_stream_path
+00722EEC	string	NetConnection.Call.Prohibited
+00722F0C	string	IllegalRequest
+00722F1C	string	url_request_target
+00722F30	string	url_request
+00722FA0	string	--edit on--
+00722FAC	string	--sep0--
+00722FC8	string	--sep1--
+00722FD4	string	--sep2--
+00722FE0	string	Movie Not Loaded...
+00722FF4	string	--sep3--
+00723000	string	--sep5--
+0072300C	string	Settings...
+00723018	string	About Adobe Flash Player...
+00723540	string	NetConnection.Connect.Failed
+00723560	string	NetConnection.Connect.Success
+00723580	string	isConnected
+0072358C	string	NetConnection.Connect.Closed
+007235D8	string	rtmfp:
+007235E0	string	rtmpte:
+007235E8	string	rtmpe:
+007235F0	string	rtmps:
+007235F8	string	rtmpt:
+00723600	string	rtmp:
+0072362C	string	System
+00723634	string	NetStream.Connect.Success
+00723654	string	maxPeerConnections
+00723668	string	objectEncoding error
+00723680	string	objectEncoding
+0072369C	string	fpadInfo
+007236A8	string	_result
+007236B0	string	_error
+007236B8	string	NetStream.Connect.Closed
+007236D4	string	pageUrl
+007236DC	string	videoFunction
+007236EC	string	videoCodecs
+007236FE	string	o@audioCodecs
+00723717	string	@capabilities
+00723730	string	tcUrl
+00723738	string	swfUrl
+00723740	string	file:
+00723748	string	flashVer
+00723758	string	stream
+00723760	string	application/x-fcs
+00723774	string	HTTPS
+00723787	string	@NetStream.Buffer.Flush
+007237A0	string	NetStream.Buffer.Full
+007237B8	string	NetStream.Buffer.Empty
+007237D0	string	NetStream.Unpause.Notify
+007237EC	string	NetStream.Pause.Notify
+0072380E	string	{@|RtmpSampleAccess
+00723824	string	pause
+00723870	string	publish
+00723878	string	receiveAudio
+00723888	string	receiveVideo
+007238A0	string	attachAudio
+007238AC	string	attachVideo
+007238B8	string	setBufferTime
+007238C8	string	play2
+007238D0	string	getBufferInfo
+007238E0	string	pauseRaw
+007238EC	string	onPeerConnect
+00723924	string	Started playing 
+00723938	string	NetStream.Play.Reset
+00723950	string	Playing and resetting 
+00723970	string	Stopped playing 
+00723984	string	NetConnection.Call.BadValue
+007239A0	string	audioLossRate
+007239B8	string	dataBufferLength
+007239CC	string	videoBufferLength
+007239E0	string	audioBufferLength
+007239F4	string	dataBufferByteLength
+00723A0C	string	videoBufferByteLength
+00723A24	string	audioBufferByteLength
+00723A3C	string	playbackBytesPerSecond
+00723A54	string	droppedFrames
+00723A64	string	dataByteCount
+00723A74	string	dataBytesPerSecond
+00723A88	string	videoByteCount
+00723A98	string	videoBytesPerSecond
+00723AAC	string	audioByteCount
+00723ABC	string	audioBytesPerSecond
+00723AD0	string	maxBytesPerSecond
+00723AE4	string	byteCount
+00723AF0	string	currentBytesPerSecond
+00723B08	string	NetStream.Publish.BadName
+00723B24	string	NetStream.Publish.Start
+00723B3C	string	NetStream.Play.PublishNotify
+00723B5C	string	 is now published.
+00723B70	string	NetStream.Publish.Failed
+00723B8C	string	append
+00723B9C	string	reset
+00723BA4	string	transition
+00723BB4	string	streamName
+00723BC0	string	audiocodec
+00723BCC	string	videocodec
+00723BD8	string	decodedFrames
+00723BE8	string	liveDelay
+00723BF4	string	bufferLength
+00723C04	string	bufferTime
+00723C10	string	LocalPublisher
+00723C20	string	directConnections
+00723C34	string	connectToFMS
+00723C44	string	NetStream.Unpublish.Success
+00723C60	string	NetStream.Play.UnpublishNotify
+00723C80	string	 is now unpublished.
+00723C98	string	Unpausing 
+00723CA4	string	Pausing 
+00723CB8	string	justify
+00723CC0	string	center
+00723CD0	string	tempMetrics
+00723CDC	string	descent
+00723CE4	string	ascent
+00723CEC	string	textFieldHeight
+00723CFC	string	textFieldWidth
+00723D0C	string	block
+00723D14	string	inline
+00723D1C	string	_typewriter
+00723D30	string	_serif
+00723D38	string	serif
+00723D40	string	_sans
+00723D48	string	sans-serif
+00723D54	string	getTextExtent
+00723D72	string	color
+00723D7C	string	target
+00723D88	string	italic
+00723D8F	string	underline
+00723D99	string	align
+00723D9F	string	leftMargin
+00723DAA	string	rightMargin
+00723DB6	string	indent
+00723DBD	string	leading
+00723DC5	string	blockIndent
+00723DD1	string	tabStops
+00723DDA	string	bullet
+00723DE1	string	display
+00723DFA	string	color
+00723E04	string	target
+00723E10	string	italic
+00723E17	string	underline
+00723E21	string	align
+00723E27	string	leftMargin
+00723E32	string	rightMargin
+00723E3E	string	indent
+00723E45	string	leading
+00723E4D	string	blockIndent
+00723E59	string	tabStops
+00723E62	string	bullet
+00723E69	string	display
+00723E71	string	kerning
+00723E79	string	letterSpacing
+00723EB4	string	TextFormat
+00723EC0	string	dynamic
+00723EE0	string	scroll
+00723EE7	string	maxscroll
+00723EF1	string	borderColor
+00723EFD	string	backgroundColor
+00723F0D	string	textColor
+00723F17	string	tabIndex
+00723F20	string	autoSize
+00723F33	string	htmlText
+00723F3C	string	variable
+00723F45	string	hscroll
+00723F4D	string	maxhscroll
+00723F58	string	maxChars
+00723F61	string	embedFonts
+00723F71	string	border
+00723F78	string	background
+00723F83	string	wordWrap
+00723F8C	string	password
+00723F95	string	multiline
+00723F9F	string	selectable
+00723FAA	string	length
+00723FB1	string	bottomScroll
+00723FBE	string	textWidth
+00723FC8	string	textHeight
+00723FD3	string	restrict
+00723FDC	string	condenseWhite
+00723FEA	string	mouseWheelEnabled
+00723FFC	string	styleSheet
+00724008	string	pixel
+00724010	string	subpixel
+0072401C	string	advanced
+00724060	string	rtmfp://
+0072406C	string	rtmpte://
+00724078	string	rtmpe://
+00724084	string	rtmps://
+00724090	string	rtmpt://
+007240A4	string	local
+007240AC	string	file:////
+007240B8	string	msencdata:
+007240D4	string	vnd.ms.wmhtml:
+007240E4	string	wmhtml:
+007240EC	string	mhtml:
+007240F4	string	Ms-its:
+007240FC	string	mk:@MSITStore:
+00724170	string	LoadNeverCompleted
+00724184	string	URLNotFound
+007241E0	string	http://settingsmanager.adobe.com
+00724204	string	http://www.adobe.com
+0072421C	string	http://www.macromedia.com/support/flashplayer/sys/
+00724250	string	onHTTPStatus
+00724260	string	_over
+0072426C	string	_down
+0072439A	string	us-ascii
+00724496	string	csiso21german
+007244A6	string	x-ia5-german
+007244D1	string	extended_unix_code_packed_format_for_japanese
+00724501	string	cseucpkdfmtjapanese
+0072458D	string	chinese
+007245EB	string	windows-936
+00724647	string	Qfx-ebcdic-thai
+0072467A	string	Zpc-multilingual-850+euro
+007246B8	string	ebcdic-latin9--euro
+007246EF	string	tebcdic-us-37+euro
+00724703	string	tx-ebcdic-cp-us-euro
+0072473B	string	uebcdic-de-273+euro
+00724750	string	ux-ebcdic-germany-euro
+0072478A	string	vebcdic-dk-277+euro
+0072479F	string	vebcdic-no-277+euro
+007247B4	string	vx-ebcdic-denmarknorway-euro
+007247F4	string	webcdic-fi-278+euro
+00724809	string	webcdic-se-278+euro
+0072481E	string	wx-ebcdic-france
+00724830	string	wx-ebcdic-finlandsweden-euro
+00724870	string	xebcdic-it-280+euro
+00724885	string	xx-ebcdic-italy-euro
+007248BD	string	yebcdic-es-284+euro
+007248D2	string	yx-ebcdic-spain-euro
+0072490A	string	zebcdic-gb-285+euro
+0072491F	string	zx-ebcdic-uk-euro
+00724954	string	{ebcdic-fr-297+euro
+00724969	string	{x-ebcdic-france-euro
+007249A2	string	|ebcdic-international-500+euro
+007249C2	string	|x-ebcdic-international-euro
+00724A02	string	}ebcdic-is-871+euro
+00724A17	string	}x-ebcdic-icelandic-euro
+00724A42	string	%ebcdic-cp-us
+00724A51	string	%ebcdic-cp-ca
+00724A60	string	%ebcdic-cp-wt
+00724A6F	string	%ebcdic-cp-nl
+00724AC3	string	O1x-ebcdic-germany
+00724ADF	string	O5ebcdic-cp-dk
+00724AEE	string	O5ebcdic-cp-no
+00724B08	string	O5x-ebcdic-denmarknorway
+00724B32	string	O6ebcdic-cp-fi
+00724B41	string	O6ebcdic-cp-se
+00724B5B	string	O6x-ebcdic-finlandsweden
+00724B85	string	O8ebcdic-cp-it
+00724B9F	string	O8x-ebcdic-italy
+00724BC1	string	O<ebcdic-cp-es
+00724BDB	string	O<x-ebcdic-spain
+00724BFD	string	O=ebcdic-cp-gb
+00724C17	string	O=x-ebcdic-uk
+00724C36	string	OBebcdic-jp-kana
+00724C52	string	OBx-ebcdic-japanesekatakana
+00724C7F	string	OIebcdic-cp-fr
+00724CAC	string	ebcdic-cp-ar1
+00724CC7	string	x-ebcdic-arabic
+00724CEA	string	ebcdic-cp-gr
+00724D04	string	x-ebcdic-greek
+00724D26	string	ebcdic-cp-he
+00724D40	string	x-ebcdic-hebrew
+00724D69	string	cspc8codepage437
+00724D7C	string	codepage437
+00724DA3	string	ebcdic-cp-be
+00724DB2	string	ebcdic-cp-ch
+00724DDD	string	cspc775baltic
+00724E03	string	Rcspc850multilingual
+00724EE2	string	^cspc862latinhebrew
+00724FBE	string	febcdic-cp-roece
+00724FD0	string	febcdic-cp-yu
+00724FFC	string	ebcdic-cp-is
+00725016	string	x-ebcdic-icelandic
+0072503C	string	ebcdic-cyrillic
+00725059	string	x-ebcdic-cyrillicrussian
+00725085	string	ebcdic-cp-tr
+0072509F	string	x-ebcdic-turkish
+007250C4	string	csunicode
+007250D0	string	unicode
+00725178	string	csiso2intlrefversion
+007251A4	string	iso-ir-100
+007251D0	string	latin1
+007251EF	string	csisolatin1
+00725242	string	latin2
+00725250	string	csisolatin2
+007252A3	string	latin3
+007252B1	string	csisolatin3
+007252CC	string	iso-ir-110
+00725306	string	csisolatin4
+0072534D	string	cyrillic
+00725358	string	csisolatincyrillic
+007253BC	string	arabic
+007253C5	string	csisolatinarabic
+00725427	string	greek
+00725438	string	csisolatingreek
+007254AF	string	hebrew
+007254B8	string	csisolatinhebrew
+007254CB	string	logical
+007254D5	string	visual
+00725525	string	csisolatin5
+007255A8	string	korean
+007255E8	string	macintosh
+007255FA	string	csmacintosh
+00725631	string	csiso60danishnorwegian
+0072564A	string	csiso60norwegian1
+0072565E	string	x-ia5-norwegian
+00725670	string	iso-ir-10
+0072567C	string	sen_850200_b
+007256AD	string	csiso10swedish
+007256BE	string	x-ia5-swedish
+007256CE	string	shift_jis
+007256E5	string	csshiftjis
+007256F2	string	shift-jis
+0072571D	string	jwindows-874
+00725744	string	unicode-1-1-utf-7
+00725758	string	csunicode11utf7
+0072576A	string	x-unicode-2-0-utf-7
+00725789	string	unicode
+00725793	string	utf-16be
+0072579E	string	unicodefffe
+007257AC	string	utf-16le
+007257B7	string	unicode
+007257C9	string	x-unicode-2-0-utf-7
+007257E7	string	unicode-2-0-utf-8
+007257FB	string	unicode-1-1-utf-8
+0072580F	string	x-unicode-2-0-utf-8
+00725825	string	windows-1250
+0072583F	string	windows-1251
+00725859	string	windows-1252
+00725868	string	x-ansi
+00725871	string	windows-1253
+00725880	string	windows-1254
+0072588F	string	windows-1255
+0072589E	string	windows-1256
+007258B6	string	windows-1257
+007258C5	string	windows-1258
+007258D4	string	windows-31j
+007258E2	string	cswindows31j
+007258F1	string	shift-jis
+00725935	string	N x-chinese-cns
+00725945	string	N"x-chinese-eten
+00725956	string	R!x-ebcdic-cyrillicserbianbulgarian
+0072597B	string	kx-ebcdic-greekmodern
+00725993	string	x-ebcdic-japaneseandjapaneselatin
+007259B7	string	x-ebcdic-japaneseandkana
+007259D2	string	x-ebcdic-japaneseanduscanada
+007259F1	string	x-ebcdic-koreanandkoreanextended
+00725A12	string	Qax-ebcdic-koreanextended
+00725A2E	string	x-ebcdic-simplifiedchinese
+00725A4B	string	x-ebcdic-traditionalchinese
+00725A72	string	qIx-europa
+00725A7F	string	x-iscii-as
+00725A8C	string	x-iscii-be
+00725A99	string	x-iscii-de
+00725AA6	string	x-iscii-gu
+00725AB3	string	x-iscii-ka
+00725AC0	string	x-iscii-ma
+00725ACD	string	x-iscii-or
+00725ADA	string	x-iscii-pa
+00725AE7	string	x-iscii-ta
+00725AF4	string	x-iscii-te
+00725B01	string	x-mac-arabic
+00725B0E	string	'-x-mac-ce
+00725B1B	string	x-mac-chinesesimp
+00725B2F	string	x-mac-chinesetrad
+00725B43	string	x-mac-cyrillic
+00725B54	string	x-mac-greek
+00725B62	string	x-mac-hebrew
+00725B6F	string	'_x-mac-icelandic
+00725B83	string	x-mac-japanese
+00725B94	string	x-mac-korean
+00725BA1	string	'ax-mac-turkish
+00725C94	string	AuthenticAMD
+00725CAC	string	Shift-JIS
+00725CB8	string	ISO-8859-1
+00725CC4	string	encoding=
+00725CD0	string	<![CDATA[
+00725CDC	string	<!DOCTYPE
+00725CE8	string	<?xml
+00725D34	string	onClose
+00725D3C	string	timeout
+00725D44	string	onConnect
+00725E20	string	Direct3DCreate9
+00725E30	string	d3d9.dll
+007261E0	string	DirectDrawCreate
+007261F4	string	DirectDrawCreateEx
+00726208	string	ddraw.dll
+0072627C	string	DirectDrawEnumerateExA
+007262F7	string	?DXVA2CreateVideoService
+00726310	string	dxva2.dll
+00726448	string	NVIDIA Quadro
+00726458	string	ImmGetCandidateListW
+00726470	string	ImmNotifyIME
+00726480	string	ImmSetCompositionStringW
+0072649C	string	ImmSetConversionStatus
+007264B4	string	ImmGetConversionStatus
+007264CC	string	ImmSetOpenStatus
+007264E0	string	ImmGetOpenStatus
+007264F4	string	ImmGetCompositionStringW
+00726510	string	ImmSetCompositionFontA
+00726528	string	ImmSetCompositionWindow
+00726540	string	ImmReleaseContext
+00726554	string	ImmGetContext
+00726564	string	imm32.dll
+00726570	string	CHINESE
+00726578	string	ALPHANUMERIC_HALF
+0072658C	string	ALPHANUMERIC_FULL
+007265A0	string	KOREAN
+007265A8	string	JAPANESE_HIRAGANA
+007265BC	string	JAPANESE_KATAKANA_HALF
+007265D4	string	JAPANESE_KATAKANA_FULL
+007265EC	string	UNKNOWN
+007265F4	string	System.IME
+00726600	string	onIMEComposition
+00726614	string	telnet
+00726624	string	mailto
+0072663C	string	command
+0072664C	string	shell
+00726654	string	,,0,0,,,
+00726660	string	WWW_OpenURL
+0072666C	string	Application
+00726678	string	ddeexec
+00726736	string	cABeam Scheduler
+007267BC	string	s#gASamsung
+007267C8	string	Panasonic
+007267D4	string	Sharp
+007267DC	string	Canon
+00726A48	unicode	FriendlyName
+00726A64	unicode	\\1394#
+00726A74	unicode	\\avc#
+00726A80	string	 Camcorder
+00726AA0	string	Builtin13
+00726AAC	string	Builtin1
+00726ABA	string	r:text
+00726AC4	string	air:serialization:
+00726AD8	string	air:reference:
+00726AE8	string	Rich Text Format
+00726AFC	string	HTML Format
+00726B08	string	Builtin
+00726B10	string	NoRemove
+00726B1C	string	ForceRemove
+00726C08	string	EndFragment:
+00726C18	string	StartFragment:
+00726C28	string	 <!--EndFragment--> </BODY> </HTML>
+00726C4C	string	 <HTML> <BODY> <!--StartFragment--> 
+00726C74	string	 EndFragment:
+00726C84	string	 StartFragment:
+00726C94	string	 EndHTML:
+00726CA0	string	 StartHTML:
+00726CAC	string	Version:0.9
+00726D18	string	GetFullPathNameW
+00726D2C	string	CopyFileW
+00726D38	string	GetTempFileNameW
+00726D4C	string	GetTempPathW
+00726D5C	string	SetCurrentDirectoryW
+00726D74	string	GetCurrentDirectoryW
+00726D8C	string	GetFileAttributesExW
+00726DA4	string	SetFileAttributesW
+00726DB8	string	GetFileAttributesW
+00726DCC	string	FindNextFileW
+00726DDC	string	FindFirstFileW
+00726DEC	string	ExpandEnvironmentStringsW
+00726E08	string	GetSystemDirectoryW
+00726E1C	string	RemoveDirectoryW
+00726E30	string	MoveFileExW
+00726E3C	string	MoveFileExA
+00726E48	string	GetModuleFileNameW
+00726E5C	string	DeleteFileW
+00726E68	string	CreateProcessW
+00726E78	string	CreateFileW
+00726E84	string	CreateDirectoryW
+00726E98	string	GetUserDefaultUILanguage
+00726EB4	string	kernel32.dll
+00726EC4	string	CharUpperBuffW
+00726ED4	string	user32.dll
+00726EE0	string	RegSetValueExW
+00726EF0	string	RegQueryValueExW
+00726F04	string	RegDeleteValueW
+00726F14	string	RegDeleteKeyW
+00726F24	string	RegOpenKeyExW
+00726F34	string	RegCreateKeyExW
+00726F44	string	GetSidSubAuthorityCount
+00726F5C	string	GetSidSubAuthority
+00726F70	string	GetTokenInformation
+00726F84	string	OpenProcessToken
+00726F98	string	CreateWellKnownSid
+00726FAC	string	DeleteAce
+00726FB8	string	EqualSid
+00726FC4	string	GetAce
+00726FCC	string	GetAclInformation
+00726FE0	string	FreeSid
+00726FE8	string	SetSecurityInfo
+00726FF8	string	SetNamedSecurityInfoW
+00727010	string	SetNamedSecurityInfoA
+00727028	string	SetEntriesInAclW
+0072703C	string	SetEntriesInAclA
+00727050	string	GetSecurityInfo
+00727060	string	GetNamedSecurityInfoW
+00727078	string	GetNamedSecurityInfoA
+00727090	string	AllocateAndInitializeSid
+007270AC	string	advapi32.dll
+007270BC	string	VerQueryValueW
+007270CC	string	GetFileVersionInfoW
+007270E0	string	GetFileVersionInfoSizeW
+007270F8	string	version.dll
+00727104	string	ShellExecuteExW
+00727114	string	SHGetFolderPathW
+0072712C	string	shell32.dll
+0072723C	string	Windows
+00727244	string	Windows 98/ME
+00727254	string	Windows 95
+00727260	string	Windows NT
+0072726C	string	Windows 2000
+0072727C	string	Windows XP
+00727288	string	Windows Server 2003
+0072729C	string	Windows Server 2003 R2
+007272B4	string	Windows Server 2008
+007272C8	string	Windows Vista
+00727334	string	Adobe Windows
+00727344	string	Macromedia Windows
+00727358	string	SHBrowseForFolderW
+0072736C	string	SHGetPathFromIDListW
+00727384	string	shell32
+0072738C	string	GetSaveFileNameW
+007273A0	string	GetOpenFileNameW
+007273B4	string	comdlg32
+007273C0	string	SetWindowTextW
+007273D0	string	user32
+007273D8	string	DwmIsCompositionEnabled
+007273F0	string	dwmapi.dll
+007274BC	string	DISPLAY
+007274D8	string	hasIME
+007274E4	string	pixelAspectRatio
+007274F8	string	screenColor
+00727504	string	screenDPI
+00727510	string	screenResolutionY
+00727524	string	screenResolutionX
+00727538	string	manufacturer
+00727548	string	&M=%s&R=%dx%d&DP=%d&COL=%s&AR=%s&OS=%s&L=%s&IME=%b
+0072759C	string	.cdmp
+007275B0	string	*.exe
+007275B8	string	*.swf
+007275D4	string	Sorry. Select fewer files.
+007275F0	string	Error
+007275F8	string	0123456789abcdef
+0072760D	string	.mdmp
+00727614	string	player_crash_log_(
+00727628	string	build_code
+00727638	string	build_version
+00727648	string	build_module
+00727658	string	SAFlashPlayer.exe
+0072766C	string	player_crash_log_(*).mdmp
+00727688	string	MiniDumpWriteDump
+0072769C	string	dbghelp.dll
+007276A8	string	caughtBy
+007276B4	string	lastChance
+00727744	string	https
+0072774C	string	onUploadCompleteData
+00727764	string	onHTTPError
+00727770	string	FlashPlayerVersion
+00727784	string	Software\\Macromedia\\FlashPlayer
+00727BD4	unicode	.TXT
+00727BE0	unicode	.SOR
+00727BEC	unicode	.SOL
+00727BF8	unicode	.SSR
+00727C04	unicode	.SSL
+00727C10	unicode	.SXX
+00727C1C	unicode	.XML
+00727C28	unicode	.AHD
+00727C34	unicode	.DAT
+00727C40	unicode	.SWZ
+00727C4C	unicode	.HEU
+00727C58	unicode	.TMP
+00727C6C	unicode	%2E\\
+00727C78	unicode	\\%2E
+00727C94	unicode	*?"|<>/
+00727CA4	unicode	\\\\?\\UNC\\
+00727CB8	unicode	\\\\?\\
+00727CC4	string	AppData
+00727CD0	string	Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
+00727D14	unicode	\\Macromedia\\Flash Player
+00727D48	unicode	\\Adobe\\Flash Player
+00727D70	unicode	\\www.macromedia.com
+00727D98	unicode	.exe
+00727DA8	unicode	\\bin\\
+00727DB4	unicode	\\digest.s
+00727DF0	string	" goto Repeat   :MoveMe   cd "
+00727E10	string	"   if exist "
+00727E20	string	@echo off   :Repeat   del "
+00727E3C	string	update.bat
+00727E48	unicode	MacromediaMutexGamma
+00727E88	string	flash
+00727E90	unicode	flash
+00727E9C	string	%HOMEPATH%
+00727EA8	string	%HOMEDRIVE%
+00727F14	string	HTTP/1.0
+00727F20	string	Shockwave Flash
+00727F30	string	</DigestValue>
+00727F40	string	<DigestValue>
+00727F50	string	<Reference URI="
+00727F64	unicode	\\Logs\\codesign.txt
+00727F90	string	VerifyMessage : Second CertVerifySubjectCertificateContext() failed. 
+00727FD8	string	VerifyMessage : Message Verified! 
+00727FFC	string	VerifyMessage : CertVerifySubjectCertificateContext() failed. 
+0072803C	string	VerifyMessage : Certificate chain is too long. 
+0072806C	string	VerifyMessage : CertCreateCertificateContext() failed. 
+007280A4	string	VerifyMessage : CryptGetMessageCertificates() failed. 
+007280DC	string	VerifyMessage : Second CryptVerifyMessageSignature() failed. 
+0072811C	string	VerifyMessage : Unable to allocate dst. 
+00728148	string	VerifyMessage : CryptVerifyMessageSignature() failed. 
+00728180	string	VerifyMessage : Unable to read external root certificate specified in MMS.CFG by CodeSignRootCert. 
+007281E4	string	\\\\?\\UNC\\
+007282B8	unicode	open
+007282E4	unicode	Simsun-18030
+00728300	unicode	Microsoft Yi Baiti
+00728328	unicode	Microsoft Himalaya
+00728350	unicode	Angsana New
+00728368	unicode	MV Boli
+00728378	unicode	Gautami
+00728388	unicode	Latha
+00728394	unicode	Estrangelo Edessa
+007283B8	unicode	Islooka Pota
+007283D4	unicode	Kalinga
+007283E4	unicode	Mongolian Baiti
+00728404	unicode	Kartika
+00728414	unicode	DokChampa
+00728428	unicode	Tunga
+00728434	unicode	DaunPenh
+00728448	unicode	SimSun-18030
+00728464	unicode	Simsun-ExtB
+0072847C	unicode	MS Mincho
+00728490	unicode	MingLiu-ExtB
+007284AC	unicode	MingLiu_HKSCS-ExtB
+007284D4	unicode	MingLiu_HKSCS
+007284F0	unicode	Batang
+00728500	unicode	Raavi
+0072850C	unicode	Shruti
+0072851C	unicode	Mangal
+0072852C	unicode	Plantagenet Cherokee
+00728558	unicode	Euphemia
+0072856C	unicode	MingLiu
+0072857C	unicode	Simsun
+0072858C	unicode	Vrinda
+0072859C	unicode	Sylfaen
+007285AC	unicode	Times New Roman
+007285CC	unicode	Microsoft Uighur
+007285F0	string	zh_TW
+007285F8	string	zh_HK
+00728600	string	zh_CN
+00728644	string	MS UI Gothic
+00728660	string	Batang
+007286C3	string	iFlash
+007286CC	string	Macromed
+007286D8	string	HttpEndRequestA
+007286E8	string	InternetWriteFile
+007286FC	string	HttpSendRequestExA
+00728710	string	HttpAddRequestHeadersA
+00728728	string	InternetSetOptionA
+0072873C	string	InternetErrorDlg
+00728750	string	InternetCloseHandle
+00728764	string	InternetReadFile
+00728778	string	InternetQueryDataAvailable
+00728794	string	HttpSendRequestA
+007287A8	string	HttpOpenRequestA
+007287BC	string	InternetConnectA
+007287D0	string	InternetOpenA
+007287E0	string	wininet.dll
+007287EC	string	text/*
+00728800	string	%d.%d.%d.%d
+0072886C	string	MacromediaFMOmega
+00728880	string	MacromediaMutexOmega
+007288A8	string	CryptReleaseContext
+007288BC	string	CryptGenRandom
+007288CC	string	CryptAcquireContextA
+0072890C	string	Playback
+00728918	string	Record
+00728920	string	Software\\Microsoft\\Multimedia\\Sound Mapper
+0072894C	string	Unknown Microphone
+00728970	string	GetTextExtentPoint32W
+00728988	string	gdi32
+007289A4	string	Hardware\\Description\\System\\CentralProcessor\\0
+00728AE4	string	trapallkeys
+00728AF0	string	showmenu
+00728B04	string	allowscale
+00728B10	string	fullscreen
+00728B70	string	\\wship6
+00728B78	string	\\ws2_32
+00728B80	string	freeaddrinfo
+00728B90	string	getnameinfo
+00728B9C	string	getaddrinfo
+00728BC8	string	ff02::1
+00728BE8	string	WinHttpGetIEProxyConfigForCurrentUser
+00728C10	string	WinHttpGetProxyForUrl
+00728C28	string	WinHttpDetectAutoProxyConfigUrl
+00728C48	string	WinHttpGetDefaultProxyConfiguration
+00728C6C	string	WinHttpCloseHandle
+00728C80	string	WinHttpOpen
+00728C8C	string	winhttp.dll
+00728C98	string	URLDownloadToFileA
+00728CAC	string	urlmon.dll
+00728CB8	string	InternetDeInitializeAutoProxyDll
+00728CDC	string	InternetGetProxyInfo
+00728CF4	string	InternetInitializeAutoProxyDll
+00728D14	string	jsproxy.dll
+00728D20	string	InternetQueryOptionA
+00728D38	string	DetectAutoProxyUrl
+00728D4C	unicode	WinHTTP AutoProxy Test
+00728D7C	string	http=
+00728D84	string	https=
+00728D90	string	STATIC
+00728D98	string	Dummy
+00728DEC	string	N8w?Secur32.dll
+00728DFC	string	Security.dll
+00728E0C	string	CertCloseStore
+00728E1C	string	CertOpenSystemStoreW
+00728E34	string	CertFreeCertificateContext
+00728E50	string	CertFreeCertificateChain
+00728E6C	string	CertVerifyCertificateChainPolicy
+00728E90	string	CertGetCertificateChain
+00728EA8	string	crypt32.dll
+00728EB4	string	InitSecurityInterfaceA
+00728ECC	string	Microsoft Unified Security Protocol Provider
+00728F50	string	application/x-amf
+00728F64	string	  Content-length: 
+00728F78	string	Content-type: 
+00728F88	string	Cache-Control: no-transform  
+00728FA8	string	.jpeg
+00728FB0	string	x-flash-version: 
+00728FC4	string	Referer: 
+00728FD0	string	FtpOpenFileA
+00728FE0	string	HttpQueryInfoA
+00728FF4	string	Adobe Flash Player Rich Text
+00729014	string	ShockwaveFlash
+00729028	string	User32.dll
+00729040	string	RecentMovie
+0072905C	string	onFullScreen
+00729074	string	FlashPlayer.ProtectedMediaForFlashPlayer
+007290A0	string	FlashPlayer.ProtectedMediaForFlashPlayer\\DefaultIcon
+007290D8	string	FlashPlayer.ProtectedMediaForFlashPlayer\\shell\\open\\command
+0072911C	string	FlashPlayer.AudioForFlashPlayer
+0072913C	string	FlashPlayer.AudioForFlashPlayer\\DefaultIcon
+00729168	string	FlashPlayer.AudioForFlashPlayer\\shell\\open\\command
+007291A4	string	FlashPlayer.VideoForFlashPlayer
+007291C4	string	FlashPlayer.VideoForFlashPlayer\\DefaultIcon
+007291F0	string	FlashPlayer.VideoForFlashPlayer\\shell\\open\\command
+0072922C	string	FlashPlayer.FlashVideo
+00729244	string	FlashPlayer.FlashVideo\\DefaultIcon
+00729268	string	FlashPlayer.FlashVideo\\shell\\open\\command
+0072929C	string	ShockwaveFlash.ShockwaveFlash
+007292BC	string	ShockwaveFlash.ShockwaveFlash\\DefaultIcon
+007292EC	string	ShockwaveFlash.ShockwaveFlash\\shell\\open\\command
+007295E4	string	sndTransform
+00729678	string	child
+00729738	string	ByteArray
+00729744	string	flash.utils
+00729764	string	bytes
+0072976C	string	charSet
+007297F8	string	algorithm
+00729804	string	endian
+0072993C	string	format
+007299C8	string	handler
+00729A60	string	alphaOffset
+00729A6C	string	blueOffset
+00729A78	string	greenOffset
+00729A84	string	redOffset
+00729A90	string	alphaMultiplier
+00729AA0	string	blueMultiplier
+00729AB0	string	greenMultiplier
+00729AC0	string	redMultiplier
+00729AD0	string	point
+00729B58	string	removeChildAt
+00729B68	string	getChildAt
+00729B74	string	getChildByName
+00729C94	string	textRotation
+00729E38	string	clone
+00729FB2	string	'7blendMode
+00729FCC	string	hitTestObject
+0072A0FC	string	parent
+0072A116	string	y8blendShader
+0072A124	string	transform
+0072A2C0	string	justificationStyle
+0072A358	string	onnnnnnnn
+0072A3E8	string	alignmentBaseline
+0072A3FC	string	breakOpportunity
+0072A410	string	dominantBaseline
+0072A424	string	fontDescription
+0072A434	string	digitCase
+0072A440	string	digitWidth
+0072A44C	string	ligatureLevel
+0072A45C	string	locale
+0072A464	string	typographicCase
+0072A6DC	string	Sbbobi
+0072A6E4	string	Sbbnnobbbbi
+0072A6F0	string	Sbbiiibbb
+0072A6FC	string	Sbboo
+0072A704	string	Sbbii
+0072A714	string	 level=error, code=
+0072A728	string	StatusEvent
+0072A734	string	Sbbss
+0072A73C	string	NetStatusEvent
+0072A75C	string	Sbbooo
+0072A764	string	Sbbno
+0072A76C	string	 text=
+0072A774	string	ErrorEvent
+0072A788	string	 error=
+0072A790	string	AsyncErrorEvent
+0072A7A0	string	SbbSa
+0072A7A8	string	IOErrorEvent
+0072A7B8	string	SecurityErrorEvent
+0072A7D4	string	event
+0072A7DC	string	listener
+0072A878	string	expression
+0072A884	string	request
+0072AAB0	string	FileReference.upload
+0072AAC8	string	uploadDataFieldName
+0072AADC	string	FileReference.download
+0072ABF8	string	FileReference.browse
+0072AC10	string	FileReferenceList.browse
+0072AD30	string	renderingMode
+0072AD40	string	fontLookup
+0072AD4C	string	fontName
+0072AD58	string	fontPosture
+0072AD64	string	fontWeight
+0072AD70	string	cffHinting
+0072AE80	string	trapAllKeys
+0072B020	string	bitmap
+0072B057	string	?colors
+0072B060	string	shader
+0072B068	string	winding
+0072B070	string	culling
+0072B29C	string	filterObject
+0072B2AC	string	destPoint
+0072B2B8	string	sourceRect
+0072B2C4	string	sourceBitmapData
+0072B2D8	string	colorTransform
+0072B2F0	string	otherBitmapData
+0072B300	string	inputByteArray
+0072B310	string	BitmapData.draw
+0072B320	string	IBitmapDrawable
+0072B330	string	secondBitmapDataPoint
+0072B348	string	firstPoint
+0072B354	string	numPixels
+0072B360	string	Operation
+0072B36C	string	operationStr
+0072B400	string	pixelSnapping
+0072B410	string	tabIndex
+0072B694	string	deblockingFilter
+0072B6A8	string	Loader.content
+0072B8D8	string	definitionName
+0072B8E8	string	getDefinition
+0072B8F8	string	globalMemory
+0072B908	string	LoaderContext.checkPolicyFile
+0072B928	string	LoaderContext.securityDomain
+0072B948	string	Loader.load
+0072BA64	string	LoaderInfo.loader
+0072BA78	string	image/gif
+0072BA84	string	image/png
+0072BA90	string	image/jpeg
+0072BA9C	string	application/x-shockwave-flash
+0072BABC	string	LoaderInfo.content
+0072BAEC	string	LocalConnection.send
+0072BC24	string	LocalConnection.connect
+0072BC3C	string	connectionName
+0072BC4C	string	methodName
+0072BD67	string	?orientationStyle
+0072BD8F	string	?vector
+0072BDA4	string	toMat
+0072BDAC	string	fromMat
+0072BDBF	string	?components
+0072BF60	string	codecString
+0072C070	string	cursor
+0072C2EC	string	NetConnection.connect
+0072C304	string	NetConnection
+0072C330	string	writeDynamicProperties
+0072C4D8	string	NetStream.play
+0072C4E8	string	nnnnnnnnnnnnnnnnnnn
+0072C524	string	NetStream
+0072C530	string	connection
+0074DFA8	string	activate
+0074DFB1	string	activity
+0074DFBA	string	added
+0074DFC0	string	addedToStage
+0074DFCD	string	cancel
+0074DFD4	string	change
+0074DFDB	string	click
+0074DFE1	string	close
+0074DFE7	string	complete
+0074DFF0	string	connect
+0074DFFD	string	deactivate
+0074E008	string	doubleClick
+0074E014	string	enterFrame
+0074E01F	string	exitFrame
+0074E029	string	error
+0074E02F	string	focusIn
+0074E037	string	focusOut
+0074E040	string	frameConstructed
+0074E055	string	imeComposition
+0074E069	string	ioError
+0074E071	string	keyDown
+0074E079	string	keyFocusChange
+0074E093	string	menuItemSelect
+0074E0A2	string	menuSelect
+0074E0AD	string	mouseDown
+0074E0B7	string	mouseFocusChange
+0074E0C8	string	mouseLeave
+0074E0D3	string	mouseMove
+0074E0DD	string	mouseOut
+0074E0E6	string	mouseOver
+0074E0F0	string	mouseUp
+0074E0F8	string	mouseWheel
+0074E103	string	netStatus
+0074E117	string	level
+0074E11D	string	description
+0074E129	string	stream
+0074E130	string	details
+0074E138	string	progress
+0074E141	string	removed
+0074E149	string	removedFromStage
+0074E15A	string	render
+0074E161	string	resize
+0074E168	string	rollOut
+0074E170	string	rollOver
+0074E179	string	scroll
+0074E180	string	securityError
+0074E18E	string	select
+0074E195	string	socketData
+0074E1A0	string	soundComplete
+0074E1AE	string	status
+0074E1B5	string	tabChildrenChange
+0074E1C7	string	tabEnabledChange
+0074E1D8	string	tabIndexChange
+0074E1E7	string	textInput
+0074E1F1	string	timer
+0074E1F7	string	unload
+0074E1FE	string	fullScreen
+0074E209	string	uploadCompleteData
+0074E21C	string	isRelatedObjectInaccessible
+0074E238	string	isMouseTargetInaccessible
+0074E252	string	ideographicTop
+0074E261	string	ideographicCenter
+0074E273	string	ideographicBottom
+0074E285	string	roman
+0074E28B	string	ascent
+0074E292	string	descent
+0074E29A	string	useDominantBaseline
+0074E2B2	string	lining
+0074E2B9	string	oldStyle
+0074E2C2	string	proportional
+0074E2CF	string	tabular
+0074E2D7	string	space
+0074E2DD	string	japanese
+0074E2E6	string	prioritizeLeastAdjustment
+0074E300	string	pushInKinsoku
+0074E30E	string	pushOutOnly
+0074E31A	string	minimum
+0074E322	string	common
+0074E329	string	uncommon
+0074E332	string	exotic
+0074E339	string	unjustified
+0074E345	string	allButLast
+0074E350	string	allIncludingLast
+0074E361	string	rotate0
+0074E369	string	rotate90
+0074E372	string	rotate180
+0074E37C	string	rotate270
+0074E386	string	title
+0074E391	string	smallCaps
+0074E39B	string	uppercase
+0074E3A5	string	lowercase
+0074E3AF	string	capsAndSmallCaps
+0074E3C0	string	valid
+0074E3C6	string	possiblyInvalid
+0074E3D6	string	invalid
+0074E3DE	string	static
+0074E3E5	string	flash
+0074E3EB	string	generic
+0074E3F3	string	postscript
+0074E3FE	string	start
+0074E408	string	decimal
+0074E419	string	paste
+0074E41F	string	clear
+0074E425	string	selectAll
+0074E42F	string	success
+0074E437	string	emergency
+0074E441	string	insufficientWidth
+0074E453	string	arrow
+0074E459	string	button
+0074E46B	string	embeddedCFF
+0074E47B	string	horizontalStem
+0074E48A	string	input
+0074E490	string	dynamic
+0074E49D	string	center
+0074E4A4	string	right
+0074E4AA	string	justify
+0074E4BB	string	square
+0074E4C2	string	round
+0074E4C8	string	bevel
+0074E4CE	string	miter
+0074E4D8	string	reflect
+0074E4E0	string	repeat
+0074E4E7	string	linear
+0074E4EE	string	radial
+0074E4F5	string	linearRGB
+0074E503	string	evenOdd
+0074E50B	string	nonZero
+0074E513	string	positive
+0074E51C	string	negative
+0074E535	string	opaque
+0074E53C	string	normal
+0074E543	string	layer
+0074E549	string	multiply
+0074E552	string	screen
+0074E559	string	lighten
+0074E561	string	darken
+0074E568	string	difference
+0074E577	string	subtract
+0074E580	string	invert
+0074E587	string	alpha
+0074E58D	string	erase
+0074E593	string	overlay
+0074E59B	string	hardlight
+0074E5A5	string	shader
+0074E5AC	string	bevel
+0074E5B7	string	inner
+0074E5BD	string	outer
+0074E5CF	string	block
+0074E5D5	string	inline
+0074E5E1	string	invoke
+0074E5F2	string	clamp
+0074E5F8	string	color
+0074E603	string	ignore
+0074E60A	string	networkError
+0074E617	string	diskError
+0074E621	string	verifyError
+0074E632	string	italic
+0074E639	string	boldItalic
+0074E64B	string	default
+0074E653	string	normal
+0074E65A	string	pixel
+0074E660	string	subpixel
+0074E671	string	advanced
+0074E67A	string	light
+0074E680	string	horizontal
+0074E68B	string	vertical
+0074E694	string	httpStatus
+0074E69F	string	littleEndian
+0074E6AC	string	bigEndian
+0074E6B6	string	writeExternal
+0074E6C4	string	readExternal
+0074E6D1	string	asyncError
+0074E6EE	string	checkPolicyFile
+0074E6FE	string	bufferTime
+0074E715	string	never
+0074E71B	string	filter
+0074E722	string	Transient
+0074E72C	string	device
+0074E733	string	embedded
+0074E73C	string	regular
+0074E749	string	italic
+0074E750	string	boldItalic
+0074E765	string	quality
+0074E777	string	rewind
+0074E77E	string	forwardAndBack
+0074E78D	string	print
+0074E793	string	float
+0074E7D8	string	matrix2x2
+0074E7EC	string	matrix4x4
+0074E800	string	eulerAngles
+0074E80C	string	axisAngle
+0074E816	string	quaternion
+0074E821	string	sampleData
+0074E831	string	deflate
+0074E839	string	LocalPublisher
+0074E954	string	BitmapData
+0074E960	string	nnnnnnnn
+0074E96C	string	nnnnnn
+0074E974	string	DisplayObject
+0074E984	string	Filter
+0074E98C	string	Point
+0074E994	string	aliasName
+0074E9A0	string	classObject
+0074E9B8	string	navigateToURL
+0074E9C8	string	sendToURL
+0074E9D4	string	</metadata>
+0074E9E0	string	<arg key="
+0074E9EC	string	" value="
+0074E9FC	string	<metadata name="
+0074EA10	string	Version
+0074EA18	string	</accessor>
+0074EA24	string	readwrite
+0074EA30	string	readonly
+0074EA3C	string	writeonly
+0074EA48	string	 access="
+0074EA54	string	<accessor name="
+0074EA68	string	</method>
+0074EA74	string	<method name="
+0074EA84	string	" declaredBy="
+0074EA94	string	" returnType="
+0074EAA4	string	</variable>
+0074EAB0	string	</constant>
+0074EABC	string	" uri="
+0074EAC4	string	 name="
+0074EACC	string	<variable
+0074EAD8	string	<constant
+0074EAE4	string	</constructor>
+0074EAF4	string	<parameter index="
+0074EB08	string	" type="
+0074EB14	string	" optional="
+0074EB2C	string	<constructor>
+0074EB3C	string	<implementsInterface type="
+0074EB58	string	<extendsClass type="
+0074EB70	string	</type>
+0074EB78	string	</factory>
+0074EB84	string	<factory type="
+0074EB94	string	 alias="
+0074EBA0	string	 isDynamic="
+0074EBB0	string	" isFinal="
+0074EBBC	string	" isStatic="
+0074EBCC	string	 base="
+0074EBD4	string	<type name="
+0074ECE8	string	PrintJob
+0074EE10	string	Product
+0074EFB0	string	nextName
+0074EFBC	string	nextValue
+0074EFC8	string	nextNameIndex
+0074EFD8	string	getDescendants
+0074EFE8	string	deleteProperty
+0074EFF8	string	callProperty
+0074F008	string	hasProperty
+0074F014	string	setProperty
+0074F020	string	getProperty
+0074F02C	string	http://www.adobe.com/2006/actionscript/flash/proxy
+0074F2F4	string	stack
+0074F5C0	string	byteCode
+0074FC24	string	propertyName
+0074FC64	string	SharedObject
+0074FC74	string	SharedObject.getLocal
+0074FC8C	string	SharedObject.getRemote
+0074FCA4	string	String or Boolean
+0074FE38	string	.connect
+0074FEDC	string	soundChannel
+0074FFF4	string	songName
+00750000	string	Sound.id3
+0075011C	string	Sound.load
+00750128	string	sound
+00750130	string	SoundMixer.computeSpectrum
+0075014C	string	stretchFactor
+007503E8	string	soundTransform
+00750518	string	unsupported
+00750524	string	defaultOff
+00750530	string	defaultOn
+007505C0	string	Stage.removeChildAt
+007505D4	string	Stage.swapChildrenAt
+007505EC	string	displayState
+007505FC	string	scaleMode
+00750608	string	colorCorrection
+00750B0C	string	colors Array
+00750B1C	string	ratios
+00750B24	string	alphas Array
+00750BC4	string	matrix
+00750CEC	string	mapBitmap
+00750CF8	string	mapPoint
+00751324	string	_internal
+00751330	string	1.0 cyclone
+007513C0	string	composition
+007513CC	string	settingsManager
+007513DC	string	display
+007513E4	string	camera
+007513EC	string	microphone
+007513F8	string	localStorage
+00751408	string	privacy
+00751590	string	alignment
+0075159C	string	decimalAlignmentToken
+00751638	string	baselineZero
+00751648	string	lastLine
+00751654	string	firstLine
+00751660	string	textJustifier
+00751670	string	lineRotation
+00751818	string	gridFitType
+00751824	string	antiAliasType
+00751834	string	richText
+00751940	string	colorType
+0075194C	string	fontStyle
+00751958	string	antialiasType
+007519E8	string	pasteRichText
+007519F8	string	copyRichText
+00751A08	string	flash.text
+00751A98	string	autoSize
+00751BA8	string	lineJustification
+00751D5C	string	baseline
+00751D68	string	validity
+00751E00	string	textToFind
+00751F30	string	clearArrayEntry
+00751FC2	string	'7relativeTo
+00752050	string	displayObject
+00752378	string	method
+00752404	string	digest
+0075240C	string	URLStream.load
+007524A8	string	projectedVertices
+007524BC	string	vertices
+00752670	string	source
+007555CC	string	-2147483648
+0075569C	string	decodeURI
+007556A8	string	decodeURIComponent
+007556BC	string	encodeURI
+007556C8	string	encodeURIComponent
+00755888	string	4294967295
+00755894	string	&#x9;
+0075589C	string	&#xD;
+007558A4	string	&#xA;
+007558AC	string	Error #
+007558B4	string	Vector.<
+007558C0	string	NeedsDxns
+007558CC	string	prefix
+007558D4	string	global
+007558E0	string	toLocaleString
+00755998	string	%2:%2:%2 %cM
+007559A8	string	%2:%2:%2 GMT%c%2%2
+007559BC	string	%3 %3 %d %d
+007559C8	string	%3 %3 %d %2:%2:%2 %d UTC
+007559E4	string	%3 %3 %d %d %2:%2:%2 %cM
+00755A00	string	JanFebMarAprMayJunJulAugSepOctNovDec
+007572CC	string	xdigit
+007572DC	string	space
+007572E4	string	punct
+007572EC	string	graph
+007572F4	string	digit
+007572FC	string	cntrl
+00757304	string	blank
+0075730C	string	ascii
+00757314	string	alnum
+0075731C	string	upper
+00757324	string	lower
+0075733C	string	PRUNE
+00757350	string	COMMIT
+00757358	string	ACCEPT
+007575EC	string	DEFINE
+0075760C	string	CRLF)
+0075762C	string	(null)
+00757648	string	[object 
+00757654	string	[class 
+00757768	string	public
+00758064	string	 xmlns
+0075808C	string	<?xml 
+00758218	string	addNamespace
+00758228	string	appendChild
+00758234	string	childIndex
+00758240	string	inScopeNamespaces
+00758254	string	insertChildAfter
+00758268	string	insertChildBefore
+0075827C	string	namespace
+00758288	string	localName
+00758294	string	namespaceDeclarations
+007582AC	string	nodeKind
+007582B8	string	prependChild
+007582C8	string	removeNamespace
+007582D8	string	replace
+007582E0	string	setChildren
+007582EC	string	setLocalName
+007582FC	string	setName
+00758304	string	setNamespace
+00758314	string	textSet
+0075831C	string	nameSet
+00758324	string	namespaceSet
+00758334	string	namespaceRemoved
+00758348	string	namespaceAdded
+00758358	string	nodeChanged
+00758364	string	nodeRemoved
+00758370	string	nodeAdded
+0075837C	string	attributeChanged
+00758390	string	attributeRemoved
+007583A4	string	attributeAdded
+007583B4	string	http://www.w3.org/XML/1998/namespace
+007583DC	string	element
+007583E4	string	processing-instruction
+007583FC	string	attribute
+00758590	string	JanFebMarAprMayJunJulAugSepOctNovDecSunMonTueWedThuFriSatGMTUTC
+007589D0	string	emptyCtor
+00758AE0	string	Class$
+00762334	string	Vector$
+0076233C	string	String$
+00762344	string	Boolean$
+00762350	string	uint$
+00762360	string	Number$
+00762368	string	Math$
+00762370	string	MethodClosure
+00762380	string	Vector.<*>
+0076238C	string	Vector.<uint>
+0076239C	string	Vector.<int>
+007623AC	string	Vector.<Number>
+007623C4	string	Vector
+007623CC	string	Vector$object
+007623DC	string	Vector$double
+007623EC	string	Vector$uint
+007623F8	string	Vector$int
+00762404	string	XMLList
+0076240C	string	QName
+00762414	string	RegExp
+00762428	string	Namespace
+00762434	string	Class
+00762458	string	Ugaritic
+00762464	string	Tifinagh
+00762470	string	Tibetan
+00762490	string	Tamil
+007624A0	string	Tagbanwa
+007624AC	string	Tagalog
+007624B4	string	Syriac
+007624BC	string	Syloti_Nagri
+007624D4	string	Sinhala
+007624DC	string	Shavian
+007624E8	string	Runic
+007624FC	string	Phoenician
+00762508	string	Phags_Pa
+00762528	string	Osmanya
+00762538	string	Old_Persian
+00762544	string	Old_Italic
+00762564	string	New_Tai_Lue
+00762578	string	Myanmar
+00762580	string	Mongolian
+00762598	string	Malayalam
+007625B8	string	Linear_B
+007625CC	string	Latin
+007625E0	string	Khmer
+007625E8	string	Kharoshthi
+007625F4	string	Katakana
+00762600	string	Kannada
+00762608	string	Inherited
+00762614	string	Hiragana
+00762620	string	Hebrew
+00762628	string	Hanunoo
+00762630	string	Hangul
+00762648	string	Gujarati
+00762654	string	Greek
+0076265C	string	Gothic
+00762664	string	Glagolitic
+00762670	string	Georgian
+0076267C	string	Ethiopic
+00762688	string	Devanagari
+00762694	string	Deseret
+0076269C	string	Cyrillic
+007626A8	string	Cypriot
+007626B0	string	Cuneiform
+007626C0	string	Coptic
+007626C8	string	Common
+007626D8	string	Cherokee
+007626EC	string	Canadian_Aboriginal
+0076270C	string	Buginese
+00762718	string	Braille
+00762720	string	Bopomofo
+0076272C	string	Bengali
+00762734	string	Balinese
+00762740	string	Armenian
+0076274C	string	Arabic
+00764090	string	maxchan
+0076A290	string	Cannot allocate LTP storage
+0076A2AC	string	Cannot allocate prediction storage
+0076A2D0	string	Cannot allocate TNS storage
+0076A2EC	string	Cannot allocate storage for joint coding data
+007713BD	string	NotDef
+007713EA	string	EKQ1.000Copyright 2008 Adobe Systems Incorporated. All rights reserved.NotDefNormal
+0077B07D	string	AAAAAAAAAAAAAAAAAAAA
+0077B17D	string	AAAAAAAAAAAAAAAAAAAA
+0077B192	string	AAAAAAAAAA
+0077B1FD	string	AAAAAAAAAAAAAAAAAAAA
+0077B3E8	string	pmcclcoltrevtkunnhkafhprfrkrferpfwlbfvbaftspflahutavtcjc
+0077B4F0	string	2vedaved2gnbgneb2rjgrjug2rugurug2dnkadnk2mlmmylm2yroayro2letulet2lmtlmat
+0077B53C	string	mvbamwlbkramnrektsid
+00787FD0	unicode	@@@@
+00788010	string	        
+00788030	string	@@@@@@@@
+0078857C	string	ultra-wideband (sub-band CELP)
+0078859C	string	wideband (sub-band CELP)
+007890A7	string	?narrowband
+0078EBDC	string	(mp3dec) error: invalid handle
+00793E90	string	e+000
+00793EA6	string	GAIsProcessorFeaturePresent
+00793EC4	string	KERNEL32
+00793ED0	string	runtime error 
+00793EE0	string	TLOSS error  
+00793EF0	string	SING error  
+00793F00	string	DOMAIN error  
+00793F10	string	R6034  An application has made an attempt to load the C runtime library incorrectly. Please contact the application's support team for more information.  
+00793FB0	string	R6033  - Attempt to use MSIL code from this assembly during native code initialization This indicates a bug in your application. It is most likely the result of calling an MSIL-compiled (/clr) function from a native constructor or from DllMain.  
+007940A8	string	R6032  - not enough space for locale information  
+007940E0	string	R6031  - Attempt to initialize the CRT more than once. This indicates a bug in your application.  
+00794144	string	R6030  - CRT not initialized  
+00794164	string	R6028  - unable to initialize heap  
+0079418C	string	R6027  - not enough space for lowio initialization  
+007941C4	string	R6026  - not enough space for stdio initialization  
+007941FC	string	R6025  - pure virtual function call  
+00794224	string	R6024  - not enough space for _onexit/atexit table  
+0079425C	string	R6019  - unable to open console device  
+00794288	string	R6018  - unexpected heap error  
+007942AC	string	R6017  - unexpected multithread lock error  
+007942DC	string	R6016  - not enough space for thread data  
+00794308	string	  This application has requested the Runtime to terminate it in an unusual way. Please contact the application's support team for more information.  
+007943A0	string	R6009  - not enough space for environment  
+007943CC	string	R6008  - not enough space for arguments  
+007943F8	string	R6002  - floating point support not loaded  
+00794428	string	Microsoft Visual C++ Runtime Library
+00794458	string	<program name unknown>
+00794470	string	Runtime Error!  Program: 
+0079448C	string	EncodePointer
+0079449C	unicode	KERNEL32.DLL
+007944B8	string	DecodePointer
+007944C8	string	FlsFree
+007944D0	string	FlsSetValue
+007944DC	string	FlsGetValue
+007944E8	string	FlsAlloc
+00794580	unicode	(null)
+007945EC	string	CorExitProcess
+007945FC	unicode	mscoree.dll
+0079470C	string	floor
+00794724	string	exp10
+0079473C	string	log10
+00794744	string	GetProcessWindowStation
+0079475C	string	GetUserObjectInformationA
+00794778	string	GetLastActivePopup
+0079478C	string	GetActiveWindow
+0079479C	string	MessageBoxA
+007947A8	string	USER32.DLL
+00794FC0	string	HH:mm:ss
+00794FCC	string	dddd, MMMM dd, yyyy
+00794FE0	string	MM/dd/yy
+00794FF4	string	December
+00795000	string	November
+0079500C	string	October
+00795014	string	September
+00795020	string	August
+00795038	string	April
+00795040	string	March
+00795048	string	February
+00795054	string	January
+0079508C	string	Saturday
+00795098	string	Friday
+007950A0	string	Thursday
+007950AC	string	Wednesday
+007950B8	string	Tuesday
+007950C0	string	Monday
+007950C8	string	Sunday
+0079514C	string	_nextafter
+007951C4	string	1#QNAN
+007951CC	string	1#INF
+007951D4	string	1#IND
+007951DC	string	1#SNAN
+007951E4	string	SunMonTueWedThuFriSat
+007951FC	string	JanFebMarAprMayJunJulAugSepOctNovDec
+00795224	string	CONOUT$
+00795F7E	TerminatedCString	HttpQueryInfoA
+00795F8E	TerminatedCString	WININET.dll
+00795F9C	TerminatedCString	CertCloseStore
+00795FAE	TerminatedCString	CertFreeCertificateContext
+00795FCC	TerminatedCString	CertVerifySubjectCertificateContext
+00795FF2	TerminatedCString	CertFindCertificateInStore
+00796010	TerminatedCString	CertCreateCertificateContext
+00796030	TerminatedCString	CryptGetMessageCertificates
+0079604E	TerminatedCString	CryptVerifyMessageSignature
+0079606A	TerminatedCString	CRYPT32.dll
+00796078	TerminatedCString	CopyStgMedium
+00796086	TerminatedCString	urlmon.dll
+00796094	TerminatedCString	GetFileVersionInfoA
+007960AA	TerminatedCString	GetFileVersionInfoSizeA
+007960C4	TerminatedCString	VerQueryValueA
+007960D4	TerminatedCString	VERSION.dll
+007960E2	TerminatedCString	timeGetTime
+007960F0	TerminatedCString	timeBeginPeriod
+00796102	TerminatedCString	timeEndPeriod
+00796112	TerminatedCString	timeGetDevCaps
+00796124	TerminatedCString	waveOutReset
+00796134	TerminatedCString	waveOutClose
+00796144	TerminatedCString	waveOutWrite
+00796154	TerminatedCString	waveOutPrepareHeader
+0079616C	TerminatedCString	waveOutUnprepareHeader
+00796186	TerminatedCString	waveInClose
+00796194	TerminatedCString	waveInUnprepareHeader
+007961AC	TerminatedCString	waveInReset
+007961BA	TerminatedCString	waveInStop
+007961C8	TerminatedCString	waveInGetNumDevs
+007961DC	TerminatedCString	waveOutGetDevCapsA
+007961F2	TerminatedCString	waveInGetDevCapsA
+00796206	TerminatedCString	waveOutGetNumDevs
+0079621A	TerminatedCString	waveOutOpen
+00796228	TerminatedCString	waveInStart
+00796236	TerminatedCString	waveInAddBuffer
+00796248	TerminatedCString	waveInPrepareHeader
+0079625E	TerminatedCString	waveInOpen
+0079626C	TerminatedCString	timeSetEvent
+0079627C	TerminatedCString	timeKillEvent
+0079628C	TerminatedCString	waveOutGetPosition
+007962A0	TerminatedCString	WINMM.dll
+007962AA	TerminatedCString	OLEAUT32.dll
+007962BA	TerminatedCString	InitializeCriticalSection
+007962D6	TerminatedCString	DeleteCriticalSection
+007962EE	TerminatedCString	EnterCriticalSection
+00796306	TerminatedCString	LeaveCriticalSection
+0079631E	TerminatedCString	Sleep
+00796326	TerminatedCString	InterlockedCompareExchange
+00796344	TerminatedCString	InterlockedExchange
+0079635A	TerminatedCString	SetEvent
+00796366	TerminatedCString	WaitForMultipleObjects
+00796380	TerminatedCString	CloseHandle
+0079638E	TerminatedCString	CreateEventA
+0079639E	TerminatedCString	ResetEvent
+007963AC	TerminatedCString	MultiByteToWideChar
+007963C2	TerminatedCString	GetCPInfo
+007963CE	TerminatedCString	GetACP
+007963D8	TerminatedCString	IsDBCSLeadByte
+007963EA	TerminatedCString	VirtualQuery
+007963FA	TerminatedCString	SetThreadAffinityMask
+00796412	TerminatedCString	GetCurrentThread
+00796426	TerminatedCString	GetProcAddress
+00796438	TerminatedCString	LoadLibraryA
+00796448	TerminatedCString	GetVersionExA
+00796458	TerminatedCString	GetLastError
+00796468	TerminatedCString	SetErrorMode
+00796478	TerminatedCString	GetLocaleInfoA
+0079648A	TerminatedCString	GetCurrentThreadId
+007964A0	TerminatedCString	GetTickCount
+007964B0	TerminatedCString	LCMapStringA
+007964C0	TerminatedCString	LCMapStringW
+007964D0	TerminatedCString	CreateProcessA
+007964E2	TerminatedCString	QueryPerformanceCounter
+007964FC	TerminatedCString	QueryPerformanceFrequency
+00796518	TerminatedCString	SetThreadPriority
+0079652C	TerminatedCString	WaitForSingleObject
+00796542	TerminatedCString	SetWaitableTimer
+00796556	TerminatedCString	CreateThread
+00796566	TerminatedCString	CreateWaitableTimerA
+0079657E	TerminatedCString	GetProcessTimes
+00796590	TerminatedCString	GetCurrentProcess
+007965A4	TerminatedCString	WideCharToMultiByte
+007965BA	TerminatedCString	GlobalUnlock
+007965CA	TerminatedCString	GlobalLock
+007965D8	TerminatedCString	GetCurrentProcessId
+007965EE	TerminatedCString	GlobalSize
+007965FC	TerminatedCString	GlobalAlloc
+0079660A	TerminatedCString	FreeLibrary
+00796618	TerminatedCString	GetSystemDefaultLangID
+00796632	TerminatedCString	MoveFileA
+0079663E	TerminatedCString	DeleteFileA
+0079664C	TerminatedCString	GetFileAttributesA
+00796662	TerminatedCString	GetSystemInfo
+00796672	TerminatedCString	GetUserDefaultLangID
+0079668A	TerminatedCString	ExitThread
+00796698	TerminatedCString	GlobalFree
+007966A6	TerminatedCString	WriteFile
+007966B2	TerminatedCString	SetFilePointer
+007966C4	TerminatedCString	CreateFileA
+007966D2	TerminatedCString	ReadFile
+007966DE	TerminatedCString	GetFileSize
+007966EC	TerminatedCString	LockResource
+007966FC	TerminatedCString	LoadResource
+0079670C	TerminatedCString	FindResourceExA
+0079671E	TerminatedCString	FindResourceExW
+00796730	TerminatedCString	GetFileAttributesW
+00796746	TerminatedCString	SetUnhandledExceptionFilter
+00796764	TerminatedCString	GetTempPathA
+00796774	TerminatedCString	FindClose
+00796780	TerminatedCString	FindNextFileA
+00796790	TerminatedCString	FindFirstFileA
+007967A2	TerminatedCString	InterlockedIncrement
+007967BA	TerminatedCString	InterlockedDecrement
+007967D2	TerminatedCString	GetTimeZoneInformation
+007967EC	TerminatedCString	GetSystemTime
+007967FC	TerminatedCString	SystemTimeToFileTime
+00796814	TerminatedCString	CreateDirectoryA
+00796828	TerminatedCString	GetModuleFileNameA
+0079683E	TerminatedCString	CreateMutexA
+0079684E	TerminatedCString	CreateFileW
+0079685C	TerminatedCString	GetCurrentDirectoryA
+00796874	TerminatedCString	GetTempFileNameA
+00796888	TerminatedCString	GetFullPathNameA
+0079689C	TerminatedCString	GetSystemDirectoryA
+007968B2	TerminatedCString	ExpandEnvironmentStringsA
+007968CE	TerminatedCString	ExpandEnvironmentStringsW
+007968EA	TerminatedCString	GetFileAttributesExA
+00796902	TerminatedCString	SetCurrentDirectoryA
+0079691A	TerminatedCString	RemoveDirectoryA
+0079692E	TerminatedCString	SetFilePointerEx
+00796942	TerminatedCString	GetFileSizeEx
+00796952	TerminatedCString	UnmapViewOfFile
+00796964	TerminatedCString	ReleaseMutex
+00796974	TerminatedCString	MapViewOfFile
+00796984	TerminatedCString	CreateFileMappingA
+0079699A	TerminatedCString	TerminateThread
+007969AC	TerminatedCString	lstrcpyA
+007969B8	TerminatedCString	lstrlenA
+007969C4	TerminatedCString	IsDBCSLeadByteEx
+007969D8	TerminatedCString	GetModuleHandleA
+007969EC	TerminatedCString	GetCommandLineW
+007969FE	TerminatedCString	DeleteFileW
+00796A0C	TerminatedCString	SetEndOfFile
+00796A1C	TerminatedCString	SetFileAttributesA
+00796A32	TerminatedCString	CopyFileA
+00796A3E	TerminatedCString	GetStartupInfoA
+00796A50	TerminatedCString	GetCommandLineA
+00796A60	TerminatedCString	KERNEL32.dll
+00796A70	TerminatedCString	GetDoubleClickTime
+00796A86	TerminatedCString	MonitorFromWindow
+00796A9A	TerminatedCString	SetRect
+00796AA4	TerminatedCString	OffsetRect
+00796AB2	TerminatedCString	GetMonitorInfoA
+00796AC4	TerminatedCString	ClientToScreen
+00796AD6	TerminatedCString	ReleaseDC
+00796AE2	TerminatedCString	GetDC
+00796AEA	TerminatedCString	FillRect
+00796AF6	TerminatedCString	GetKeyboardLayout
+00796B0A	TerminatedCString	SendInput
+00796B16	TerminatedCString	DdeUninitialize
+00796B28	TerminatedCString	DdeFreeStringHandle
+00796B3E	TerminatedCString	DdeDisconnect
+00796B4E	TerminatedCString	DdeClientTransaction
+00796B66	TerminatedCString	DdeConnect
+00796B74	TerminatedCString	DdeCreateStringHandleA
+00796B8E	TerminatedCString	DdeInitializeA
+00796BA0	TerminatedCString	RegisterClipboardFormatA
+00796BBC	TerminatedCString	GetClipboardFormatNameA
+00796BD6	TerminatedCString	GetSystemMetrics
+00796BEA	TerminatedCString	InsertMenuItemW
+00796BFC	TerminatedCString	SystemParametersInfoA
+00796C14	TerminatedCString	GetMenuItemInfoA
+00796C28	TerminatedCString	GetMenuItemCount
+00796C3C	TerminatedCString	SetFocus
+00796C48	TerminatedCString	SetWindowTextA
+00796C5A	TerminatedCString	SendMessageA
+00796C6A	TerminatedCString	GetDlgItem
+00796C78	TerminatedCString	LoadIconA
+00796C84	TerminatedCString	SetWindowPos
+00796C94	TerminatedCString	GetDesktopWindow
+00796CA8	TerminatedCString	GetWindowRect
+00796CB8	TerminatedCString	GetParent
+00796CC4	TerminatedCString	SetWindowLongA
+00796CD6	TerminatedCString	EndDialog
+00796CE2	TerminatedCString	PostMessageA
+00796CF2	TerminatedCString	DialogBoxIndirectParamA
+00796D0C	TerminatedCString	DialogBoxIndirectParamW
+00796D26	TerminatedCString	RedrawWindow
+00796D36	TerminatedCString	LoadStringA
+00796D44	TerminatedCString	GetClientRect
+00796D54	TerminatedCString	DialogBoxParamA
+00796D66	TerminatedCString	DialogBoxParamW
+00796D78	TerminatedCString	MessageBoxA
+00796D86	TerminatedCString	WaitForInputIdle
+00796D9A	TerminatedCString	GetForegroundWindow
+00796DB0	TerminatedCString	GetKeyState
+00796DBE	TerminatedCString	MapVirtualKeyA
+00796DD0	TerminatedCString	InvalidateRect
+00796DE2	TerminatedCString	CheckMenuItem
+00796DF2	TerminatedCString	EnableMenuItem
+00796E04	TerminatedCString	EndPaint
+00796E10	TerminatedCString	BeginPaint
+00796E1E	TerminatedCString	DestroyMenu
+00796E2C	TerminatedCString	GetSubMenu
+00796E3A	TerminatedCString	LoadMenuA
+00796E46	TerminatedCString	SetTimer
+00796E52	TerminatedCString	KillTimer
+00796E5E	TerminatedCString	ScreenToClient
+00796E70	TerminatedCString	GetCursorPos
+00796E80	TerminatedCString	SetCursor
+00796E8C	TerminatedCString	LoadCursorA
+00796E9A	TerminatedCString	GetMenu
+00796EA4	TerminatedCString	DestroyWindow
+00796EB4	TerminatedCString	GetFocus
+00796EC0	TerminatedCString	WindowFromPoint
+00796ED2	TerminatedCString	GetCapture
+00796EE0	TerminatedCString	DefWindowProcA
+00796EF2	TerminatedCString	TrackPopupMenu
+00796F04	TerminatedCString	InsertMenuItemA
+00796F16	TerminatedCString	DeleteMenu
+00796F24	TerminatedCString	GetMenuItemID
+00796F34	TerminatedCString	ReleaseCapture
+00796F46	TerminatedCString	SetCapture
+00796F54	TerminatedCString	CreateWindowExA
+00796F66	TerminatedCString	IsWindow
+00796F72	TerminatedCString	GetWindowThreadProcessId
+00796F8E	TerminatedCString	GetWindowLongA
+00796FA0	TerminatedCString	CloseClipboard
+00796FB2	TerminatedCString	SetClipboardData
+00796FC6	TerminatedCString	EmptyClipboard
+00796FD8	TerminatedCString	OpenClipboard
+00796FE8	TerminatedCString	GetClipboardData
+00796FFC	TerminatedCString	IsClipboardFormatAvailable
+0079701A	TerminatedCString	GetWindow
+00797026	TerminatedCString	EnumDisplaySettingsA
+0079703E	TerminatedCString	LoadStringW
+0079704C	TerminatedCString	MoveWindow
+0079705A	TerminatedCString	SetMenu
+00797064	TerminatedCString	InsertMenuA
+00797072	TerminatedCString	InsertMenuW
+00797080	TerminatedCString	RemoveMenu
+0079708E	TerminatedCString	UnregisterClassA
+007970A2	TerminatedCString	UpdateWindow
+007970B2	TerminatedCString	ShowWindow
+007970C0	TerminatedCString	GetWindowTextA
+007970D2	TerminatedCString	SetDlgItemTextA
+007970E4	TerminatedCString	SetDlgItemTextW
+007970F6	TerminatedCString	EnableWindow
+00797106	TerminatedCString	GetDlgItemTextA
+00797118	TerminatedCString	GetWindowTextLengthA
+00797130	TerminatedCString	GetDlgItemTextW
+00797142	TerminatedCString	GetWindowTextLengthW
+0079715A	TerminatedCString	PostQuitMessage
+0079716C	TerminatedCString	GetMenuStringA
+0079717E	TerminatedCString	GetMenuStringW
+00797190	TerminatedCString	RegisterClassA
+007971A2	TerminatedCString	DispatchMessageA
+007971B6	TerminatedCString	TranslateMessage
+007971CA	TerminatedCString	TranslateAcceleratorA
+007971E2	TerminatedCString	GetMessageA
+007971F0	TerminatedCString	LoadAcceleratorsA
+00797202	TerminatedCString	USER32.dll
+00797210	TerminatedCString	StartPage
+0079721C	TerminatedCString	EndPage
+00797226	TerminatedCString	SetPolyFillMode
+00797238	TerminatedCString	SaveDC
+00797242	TerminatedCString	BeginPath
+0079724E	TerminatedCString	EndPath
+00797258	TerminatedCString	MoveToEx
+00797264	TerminatedCString	LineTo
+0079726E	TerminatedCString	PolyBezierTo
+0079727E	TerminatedCString	SelectClipPath
+00797290	TerminatedCString	RestoreDC
+0079729C	TerminatedCString	GdiFlush
+007972A8	TerminatedCString	CreateCompatibleDC
+007972BE	TerminatedCString	DeleteDC
+007972CA	TerminatedCString	GetPixel
+007972D6	TerminatedCString	GetObjectA
+007972E4	TerminatedCString	CreateDIBSection
+007972F8	TerminatedCString	DeleteObject
+00797308	TerminatedCString	GetDIBits
+00797314	TerminatedCString	CreateCompatibleBitmap
+0079732E	TerminatedCString	GetDeviceCaps
+0079733E	TerminatedCString	BitBlt
+00797348	TerminatedCString	SelectObject
+00797358	TerminatedCString	RealizePalette
+0079736A	TerminatedCString	SelectPalette
+0079737A	TerminatedCString	ExtTextOutA
+00797388	TerminatedCString	SetBkColor
+00797396	TerminatedCString	CreateSolidBrush
+007973AA	TerminatedCString	StretchBlt
+007973B8	TerminatedCString	SetStretchBltMode
+007973CC	TerminatedCString	GetStretchBltMode
+007973E0	TerminatedCString	GetICMProfileA
+007973F2	TerminatedCString	CreateDCA
+007973FE	TerminatedCString	GetStockObject
+00797410	TerminatedCString	CreateFontIndirectA
+00797426	TerminatedCString	GetTextMetricsA
+00797438	TerminatedCString	EnumFontFamiliesA
+0079744C	TerminatedCString	SetBkMode
+00797458	TerminatedCString	SetTextAlign
+00797468	TerminatedCString	IntersectClipRect
+0079747C	TerminatedCString	SelectClipRgn
+0079748C	TerminatedCString	ExtTextOutW
+0079749A	TerminatedCString	SetTextColor
+007974AA	TerminatedCString	GetClipRgn
+007974B8	TerminatedCString	CreateRectRgn
+007974C8	TerminatedCString	GetTextAlign
+007974D8	TerminatedCString	GetBkMode
+007974E4	TerminatedCString	GetTextColor
+007974F4	TerminatedCString	GetBkColor
+00797502	TerminatedCString	CreateFontIndirectW
+00797518	TerminatedCString	SetWorldTransform
+0079752C	TerminatedCString	SetGraphicsMode
+0079753E	TerminatedCString	GetWorldTransform
+00797552	TerminatedCString	SetTextCharacterExtra
+0079756A	TerminatedCString	CreatePen
+00797576	TerminatedCString	DPtoLP
+00797580	TerminatedCString	GetTextExtentPoint32W
+00797598	TerminatedCString	GetCurrentObject
+007975AC	TerminatedCString	GetTextExtentPoint32A
+007975C4	TerminatedCString	CreatePalette
+007975D4	TerminatedCString	GetSystemPaletteEntries
+007975EE	TerminatedCString	GetClipBox
+007975FC	TerminatedCString	LPtoDP
+00797606	TerminatedCString	StartDocA
+00797612	TerminatedCString	EndDoc
+0079761C	TerminatedCString	StrokePath
+0079762A	TerminatedCString	ExtCreatePen
+0079763A	TerminatedCString	FillPath
+00797646	TerminatedCString	StretchDIBits
+00797654	TerminatedCString	GDI32.dll
+00797660	TerminatedCString	GetSaveFileNameA
+00797674	TerminatedCString	CommDlgExtendedError
+0079768C	TerminatedCString	GetOpenFileNameA
+007976A0	TerminatedCString	PrintDlgA
+007976AC	TerminatedCString	GetOpenFileNameW
+007976C0	TerminatedCString	GetSaveFileNameW
+007976D2	TerminatedCString	COMDLG32.dll
+007976E2	TerminatedCString	RegCreateKeyExA
+007976F4	TerminatedCString	RegCloseKey
+00797702	TerminatedCString	RegQueryValueExA
+00797716	TerminatedCString	RegOpenKeyExA
+00797726	TerminatedCString	RegSetValueExA
+00797736	TerminatedCString	ADVAPI32.dll
+00797746	TerminatedCString	SHAppBarMessage
+00797758	TerminatedCString	SHGetPathFromIDListA
+00797770	TerminatedCString	SHGetSpecialFolderLocation
+0079778E	TerminatedCString	SHBrowseForFolderA
+007977A4	TerminatedCString	DragAcceptFiles
+007977B6	TerminatedCString	DragQueryFileA
+007977C8	TerminatedCString	DragQueryFileW
+007977D8	TerminatedCString	SHELL32.dll
+007977E6	TerminatedCString	CoTaskMemFree
+007977F6	TerminatedCString	CoCreateInstance
+0079780A	TerminatedCString	CoTaskMemAlloc
+0079781C	TerminatedCString	CoInitialize
+0079782C	TerminatedCString	CreateBindCtx
+0079783C	TerminatedCString	ReleaseStgMedium
+00797850	TerminatedCString	OleUninitialize
+00797862	TerminatedCString	OleFlushClipboard
+00797876	TerminatedCString	OleIsCurrentClipboard
+0079788E	TerminatedCString	OleGetClipboard
+007978A0	TerminatedCString	OleSetClipboard
+007978B2	TerminatedCString	OleInitialize
+007978C2	TerminatedCString	CoUninitialize
+007978D2	TerminatedCString	ole32.dll
+007978DE	TerminatedCString	DeleteColorTransform
+007978F6	TerminatedCString	TranslateBitmapBits
+0079790C	TerminatedCString	CloseColorProfile
+00797920	TerminatedCString	CreateColorTransformW
+00797938	TerminatedCString	OpenColorProfileA
+0079794A	TerminatedCString	mscms.dll
+00797956	TerminatedCString	WSACloseEvent
+00797966	TerminatedCString	WSACreateEvent
+00797978	TerminatedCString	WSAEventSelect
+0079798A	TerminatedCString	WSAEnumNetworkEvents
+007979A2	TerminatedCString	WSAIoctl
+007979AE	TerminatedCString	WSASocketA
+007979BC	TerminatedCString	WSAAddressToStringA
+007979D0	TerminatedCString	WS2_32.dll
+007979DE	TerminatedCString	FlushInstructionCache
+007979F6	TerminatedCString	VirtualProtectEx
+00797A0A	TerminatedCString	HeapAlloc
+00797A16	TerminatedCString	GetProcessHeap
+00797A28	TerminatedCString	HeapFree
+00797A34	TerminatedCString	VirtualAlloc
+00797A44	TerminatedCString	VirtualFree
+00797A52	TerminatedCString	VirtualProtect
+00797A64	TerminatedCString	CreateSemaphoreA
+00797A78	TerminatedCString	ReleaseSemaphore
+00797A8C	TerminatedCString	UnhandledExceptionFilter
+00797AA8	TerminatedCString	GetStdHandle
+00797AB8	TerminatedCString	GetModuleHandleW
+00797ACC	TerminatedCString	TlsGetValue
+00797ADA	TerminatedCString	TlsAlloc
+00797AE6	TerminatedCString	TlsSetValue
+00797AF4	TerminatedCString	TlsFree
+00797AFE	TerminatedCString	SetLastError
+00797B0E	TerminatedCString	TerminateProcess
+00797B22	TerminatedCString	IsDebuggerPresent
+00797B36	TerminatedCString	HeapCreate
+00797B44	TerminatedCString	HeapReAlloc
+00797B52	TerminatedCString	GetOEMCP
+00797B5E	TerminatedCString	IsValidCodePage
+00797B70	TerminatedCString	RtlUnwind
+00797B7C	TerminatedCString	HeapSize
+00797B88	TerminatedCString	ExitProcess
+00797B96	TerminatedCString	FreeEnvironmentStringsA
+00797BB0	TerminatedCString	GetEnvironmentStrings
+00797BC8	TerminatedCString	FreeEnvironmentStringsW
+00797BE2	TerminatedCString	GetEnvironmentStringsW
+00797BFC	TerminatedCString	SetHandleCount
+00797C0E	TerminatedCString	GetFileType
+00797C1C	TerminatedCString	GetSystemTimeAsFileTime
+00797C36	TerminatedCString	InitializeCriticalSectionAndSpinCount
+00797C5E	TerminatedCString	GetStringTypeA
+00797C70	TerminatedCString	GetStringTypeW
+00797C82	TerminatedCString	GetConsoleCP
+00797C92	TerminatedCString	GetConsoleMode
+00797CA4	TerminatedCString	RaiseException
+00797CB6	TerminatedCString	SetStdHandle
+00797CC6	TerminatedCString	WriteConsoleA
+00797CD6	TerminatedCString	GetConsoleOutputCP
+00797CEC	TerminatedCString	WriteConsoleW
+00797CFC	TerminatedCString	FlushFileBuffers
+00797D10	TerminatedCString	GetFontData
+00797D1E	TerminatedCString	EnumFontFamiliesExW
+00798134	unicode	quot
+00798140	unicode	apos
+0079815C	unicode	nbsp
+007A5160	string	AdobePatentID="B598"
+007A5478	string	ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
+007AFBBC	string	AdobePatentID="P057"
+007AFBD4	string	AdobePatentID="P052"
+007AFBEC	string	AdobePatentID="P649"
+007B177E	string	abcdefghijklmnopqrstuvwxyz
+007B179E	string	ABCDEFGHIJKLMNOPQRSTUVWXYZ
+007B1989	string	abcdefghijklmnopqrstuvwxyz
+007B19A9	string	ABCDEFGHIJKLMNOPQRSTUVWXYZ
+008904D0	PascalUnicode	
+008904D2	PascalUnicode	Choose File(s)
+008904F0	PascalUnicode	Flash Movies
+0089050A	PascalUnicode	Applications
+00890524	PascalUnicode	All Files
+00890538	PascalUnicode	
+0089053A	PascalUnicode	Choose Folder
+00890556	PascalUnicode	
+00890558	PascalUnicode	
+0089055A	PascalUnicode	
+0089055C	PascalUnicode	
+0089055E	PascalUnicode	
+00890560	PascalUnicode	
+00890562	PascalUnicode	
+00890564	PascalUnicode	
+00890566	PascalUnicode	
+00890568	PascalUnicode	
+0089056A	PascalUnicode	ファイルを選択
+0089057A	PascalUnicode	Flash ムービー
+00890590	PascalUnicode	アプリケーション
+008905A2	PascalUnicode	すべてのファイル
+008905B4	PascalUnicode	
+008905B6	PascalUnicode	フォルダを選択
+008905C6	PascalUnicode	
+008905C8	PascalUnicode	
+008905CA	PascalUnicode	
+008905CC	PascalUnicode	
+008905CE	PascalUnicode	
+008905D0	PascalUnicode	
+008905D2	PascalUnicode	
+008905D4	PascalUnicode	
+008905D6	PascalUnicode	
+008905D8	PascalUnicode	
+008905DA	PascalUnicode	选择文件
+008905E4	PascalUnicode	Flash 影片
+008905F6	PascalUnicode	应用程序
+00890600	PascalUnicode	所有文件
+0089060A	PascalUnicode	
+0089060C	PascalUnicode	选择文件夹
+00890618	PascalUnicode	
+0089061A	PascalUnicode	
+0089061C	PascalUnicode	
+0089061E	PascalUnicode	
+00890620	PascalUnicode	
+00890622	PascalUnicode	
+00890624	PascalUnicode	
+00890626	PascalUnicode	
+00890628	PascalUnicode	
+00890630	PascalUnicode	
+00890632	PascalUnicode	파일 선택
+0089063E	PascalUnicode	Flash 무비
+00890650	PascalUnicode	응용 프로그램
+00890660	PascalUnicode	모든파일
+0089066A	PascalUnicode	
+0089066C	PascalUnicode	폴더선택
+00890676	PascalUnicode	
+00890678	PascalUnicode	
+0089067A	PascalUnicode	
+0089067C	PascalUnicode	
+0089067E	PascalUnicode	
+00890680	PascalUnicode	
+00890682	PascalUnicode	
+00890684	PascalUnicode	
+00890686	PascalUnicode	
+00890688	PascalUnicode	
+0089068A	PascalUnicode	選取檔案
+00890694	PascalUnicode	Flash 影片
+008906A6	PascalUnicode	應用程式
+008906B0	PascalUnicode	所有檔案
+008906BA	PascalUnicode	
+008906BC	PascalUnicode	選取資料夾
+008906C8	PascalUnicode	
+008906CA	PascalUnicode	
+008906CC	PascalUnicode	
+008906CE	PascalUnicode	
+008906D0	PascalUnicode	
+008906D2	PascalUnicode	
+008906D4	PascalUnicode	
+008906D6	PascalUnicode	
+008906D8	PascalUnicode	
+008906E0	PascalUnicode	
+008906E2	PascalUnicode	Datei(en) auswählen
+0089070A	PascalUnicode	Flash-Filme
+00890722	PascalUnicode	Anwendungen
+0089073A	PascalUnicode	Alle Dateien
+00890754	PascalUnicode	
+00890756	PascalUnicode	Ordner auswählen
+00890778	PascalUnicode	
+0089077A	PascalUnicode	
+0089077C	PascalUnicode	
+0089077E	PascalUnicode	
+00890780	PascalUnicode	
+00890782	PascalUnicode	
+00890784	PascalUnicode	
+00890786	PascalUnicode	
+00890788	PascalUnicode	
+00890790	PascalUnicode	
+00890792	PascalUnicode	Sélectionner fichier(s)
+008907C2	PascalUnicode	Animations Flash
+008907E4	PascalUnicode	Applications
+008907FE	PascalUnicode	Tous les fichiers
+00890822	PascalUnicode	
+00890824	PascalUnicode	Sélectionnez un dossier
+00890854	PascalUnicode	
+00890856	PascalUnicode	
+00890858	PascalUnicode	
+0089085A	PascalUnicode	
+0089085C	PascalUnicode	
+0089085E	PascalUnicode	
+00890860	PascalUnicode	
+00890862	PascalUnicode	
+00890864	PascalUnicode	
+00890868	PascalUnicode	
+0089086A	PascalUnicode	Seleziona file
+00890888	PascalUnicode	Filmati Flash
+008908A4	PascalUnicode	Applicazioni
+008908BE	PascalUnicode	Tutti i file
+008908D8	PascalUnicode	
+008908DA	PascalUnicode	Seleziona cartella
+00890900	PascalUnicode	
+00890902	PascalUnicode	
+00890904	PascalUnicode	
+00890906	PascalUnicode	
+00890908	PascalUnicode	
+0089090A	PascalUnicode	
+0089090C	PascalUnicode	
+0089090E	PascalUnicode	
+00890910	PascalUnicode	
+00890918	PascalUnicode	
+0089091A	PascalUnicode	Seleccionar archivos
+00890944	PascalUnicode	Películas Flash
+00890964	PascalUnicode	Aplicaciones
+0089097E	PascalUnicode	Todos los archivos
+008909A4	PascalUnicode	
+008909A6	PascalUnicode	Seleccionar carpeta
+008909CE	PascalUnicode	
+008909D0	PascalUnicode	
+008909D2	PascalUnicode	
+008909D4	PascalUnicode	
+008909D6	PascalUnicode	
+008909D8	PascalUnicode	
+008909DA	PascalUnicode	
+008909DC	PascalUnicode	
+008909DE	PascalUnicode	
+008909E0	PascalUnicode	
+008909E2	PascalUnicode	Bestand(en) kiezen
+00890A08	PascalUnicode	Flash-films
+00890A20	PascalUnicode	Toepassingen 
+00890A3C	PascalUnicode	Alle bestanden
+00890A5A	PascalUnicode	
+00890A5C	PascalUnicode	Map kiezen
+00890A72	PascalUnicode	
+00890A74	PascalUnicode	
+00890A76	PascalUnicode	
+00890A78	PascalUnicode	
+00890A7A	PascalUnicode	
+00890A7C	PascalUnicode	
+00890A7E	PascalUnicode	
+00890A80	PascalUnicode	
+00890A82	PascalUnicode	
+00890A88	PascalUnicode	
+00890A8A	PascalUnicode	Välj filer
+00890AA0	PascalUnicode	Flash-filmer
+00890ABA	PascalUnicode	Program
+00890ACA	PascalUnicode	Alla filer
+00890AE0	PascalUnicode	
+00890AE2	PascalUnicode	Välj mapp
+00890AF6	PascalUnicode	
+00890AF8	PascalUnicode	
+00890AFA	PascalUnicode	
+00890AFC	PascalUnicode	
+00890AFE	PascalUnicode	
+00890B00	PascalUnicode	
+00890B02	PascalUnicode	
+00890B04	PascalUnicode	
+00890B06	PascalUnicode	
+00890B08	PascalUnicode	
+00890B0A	PascalUnicode	Escolher arquivo(s)
+00890B32	PascalUnicode	Filmes Flash
+00890B4C	PascalUnicode	Aplicativos
+00890B64	PascalUnicode	Todos os arquivos
+00890B88	PascalUnicode	
+00890B8A	PascalUnicode	Escolher pasta
+00890BA8	PascalUnicode	
+00890BAA	PascalUnicode	
+00890BAC	PascalUnicode	
+00890BAE	PascalUnicode	
+00890BB0	PascalUnicode	
+00890BB2	PascalUnicode	
+00890BB4	PascalUnicode	
+00890BB6	PascalUnicode	
+00890BB8	PascalUnicode	
+00890BC0	PascalUnicode	
+00890BC2	PascalUnicode	Zvolit soubory
+00890BE0	PascalUnicode	Filmy Flash
+00890BF8	PascalUnicode	Aplikace
+00890C0A	PascalUnicode	Všechny soubory
+00890C2A	PascalUnicode	
+00890C2C	PascalUnicode	Zvolit složku
+00890C48	PascalUnicode	
+00890C4A	PascalUnicode	
+00890C4C	PascalUnicode	
+00890C4E	PascalUnicode	
+00890C50	PascalUnicode	
+00890C52	PascalUnicode	
+00890C54	PascalUnicode	
+00890C56	PascalUnicode	
+00890C58	PascalUnicode	
+00890C60	PascalUnicode	
+00890C62	PascalUnicode	Wybierz pliki
+00890C7E	PascalUnicode	Filmy Flash
+00890C96	PascalUnicode	Aplikacje
+00890CAA	PascalUnicode	Wszystkie pliki
+00890CCA	PascalUnicode	
+00890CCC	PascalUnicode	Wybierz folder
+00890CEA	PascalUnicode	
+00890CEC	PascalUnicode	
+00890CEE	PascalUnicode	
+00890CF0	PascalUnicode	
+00890CF2	PascalUnicode	
+00890CF4	PascalUnicode	
+00890CF6	PascalUnicode	
+00890CF8	PascalUnicode	
+00890CFA	PascalUnicode	
+00890D00	PascalUnicode	
+00890D02	PascalUnicode	Выбрать файлы
+00890D1E	PascalUnicode	Flash-ролики
+00890D38	PascalUnicode	Приложения
+00890D4E	PascalUnicode	Все файлы
+00890D62	PascalUnicode	
+00890D64	PascalUnicode	Выбрать папку
+00890D80	PascalUnicode	
+00890D82	PascalUnicode	
+00890D84	PascalUnicode	
+00890D86	PascalUnicode	
+00890D88	PascalUnicode	
+00890D8A	PascalUnicode	
+00890D8C	PascalUnicode	
+00890D8E	PascalUnicode	
+00890D90	PascalUnicode	
+00890D98	PascalUnicode	
+00890D9A	PascalUnicode	Dosyaları Seç
+00890DB6	PascalUnicode	Flash Filmleri
+00890DD4	PascalUnicode	Uygulamalar
+00890DEC	PascalUnicode	Tüm Dosyalar
+00890E06	PascalUnicode	
+00890E08	PascalUnicode	Klasör Seç
+00890E1E	PascalUnicode	
+00890E20	PascalUnicode	
+00890E22	PascalUnicode	
+00890E24	PascalUnicode	
+00890E26	PascalUnicode	
+00890E28	PascalUnicode	
+00890E2A	PascalUnicode	
+00890E2C	PascalUnicode	
+00890E2E	PascalUnicode	
+00890E92	TerminatedUnicode	StringFileInfo
+00890EB6	TerminatedUnicode	040904b0
+00890ECE	TerminatedUnicode	CompanyName
+00890EE8	TerminatedUnicode	Adobe Systems, Inc.
+00890F16	TerminatedUnicode	FileDescription
+00890F38	TerminatedUnicode	Adobe Flash Player 10.0 r22
+00890F76	TerminatedUnicode	FileVersion
+00890F90	TerminatedUnicode	10,0,22,87
+00890FAE	TerminatedUnicode	InternalName
+00890FC8	TerminatedUnicode	Adobe Flash Player 10.0
+00890FFE	TerminatedUnicode	LegalCopyright
+0089101C	TerminatedUnicode	Adobe® Flash® Player. Copyright © 1996-2009 Adobe Systems Incorporated. All Rights Reserved. Protected by U.S. Patent 6,879,327; Patents Pending in the United States and other countries. Adobe and Flash are either trademarks or registered trademarks in the United States and/or other countries.
+00891272	TerminatedUnicode	LegalTrademarks
+00891294	TerminatedUnicode	Adobe Flash Player
+008912C2	TerminatedUnicode	OriginalFilename
+008912E4	TerminatedUnicode	SAFlashPlayer.exe
+0089130E	TerminatedUnicode	ProductName
+00891328	TerminatedUnicode	Shockwave Flash
+0089134E	TerminatedUnicode	ProductVersion
+0089136C	TerminatedUnicode	10,0,22,87
+0089138A	TerminatedUnicode	Debugger
+0089139C	TerminatedUnicode	0
+008913A6	TerminatedUnicode	VarFileInfo
+008913C6	TerminatedUnicode	Translation
+008DD1B8	PascalUnicode	
+008DD1BA	PascalUnicode	
+008DD1BC	PascalUnicode	
+008DD1BE	PascalUnicode	
+008DD1C0	PascalUnicode	
+008DD1C2	PascalUnicode	
+008DD1C4	PascalUnicode	
+008DD1C6	PascalUnicode	
+008DD1C8	PascalUnicode	A script in this movie is causing Adobe Flash Player 10 to run slowly.  If it continues to run, your computer may become unresponsive.  Do you want to abort the script?
+008DD31A	PascalUnicode	Adobe Flash Player 10
+008DD346	PascalUnicode	
+008DD348	PascalUnicode	
+008DD34A	PascalUnicode	
+008DD34C	PascalUnicode	
+008DD34E	PascalUnicode	
+008DD350	PascalUnicode	
+008DD358	PascalUnicode	
+008DD35A	PascalUnicode	
+008DD35C	PascalUnicode	
+008DD35E	PascalUnicode	
+008DD360	PascalUnicode	
+008DD362	PascalUnicode	
+008DD364	PascalUnicode	
+008DD366	PascalUnicode	
+008DD368	PascalUnicode	
+008DD36A	PascalUnicode	Select file to upload by 
+008DD39E	PascalUnicode	Select file(s) to upload by 
+008DD3D8	PascalUnicode	Select location for download by 
+008DD41A	PascalUnicode	
+008DD41C	PascalUnicode	
+008DD41E	PascalUnicode	
+008DD420	PascalUnicode	
+008DD428	PascalUnicode	
+008DD42A	PascalUnicode	
+008DD42C	PascalUnicode	
+008DD42E	PascalUnicode	
+008DD430	PascalUnicode	
+008DD432	PascalUnicode	
+008DD434	PascalUnicode	
+008DD436	PascalUnicode	
+008DD438	PascalUnicode	
+008DD43A	PascalUnicode	
+008DD43C	PascalUnicode	
+008DD43E	PascalUnicode	
+008DD440	PascalUnicode	
+008DD442	PascalUnicode	
+008DD444	PascalUnicode	
+008DD446	PascalUnicode	Warning: This file may be an executable program or contain malicious content, use caution before saving or opening.
+008DD530	PascalUnicode	
+008DD532	PascalUnicode	
+008DD534	PascalUnicode	Adobe Flash Player 10
+008DD560	PascalUnicode	Adobe Flash movie (*.swf)|*.swf;*.spl|All Files (*.*)|*.*||
+008DD5D8	PascalUnicode	Projector (*.exe)|*.exe||
+008DD60C	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated.  All Rights Reserved.
+008DD69C	PascalUnicode	Protected by U.S. Patent 6,879,327; Patents Pending in the United States and other countries. Adobe and Flash are either trademarks or registered trademarks in the United States and/or other countries.
+008DD830	PascalUnicode	
+008DD832	PascalUnicode	
+008DD834	PascalUnicode	
+008DD836	PascalUnicode	
+008DD838	PascalUnicode	
+008DD83A	PascalUnicode	
+008DD83C	PascalUnicode	
+008DD83E	PascalUnicode	
+008DD840	PascalUnicode	
+008DD848	PascalUnicode	
+008DD84A	PascalUnicode	
+008DD84C	PascalUnicode	
+008DD84E	PascalUnicode	
+008DD850	PascalUnicode	
+008DD852	PascalUnicode	
+008DD854	PascalUnicode	
+008DD856	PascalUnicode	
+008DD858	PascalUnicode	Adobe Flash Player 10 wird durch ein Skript in diesem Film verlangsamt. Wenn das Skript weiterhin ausgeführt wird, reagiert der Computer möglicherweise nicht mehr. Möchten Sie die Ausführung des Skripts abbrechen?
+008DDA04	PascalUnicode	Adobe Flash Player 10
+008DDA30	PascalUnicode	
+008DDA32	PascalUnicode	
+008DDA34	PascalUnicode	
+008DDA36	PascalUnicode	
+008DDA38	PascalUnicode	
+008DDA3A	PascalUnicode	
+008DDA40	PascalUnicode	
+008DDA42	PascalUnicode	
+008DDA44	PascalUnicode	
+008DDA46	PascalUnicode	
+008DDA48	PascalUnicode	
+008DDA4A	PascalUnicode	
+008DDA4C	PascalUnicode	
+008DDA4E	PascalUnicode	
+008DDA50	PascalUnicode	
+008DDA52	PascalUnicode	Wählen Sie die zu ladende Datei, von 
+008DDA9E	PascalUnicode	Wählen Sie die zu ladenden Dateien, von 
+008DDAF0	PascalUnicode	Wählen Sie den Ordner für den Download von 
+008DDB48	PascalUnicode	
+008DDB4A	PascalUnicode	
+008DDB4C	PascalUnicode	
+008DDB4E	PascalUnicode	
+008DDB50	PascalUnicode	
+008DDB52	PascalUnicode	
+008DDB54	PascalUnicode	
+008DDB56	PascalUnicode	
+008DDB58	PascalUnicode	
+008DDB5A	PascalUnicode	
+008DDB5C	PascalUnicode	
+008DDB5E	PascalUnicode	
+008DDB60	PascalUnicode	
+008DDB62	PascalUnicode	
+008DDB64	PascalUnicode	
+008DDB66	PascalUnicode	
+008DDB68	PascalUnicode	
+008DDB6A	PascalUnicode	
+008DDB6C	PascalUnicode	
+008DDB6E	PascalUnicode	Warnung: Diese Datei ist möglicherweise ein ausführbares Programm oder sie enthält unsichere Inhalte. Speichern oder öffnen Sie die Datei mit Vorsicht.
+008DDCA0	PascalUnicode	
+008DDCA2	PascalUnicode	
+008DDCA4	PascalUnicode	Adobe Flash Player 10
+008DDCD0	PascalUnicode	Adobe Flash movie (*.swf)|*.swf;*.spl|Alle Dateien (*.*)|*.*||
+008DDD4E	PascalUnicode	Projektor (*.exe)|*.exe||
+008DDD82	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated.  Alle Rechte vorbehalten.
+008DDE1A	PascalUnicode	Geschützt durch U.S. Patent 6,879,327; weitere Patente in den USA und anderen Ländern schwebend. Adobe und Flash sind Marken oder registrierte Marken in den USA und/oder anderen Ländern.
+008DDF90	PascalUnicode	
+008DDF92	PascalUnicode	
+008DDF94	PascalUnicode	
+008DDF96	PascalUnicode	
+008DDF98	PascalUnicode	
+008DDF9A	PascalUnicode	
+008DDF9C	PascalUnicode	
+008DDF9E	PascalUnicode	
+008DDFA0	PascalUnicode	
+008DDFA8	PascalUnicode	
+008DDFAA	PascalUnicode	
+008DDFAC	PascalUnicode	
+008DDFAE	PascalUnicode	
+008DDFB0	PascalUnicode	
+008DDFB2	PascalUnicode	
+008DDFB4	PascalUnicode	
+008DDFB6	PascalUnicode	
+008DDFB8	PascalUnicode	Un script de cette animation ralentit l’exécution d'Adobe Flash Player 10. Si l’exécution n’est pas suspendue, il est possible que votre ordinateur ne réagisse plus. Souhaitez-vous abandonner l’exécution du script ?
+008DE168	PascalUnicode	Adobe Flash Player 10
+008DE194	PascalUnicode	
+008DE196	PascalUnicode	
+008DE198	PascalUnicode	
+008DE19A	PascalUnicode	
+008DE19C	PascalUnicode	
+008DE19E	PascalUnicode	
+008DE1A0	PascalUnicode	
+008DE1A2	PascalUnicode	
+008DE1A4	PascalUnicode	
+008DE1A6	PascalUnicode	
+008DE1A8	PascalUnicode	
+008DE1AA	PascalUnicode	
+008DE1AC	PascalUnicode	
+008DE1AE	PascalUnicode	
+008DE1B0	PascalUnicode	
+008DE1B2	PascalUnicode	Choix du fichier à transférer par 
+008DE1F8	PascalUnicode	Choix des fichiers à transférer par 
+008DE242	PascalUnicode	Choix de l'emplacement de téléchargement par 
+008DE29E	PascalUnicode	
+008DE2A0	PascalUnicode	
+008DE2A2	PascalUnicode	
+008DE2A4	PascalUnicode	
+008DE2A8	PascalUnicode	
+008DE2AA	PascalUnicode	
+008DE2AC	PascalUnicode	
+008DE2AE	PascalUnicode	
+008DE2B0	PascalUnicode	
+008DE2B2	PascalUnicode	
+008DE2B4	PascalUnicode	
+008DE2B6	PascalUnicode	
+008DE2B8	PascalUnicode	
+008DE2BA	PascalUnicode	
+008DE2BC	PascalUnicode	
+008DE2BE	PascalUnicode	
+008DE2C0	PascalUnicode	
+008DE2C2	PascalUnicode	
+008DE2C4	PascalUnicode	
+008DE2C6	PascalUnicode	Avertissement : Ce fichier peut être un programme exécutable ou renfermer du contenu malveillant. Soyez prudent(e) avant de l'ouvrir ou de l'enregistrer.
+008DE400	PascalUnicode	
+008DE402	PascalUnicode	
+008DE404	PascalUnicode	Adobe Flash Player 10
+008DE430	PascalUnicode	Adobe Flash movie (*.swf)|*.swf;*.spl|Tous les fichiers (*.*)|*.*||
+008DE4B8	PascalUnicode	Projection (*.exe)|*.exe||
+008DE4EE	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated.  Tous droits réservés.
+008DE580	PascalUnicode	Protégé par le brevet américain 6,879,327; brevets en cours d'homologation aux États-Unis et dans d'autres pays. Adobe et Flash sont soit des marques soit des marques déposées aux États-Unis et/ou dans d’autres pays.
+008DE732	PascalUnicode	
+008DE734	PascalUnicode	
+008DE736	PascalUnicode	
+008DE738	PascalUnicode	
+008DE73A	PascalUnicode	
+008DE73C	PascalUnicode	
+008DE73E	PascalUnicode	
+008DE740	PascalUnicode	
+008DE742	PascalUnicode	
+008DE748	PascalUnicode	
+008DE74A	PascalUnicode	
+008DE74C	PascalUnicode	
+008DE74E	PascalUnicode	
+008DE750	PascalUnicode	
+008DE752	PascalUnicode	
+008DE754	PascalUnicode	
+008DE756	PascalUnicode	
+008DE758	PascalUnicode	Uno script del filmato sta rallentando la riproduzione di Adobe Flash Player 10. Se non viene interrotto potrebbe causare il blocco del computer. Interrompere lo script?
+008DE8AC	PascalUnicode	Adobe Flash Player 10
+008DE8D8	PascalUnicode	
+008DE8DA	PascalUnicode	
+008DE8DC	PascalUnicode	
+008DE8DE	PascalUnicode	
+008DE8E0	PascalUnicode	
+008DE8E2	PascalUnicode	
+008DE8E8	PascalUnicode	
+008DE8EA	PascalUnicode	
+008DE8EC	PascalUnicode	
+008DE8EE	PascalUnicode	
+008DE8F0	PascalUnicode	
+008DE8F2	PascalUnicode	
+008DE8F4	PascalUnicode	
+008DE8F6	PascalUnicode	
+008DE8F8	PascalUnicode	
+008DE8FA	PascalUnicode	Seleziona il file da caricare con 
+008DE940	PascalUnicode	Seleziona i file da caricare con 
+008DE984	PascalUnicode	Seleziona il percorso di scaricamento con 
+008DE9DA	PascalUnicode	
+008DE9DC	PascalUnicode	
+008DE9DE	PascalUnicode	
+008DE9E0	PascalUnicode	
+008DE9E8	PascalUnicode	
+008DE9EA	PascalUnicode	
+008DE9EC	PascalUnicode	
+008DE9EE	PascalUnicode	
+008DE9F0	PascalUnicode	
+008DE9F2	PascalUnicode	
+008DE9F4	PascalUnicode	
+008DE9F6	PascalUnicode	
+008DE9F8	PascalUnicode	
+008DE9FA	PascalUnicode	
+008DE9FC	PascalUnicode	
+008DE9FE	PascalUnicode	
+008DEA00	PascalUnicode	
+008DEA02	PascalUnicode	
+008DEA04	PascalUnicode	
+008DEA06	PascalUnicode	Avvertenza: questo file potrebbe essere un programma eseguibile o contenere codice dannoso; prestate attenzione prima di salvarlo o aprirlo.
+008DEB20	PascalUnicode	
+008DEB22	PascalUnicode	
+008DEB24	PascalUnicode	Adobe Flash Player 10
+008DEB50	PascalUnicode	Adobe Flash movie (*.swf)|*.swf;*.spl|Tutti i file (*.*)|*.*||
+008DEBCE	PascalUnicode	Proiettore (*.exe)|*.exe||
+008DEC04	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated. Tutti i diritti riservati.
+008DEC9E	PascalUnicode	Protetto dal Brevetto Statunitense 6,879,327; Brevetti in Corso Di Concessione negli Stati Uniti e in altri Paesi. Adobe e Flash sono marchi ovvero marchi registrati negli Stati Uniti e/o in altri Paesi.
+008DEE36	PascalUnicode	
+008DEE38	PascalUnicode	
+008DEE3A	PascalUnicode	
+008DEE3C	PascalUnicode	
+008DEE3E	PascalUnicode	
+008DEE40	PascalUnicode	
+008DEE42	PascalUnicode	
+008DEE44	PascalUnicode	
+008DEE46	PascalUnicode	
+008DEE48	PascalUnicode	
+008DEE4A	PascalUnicode	
+008DEE4C	PascalUnicode	
+008DEE4E	PascalUnicode	
+008DEE50	PascalUnicode	
+008DEE52	PascalUnicode	
+008DEE54	PascalUnicode	
+008DEE56	PascalUnicode	
+008DEE58	PascalUnicode	Un script de esta película está provocando que el Reproductor de Flash se ejecute lentamente. Si continua ejecutándose, su PC podría no responder. ¿Desea anular el script?
+008DEFB0	PascalUnicode	Adobe Flash Player 10
+008DEFDC	PascalUnicode	
+008DEFDE	PascalUnicode	
+008DEFE0	PascalUnicode	
+008DEFE2	PascalUnicode	
+008DEFE4	PascalUnicode	
+008DEFE6	PascalUnicode	
+008DEFE8	PascalUnicode	
+008DEFEA	PascalUnicode	
+008DEFEC	PascalUnicode	
+008DEFEE	PascalUnicode	
+008DEFF0	PascalUnicode	
+008DEFF2	PascalUnicode	
+008DEFF4	PascalUnicode	
+008DEFF6	PascalUnicode	
+008DEFF8	PascalUnicode	
+008DEFFA	PascalUnicode	Seleccione el archivo que se cargará con 
+008DF04E	PascalUnicode	Seleccione los archivos que se cargarán con 
+008DF0A8	PascalUnicode	Seleccione la ubicación para la descarga realizada por 
+008DF118	PascalUnicode	
+008DF11A	PascalUnicode	
+008DF11C	PascalUnicode	
+008DF11E	PascalUnicode	
+008DF120	PascalUnicode	
+008DF122	PascalUnicode	
+008DF124	PascalUnicode	
+008DF126	PascalUnicode	
+008DF128	PascalUnicode	
+008DF12A	PascalUnicode	
+008DF12C	PascalUnicode	
+008DF12E	PascalUnicode	
+008DF130	PascalUnicode	
+008DF132	PascalUnicode	
+008DF134	PascalUnicode	
+008DF136	PascalUnicode	
+008DF138	PascalUnicode	
+008DF13A	PascalUnicode	
+008DF13C	PascalUnicode	
+008DF13E	PascalUnicode	Advertencia: este archivo puede contener un programa ejecutable o contenido malintencionado. Piense si realmente quiere abrirlo o guardarlo.
+008DF258	PascalUnicode	
+008DF25A	PascalUnicode	
+008DF25C	PascalUnicode	Adobe Flash Player 10
+008DF288	PascalUnicode	Adobe Flash movie (*.swf)|*.swf;*.spl|Todos los archivos (*.*)|*.*||
+008DF312	PascalUnicode	Proyector (*.exe)|*.exe||
+008DF346	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated. Todos los derechos reservados.
+008DF3E8	PascalUnicode	Protegido por Patente USA 6,879,327; Patentes Pendientes en los Estados Unidos y otros países. Adobe y Flash son marcas o marcas registradas en los Estados Unidos y otros países.
+008DF54E	PascalUnicode	
+008DF550	PascalUnicode	
+008DF552	PascalUnicode	
+008DF554	PascalUnicode	
+008DF556	PascalUnicode	
+008DF558	PascalUnicode	
+008DF55A	PascalUnicode	
+008DF55C	PascalUnicode	
+008DF55E	PascalUnicode	
+008DF560	PascalUnicode	
+008DF562	PascalUnicode	
+008DF564	PascalUnicode	
+008DF566	PascalUnicode	
+008DF568	PascalUnicode	
+008DF56A	PascalUnicode	
+008DF56C	PascalUnicode	
+008DF56E	PascalUnicode	
+008DF570	PascalUnicode	ムービー内のスクリプトが原因で Adobe Flash Player 10 の実行速度が遅くなっています。このまま継続すると、応答しなくなることがあります。スクリプトの実行を中止しますか?
+008DF62E	PascalUnicode	Adobe Flash Player 10
+008DF65A	PascalUnicode	
+008DF65C	PascalUnicode	
+008DF65E	PascalUnicode	
+008DF660	PascalUnicode	
+008DF662	PascalUnicode	
+008DF664	PascalUnicode	
+008DF668	PascalUnicode	
+008DF66A	PascalUnicode	
+008DF66C	PascalUnicode	
+008DF66E	PascalUnicode	
+008DF670	PascalUnicode	
+008DF672	PascalUnicode	
+008DF674	PascalUnicode	
+008DF676	PascalUnicode	
+008DF678	PascalUnicode	
+008DF67A	PascalUnicode	でアップロードするファイルを選択します 
+008DF6A4	PascalUnicode	でアップロードするファイルを選択します 
+008DF6CE	PascalUnicode	でダウンロード先を選択します 
+008DF6EE	PascalUnicode	
+008DF6F0	PascalUnicode	
+008DF6F2	PascalUnicode	
+008DF6F4	PascalUnicode	
+008DF6F8	PascalUnicode	
+008DF6FA	PascalUnicode	
+008DF6FC	PascalUnicode	
+008DF6FE	PascalUnicode	
+008DF700	PascalUnicode	
+008DF702	PascalUnicode	
+008DF704	PascalUnicode	
+008DF706	PascalUnicode	
+008DF708	PascalUnicode	
+008DF70A	PascalUnicode	
+008DF70C	PascalUnicode	
+008DF70E	PascalUnicode	
+008DF710	PascalUnicode	
+008DF712	PascalUnicode	
+008DF714	PascalUnicode	
+008DF716	PascalUnicode	警告 : このファイルは実行可能プログラムであるか、悪質なコンテンツを含んでいる可能性があります。ファイルを保存したり開く際にはご注意ください。
+008DF7A8	PascalUnicode	
+008DF7AA	PascalUnicode	
+008DF7AC	PascalUnicode	Adobe Flash Player 10
+008DF7D8	PascalUnicode	Adobe Flash movie (*.swf)|*.swf;*.spl|すべてのファイル (*.*)|*.*||
+008DF84E	PascalUnicode	プロジェクタ (*.exe)|*.exe||
+008DF87C	PascalUnicode	Copyright (C) 1996-2009 Adobe Systems Incorporated. 
+008DF8E6	PascalUnicode	無断複写・転載を禁止します。合衆国特許第 6,879,327 号によって保護されています。合衆国およびその他の国において特許出願中です。 Adobe および Flash は、合衆国および／またはその他の国における商標または登録商標です。
+008DF9D4	PascalUnicode	
+008DF9D6	PascalUnicode	
+008DF9D8	PascalUnicode	
+008DF9DA	PascalUnicode	
+008DF9DC	PascalUnicode	
+008DF9DE	PascalUnicode	
+008DF9E0	PascalUnicode	
+008DF9E2	PascalUnicode	
+008DF9E4	PascalUnicode	
+008DF9E8	PascalUnicode	
+008DF9EA	PascalUnicode	
+008DF9EC	PascalUnicode	
+008DF9EE	PascalUnicode	
+008DF9F0	PascalUnicode	
+008DF9F2	PascalUnicode	
+008DF9F4	PascalUnicode	
+008DF9F6	PascalUnicode	
+008DF9F8	PascalUnicode	影片中的某个脚本导致 Adobe Flash Player 10 速度降低。如果继续运行，电脑将有一段时间没有响应。是否要终止此脚本？
+008DFA80	PascalUnicode	Adobe Flash Player 10
+008DFAAC	PascalUnicode	
+008DFAAE	PascalUnicode	
+008DFAB0	PascalUnicode	
+008DFAB2	PascalUnicode	
+008DFAB4	PascalUnicode	
+008DFAB6	PascalUnicode	
+008DFAB8	PascalUnicode	
+008DFABA	PascalUnicode	
+008DFABC	PascalUnicode	
+008DFABE	PascalUnicode	
+008DFAC0	PascalUnicode	
+008DFAC2	PascalUnicode	
+008DFAC4	PascalUnicode	
+008DFAC6	PascalUnicode	
+008DFAC8	PascalUnicode	
+008DFACA	PascalUnicode	选择要上载的文件自 
+008DFAE0	PascalUnicode	选择要上载的文件自 
+008DFAF6	PascalUnicode	选择要下载的位置自 
+008DFB0C	PascalUnicode	
+008DFB0E	PascalUnicode	
+008DFB10	PascalUnicode	
+008DFB12	PascalUnicode	
+008DFB18	PascalUnicode	
+008DFB1A	PascalUnicode	
+008DFB1C	PascalUnicode	
+008DFB1E	PascalUnicode	
+008DFB20	PascalUnicode	
+008DFB22	PascalUnicode	
+008DFB24	PascalUnicode	
+008DFB26	PascalUnicode	
+008DFB28	PascalUnicode	
+008DFB2A	PascalUnicode	
+008DFB2C	PascalUnicode	
+008DFB2E	PascalUnicode	
+008DFB30	PascalUnicode	
+008DFB32	PascalUnicode	
+008DFB34	PascalUnicode	
+008DFB36	PascalUnicode	警告: 此文件可能是可执行程序，或者可能包含恶意内容，因此在保存或打开之前务必慎重。
+008DFB90	PascalUnicode	
+008DFB92	PascalUnicode	
+008DFB94	PascalUnicode	Adobe Flash Player 10
+008DFBC0	PascalUnicode	Adobe Flash movie (*.swf)|*.swf;*.spl|所有文件 (*.*)|*.*||
+008DFC2E	PascalUnicode	播放器 (*.exe)|*.exe||
+008DFC56	PascalUnicode	Copyright (C) 1996-2009 Adobe Systems Incorporated.
+008DFCBE	PascalUnicode	保留所有权利。受美国专利 6,879,327 保障；有待在美国和其他国家注册专利。 Adobe 和 Flash 是美国和／或其他国家的商标或注册商标。
+008DFD56	PascalUnicode	
+008DFD58	PascalUnicode	
+008DFD5A	PascalUnicode	
+008DFD5C	PascalUnicode	
+008DFD5E	PascalUnicode	
+008DFD60	PascalUnicode	
+008DFD62	PascalUnicode	
+008DFD64	PascalUnicode	
+008DFD66	PascalUnicode	
+008DFD68	PascalUnicode	
+008DFD6A	PascalUnicode	
+008DFD6C	PascalUnicode	
+008DFD6E	PascalUnicode	
+008DFD70	PascalUnicode	
+008DFD72	PascalUnicode	
+008DFD74	PascalUnicode	
+008DFD76	PascalUnicode	
+008DFD78	PascalUnicode	影片中有一個 Script 會讓 Flash Player 的速度變慢，如果繼續執行它，電腦可能會停止回應，你要停止這個 Script 嗎?
+008DFE06	PascalUnicode	Adobe Flash Player 10
+008DFE32	PascalUnicode	
+008DFE34	PascalUnicode	
+008DFE36	PascalUnicode	
+008DFE38	PascalUnicode	
+008DFE3A	PascalUnicode	
+008DFE3C	PascalUnicode	
+008DFE40	PascalUnicode	
+008DFE42	PascalUnicode	
+008DFE44	PascalUnicode	
+008DFE46	PascalUnicode	
+008DFE48	PascalUnicode	
+008DFE4A	PascalUnicode	
+008DFE4C	PascalUnicode	
+008DFE4E	PascalUnicode	
+008DFE50	PascalUnicode	
+008DFE52	PascalUnicode	選取要上傳的檔案 
+008DFE66	PascalUnicode	選取要上傳的檔案 
+008DFE7A	PascalUnicode	選取要下載的位置 
+008DFE8E	PascalUnicode	
+008DFE90	PascalUnicode	
+008DFE92	PascalUnicode	
+008DFE94	PascalUnicode	
+008DFE98	PascalUnicode	
+008DFE9A	PascalUnicode	
+008DFE9C	PascalUnicode	
+008DFE9E	PascalUnicode	
+008DFEA0	PascalUnicode	
+008DFEA2	PascalUnicode	
+008DFEA4	PascalUnicode	
+008DFEA6	PascalUnicode	
+008DFEA8	PascalUnicode	
+008DFEAA	PascalUnicode	
+008DFEAC	PascalUnicode	
+008DFEAE	PascalUnicode	
+008DFEB0	PascalUnicode	
+008DFEB2	PascalUnicode	
+008DFEB4	PascalUnicode	
+008DFEB6	PascalUnicode	警告: 此檔案可能是可執行的程式或可能包含惡意內容，儲存或開啟前請多加注意。
+008DFF08	PascalUnicode	
+008DFF0A	PascalUnicode	
+008DFF0C	PascalUnicode	Adobe Flash Player 10
+008DFF38	PascalUnicode	Adobe Flash movie (*.swf)|*.swf;*.spl|所有檔案 (*.*)|*.*||
+008DFFA6	PascalUnicode	放映檔 (*.exe)|*.exe||
+008DFFCE	PascalUnicode	Copyright (C) 1996-2009 Adobe Systems Incorporated.
+008E0036	PascalUnicode	版權所有。受美國第 6,879,327 號專利保護；專利繫屬於美國及其他國家。 Adobe 及 Flash 為美國及（或）其他國家之商標或註冊商標。
+008E00CC	PascalUnicode	
+008E00CE	PascalUnicode	
+008E00D0	PascalUnicode	
+008E00D2	PascalUnicode	
+008E00D4	PascalUnicode	
+008E00D6	PascalUnicode	
+008E00D8	PascalUnicode	
+008E00DA	PascalUnicode	
+008E00DC	PascalUnicode	
+008E00E0	PascalUnicode	
+008E00E2	PascalUnicode	
+008E00E4	PascalUnicode	
+008E00E6	PascalUnicode	
+008E00E8	PascalUnicode	
+008E00EA	PascalUnicode	
+008E00EC	PascalUnicode	
+008E00EE	PascalUnicode	
+008E00F0	PascalUnicode	이 동영상의 스크립트로 인해 Flash 플레이어의 실행 속도가 느립니다. 계속 실행하면 컴퓨터에서 응답하지 않을 수도 있습니다. 스크립트를 중단하시겠습니까?
+008E01A0	PascalUnicode	Adobe Flash Player 10
+008E01CC	PascalUnicode	
+008E01CE	PascalUnicode	
+008E01D0	PascalUnicode	
+008E01D2	PascalUnicode	
+008E01D4	PascalUnicode	
+008E01D6	PascalUnicode	
+008E01D8	PascalUnicode	
+008E01DA	PascalUnicode	
+008E01DC	PascalUnicode	
+008E01DE	PascalUnicode	
+008E01E0	PascalUnicode	
+008E01E2	PascalUnicode	
+008E01E4	PascalUnicode	
+008E01E6	PascalUnicode	
+008E01E8	PascalUnicode	
+008E01EA	PascalUnicode	에서 업로드할 파일 선택 
+008E0208	PascalUnicode	에서 업로드할 파일을 선택 
+008E0228	PascalUnicode	에 의해 다운로드 할 위치 선택
+008E024C	PascalUnicode	
+008E024E	PascalUnicode	
+008E0250	PascalUnicode	
+008E0252	PascalUnicode	
+008E0258	PascalUnicode	
+008E025A	PascalUnicode	
+008E025C	PascalUnicode	
+008E025E	PascalUnicode	
+008E0260	PascalUnicode	
+008E0262	PascalUnicode	
+008E0264	PascalUnicode	
+008E0266	PascalUnicode	
+008E0268	PascalUnicode	
+008E026A	PascalUnicode	
+008E026C	PascalUnicode	
+008E026E	PascalUnicode	
+008E0270	PascalUnicode	
+008E0272	PascalUnicode	
+008E0274	PascalUnicode	
+008E0276	PascalUnicode	경고: 이 파일은 실행 가능한 프로그램이거나 악의적인 내용을 포함할 수 있으므로 저장하거나 열기 전에 주의하십시오.
+008E02F8	PascalUnicode	
+008E02FA	PascalUnicode	
+008E02FC	PascalUnicode	Adobe Flash Player 10
+008E0328	PascalUnicode	Adobe Flash movie (*.swf)|*.swf;*.spl|모든 파일(*.*)|*.*||
+008E0396	PascalUnicode	프로젝터 (*.exe)|*.exe||
+008E03C0	PascalUnicode	Copyright (C) 1996-2009 Adobe Systems Incorporated.  All Rights Reserved.
+008E0454	PascalUnicode	미국 특허 6,879,327에 의해 보호되고, 미국 및 기타 국가에서 특허 출원 중입니다. Adobe 및 Flash는 미국 및/또는 기타 국가에서 Adobe Systems Incorporated의 상표 또는 등록 상표입니다.
+008E0550	PascalUnicode	
+008E0552	PascalUnicode	
+008E0554	PascalUnicode	
+008E0556	PascalUnicode	
+008E0558	PascalUnicode	
+008E055A	PascalUnicode	
+008E055C	PascalUnicode	
+008E055E	PascalUnicode	
+008E0560	PascalUnicode	
+008E0568	PascalUnicode	
+008E056A	PascalUnicode	
+008E056C	PascalUnicode	
+008E056E	PascalUnicode	
+008E0570	PascalUnicode	
+008E0572	PascalUnicode	
+008E0574	PascalUnicode	
+008E0576	PascalUnicode	
+008E0578	PascalUnicode	Een script in deze film zorgt ervoor dat Adobe Flash Player 10 langzaam wordt uitgevoerd. Als dit wordt voortgezet, zal de computer mogelijk niet meer reageren. Wilt u het script afbreken?
+008E06F2	PascalUnicode	Adobe Flash Player 10
+008E071E	PascalUnicode	
+008E0720	PascalUnicode	
+008E0722	PascalUnicode	
+008E0724	PascalUnicode	
+008E0726	PascalUnicode	
+008E0728	PascalUnicode	
+008E0730	PascalUnicode	
+008E0732	PascalUnicode	
+008E0734	PascalUnicode	
+008E0736	PascalUnicode	
+008E0738	PascalUnicode	
+008E073A	PascalUnicode	
+008E073C	PascalUnicode	
+008E073E	PascalUnicode	
+008E0740	PascalUnicode	
+008E0742	PascalUnicode	Selecteer het bestand dat u wilt uploaden door 
+008E07A2	PascalUnicode	Selecteer de bestanden die u wilt uploaden door 
+008E0804	PascalUnicode	Selecteer een locatie voor downloaden door 
+008E085C	PascalUnicode	
+008E085E	PascalUnicode	
+008E0860	PascalUnicode	
+008E0862	PascalUnicode	
+008E0868	PascalUnicode	
+008E086A	PascalUnicode	
+008E086C	PascalUnicode	
+008E086E	PascalUnicode	
+008E0870	PascalUnicode	
+008E0872	PascalUnicode	
+008E0874	PascalUnicode	
+008E0876	PascalUnicode	
+008E0878	PascalUnicode	
+008E087A	PascalUnicode	
+008E087C	PascalUnicode	
+008E087E	PascalUnicode	
+008E0880	PascalUnicode	
+008E0882	PascalUnicode	
+008E0884	PascalUnicode	
+008E0886	PascalUnicode	Waarschuwing: Dit bestand kan een uitvoerbaar programma zijn of kan schadelijke inhoud bevatten. Wees uiterst voorzichtig wanneer u het bestand opslaat of opent.
+008E09D0	PascalUnicode	
+008E09D2	PascalUnicode	
+008E09D4	PascalUnicode	Adobe Flash Player 10
+008E0A00	PascalUnicode	Adobe Flash-filmbestanden (*.swf)|*.swf;*.spl|Alle bestanden (*.*)|*.*||
+008E0A92	PascalUnicode	Projectorbestand (*.exe)|*.exe||
+008E0AD4	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated. Alle rechten voorbehouden.
+008E0B6E	PascalUnicode	Beschermd door het Amerikaanse patent 6.879.327; patenten aangevraagd in de V.S. en in andere landen. Adobe en Flash zijn handelsmerken of gedeponeerde handelsmerken in de Verenigde Staten en/of andere landen.
+008E0D12	PascalUnicode	
+008E0D14	PascalUnicode	
+008E0D16	PascalUnicode	
+008E0D18	PascalUnicode	
+008E0D1A	PascalUnicode	
+008E0D1C	PascalUnicode	
+008E0D1E	PascalUnicode	
+008E0D20	PascalUnicode	
+008E0D22	PascalUnicode	
+008E0D28	PascalUnicode	
+008E0D2A	PascalUnicode	
+008E0D2C	PascalUnicode	
+008E0D2E	PascalUnicode	
+008E0D30	PascalUnicode	
+008E0D32	PascalUnicode	
+008E0D34	PascalUnicode	
+008E0D36	PascalUnicode	
+008E0D38	PascalUnicode	Ett skript i den här filmen gör att Adobe Flash Player 10 körs långsamt. Om du fortsätter att köra det kanske datorn inte svarar. Vill du avsluta skriptet?
+008E0E70	PascalUnicode	Adobe Flash Player 10
+008E0E9C	PascalUnicode	
+008E0E9E	PascalUnicode	
+008E0EA0	PascalUnicode	
+008E0EA2	PascalUnicode	
+008E0EA4	PascalUnicode	
+008E0EA6	PascalUnicode	
+008E0EA8	PascalUnicode	
+008E0EAA	PascalUnicode	
+008E0EAC	PascalUnicode	
+008E0EAE	PascalUnicode	
+008E0EB0	PascalUnicode	
+008E0EB2	PascalUnicode	
+008E0EB4	PascalUnicode	
+008E0EB6	PascalUnicode	
+008E0EB8	PascalUnicode	
+008E0EBA	PascalUnicode	Välj vilken fil som ska överföras av 
+008E0F06	PascalUnicode	Välj vilka filer som ska överföras av 
+008E0F54	PascalUnicode	Välj plats för hämtning av 
+008E0F8C	PascalUnicode	
+008E0F8E	PascalUnicode	
+008E0F90	PascalUnicode	
+008E0F92	PascalUnicode	
+008E0F98	PascalUnicode	
+008E0F9A	PascalUnicode	
+008E0F9C	PascalUnicode	
+008E0F9E	PascalUnicode	
+008E0FA0	PascalUnicode	
+008E0FA2	PascalUnicode	
+008E0FA4	PascalUnicode	
+008E0FA6	PascalUnicode	
+008E0FA8	PascalUnicode	
+008E0FAA	PascalUnicode	
+008E0FAC	PascalUnicode	
+008E0FAE	PascalUnicode	
+008E0FB0	PascalUnicode	
+008E0FB2	PascalUnicode	
+008E0FB4	PascalUnicode	
+008E0FB6	PascalUnicode	Varning: Filen kan vara ett körbart program eller innehålla skadligt innehåll. Var försiktig när du sparar eller öppnar filen.
+008E10B8	PascalUnicode	
+008E10BA	PascalUnicode	
+008E10BC	PascalUnicode	Adobe Flash Player 10
+008E10E8	PascalUnicode	Adobe Flash-film (*.swf)|*.swf;*.spl|Alla filer (*.*)|*.*||
+008E1160	PascalUnicode	Projektor (*.exe)|*.exe||
+008E1194	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated. Med ensamrätt.
+008E1216	PascalUnicode	Skyddat av U.S. Patent 6,879,327; patent sökta i USA och i andra länder. Adobe och Flash är varumärken eller registrerade varumärken i USA och/eller andra länder.
+008E135C	PascalUnicode	
+008E135E	PascalUnicode	
+008E1360	PascalUnicode	
+008E1362	PascalUnicode	
+008E1364	PascalUnicode	
+008E1366	PascalUnicode	
+008E1368	PascalUnicode	
+008E136A	PascalUnicode	
+008E136C	PascalUnicode	
+008E1370	PascalUnicode	
+008E1372	PascalUnicode	
+008E1374	PascalUnicode	
+008E1376	PascalUnicode	
+008E1378	PascalUnicode	
+008E137A	PascalUnicode	
+008E137C	PascalUnicode	
+008E137E	PascalUnicode	
+008E1380	PascalUnicode	Um script deste filme está fazendo com que o Adobe Flash Player 10 seja executado lentamente.  Se ele continuar a ser executado, seu computador poderá deixar de responder.  Deseja anular o script?
+008E150A	PascalUnicode	Adobe Flash Player 10
+008E1536	PascalUnicode	
+008E1538	PascalUnicode	
+008E153A	PascalUnicode	
+008E153C	PascalUnicode	
+008E153E	PascalUnicode	
+008E1540	PascalUnicode	
+008E1548	PascalUnicode	
+008E154A	PascalUnicode	
+008E154C	PascalUnicode	
+008E154E	PascalUnicode	
+008E1550	PascalUnicode	
+008E1552	PascalUnicode	
+008E1554	PascalUnicode	
+008E1556	PascalUnicode	
+008E1558	PascalUnicode	
+008E155A	PascalUnicode	Selecionar arquivo para upload de 
+008E15A0	PascalUnicode	Selecionar arquivo(s) para upload de 
+008E15EC	PascalUnicode	Selecionar local para download de 
+008E1632	PascalUnicode	
+008E1634	PascalUnicode	
+008E1636	PascalUnicode	
+008E1638	PascalUnicode	
+008E1640	PascalUnicode	
+008E1642	PascalUnicode	
+008E1644	PascalUnicode	
+008E1646	PascalUnicode	
+008E1648	PascalUnicode	
+008E164A	PascalUnicode	
+008E164C	PascalUnicode	
+008E164E	PascalUnicode	
+008E1650	PascalUnicode	
+008E1652	PascalUnicode	
+008E1654	PascalUnicode	
+008E1656	PascalUnicode	
+008E1658	PascalUnicode	
+008E165A	PascalUnicode	
+008E165C	PascalUnicode	
+008E165E	PascalUnicode	Aviso: este arquivo pode ser um programa executável ou conter conteúdo malicioso. Tome cuidado antes de salvar ou abrir.
+008E1750	PascalUnicode	
+008E1752	PascalUnicode	
+008E1754	PascalUnicode	Adobe Flash Player 10
+008E1780	PascalUnicode	Filme do Adobe Flash (*.swf)|*.swf;*.spl|Todos os arquivos (*.*)|*.*||
+008E180E	PascalUnicode	Projetor (*.exe)|*.exe||
+008E1840	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated.  Todos os direitos reservados.
+008E18E2	PascalUnicode	Protegido pela patente dos EUA 6.879.327; patentes pendentes nos Estados Unidos e em outros países. Adobe e Flash são marcas comerciais ou marcas registradas nos Estados Unidos e/ou em outros países.
+008E1A72	PascalUnicode	
+008E1A74	PascalUnicode	
+008E1A76	PascalUnicode	
+008E1A78	PascalUnicode	
+008E1A7A	PascalUnicode	
+008E1A7C	PascalUnicode	
+008E1A7E	PascalUnicode	
+008E1A80	PascalUnicode	
+008E1A82	PascalUnicode	
+008E1A88	PascalUnicode	
+008E1A8A	PascalUnicode	
+008E1A8C	PascalUnicode	
+008E1A8E	PascalUnicode	
+008E1A90	PascalUnicode	
+008E1A92	PascalUnicode	
+008E1A94	PascalUnicode	
+008E1A96	PascalUnicode	
+008E1A98	PascalUnicode	Skript v tomto filmu způsobuje pomalý běh přehrávače Adobe Flash Player 10.  Pokud bude i nadále spuštěn, počítač může přestat reagovat.  Chcete skript přerušit?
+008E1BDC	PascalUnicode	Adobe Flash Player 10
+008E1C08	PascalUnicode	
+008E1C0A	PascalUnicode	
+008E1C0C	PascalUnicode	
+008E1C0E	PascalUnicode	
+008E1C10	PascalUnicode	
+008E1C12	PascalUnicode	
+008E1C18	PascalUnicode	
+008E1C1A	PascalUnicode	
+008E1C1C	PascalUnicode	
+008E1C1E	PascalUnicode	
+008E1C20	PascalUnicode	
+008E1C22	PascalUnicode	
+008E1C24	PascalUnicode	
+008E1C26	PascalUnicode	
+008E1C28	PascalUnicode	
+008E1C2A	PascalUnicode	Vyberte soubor, který chcete odeslat prostřednictvím 
+008E1C96	PascalUnicode	Vyberte soubory, které chcete odeslat prostřednictvím 
+008E1D04	PascalUnicode	Vyberte umístění pro stahování prostřednictvím 
+008E1D64	PascalUnicode	
+008E1D66	PascalUnicode	
+008E1D68	PascalUnicode	
+008E1D6A	PascalUnicode	
+008E1D70	PascalUnicode	
+008E1D72	PascalUnicode	
+008E1D74	PascalUnicode	
+008E1D76	PascalUnicode	
+008E1D78	PascalUnicode	
+008E1D7A	PascalUnicode	
+008E1D7C	PascalUnicode	
+008E1D7E	PascalUnicode	
+008E1D80	PascalUnicode	
+008E1D82	PascalUnicode	
+008E1D84	PascalUnicode	
+008E1D86	PascalUnicode	
+008E1D88	PascalUnicode	
+008E1D8A	PascalUnicode	
+008E1D8C	PascalUnicode	
+008E1D8E	PascalUnicode	Upozornění: Tento soubor může být spustitelný program nebo může obsahovat nebezpečný obsah. Před jeho uložením nebo otevřením buďte opatrní.
+008E1EA8	PascalUnicode	
+008E1EAA	PascalUnicode	
+008E1EAC	PascalUnicode	Adobe Flash Player 10
+008E1ED8	PascalUnicode	Film Adobe Flash (*.swf)|*.swf;*.spl|Všechny soubory (*.*)|*.*||
+008E1F5A	PascalUnicode	Projektor (*.exe)|*.exe||
+008E1F8E	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated.  Všechna práva vyhrazena.
+008E2026	PascalUnicode	Chráněno americkým patentem 6,879,327. Další patenty byly přihlášeny v USA a dalších zemích. Adobe a Flash jsou buďto ochranné známky nebo registrované ochranné známky ve Spojených státech nebo dalších zemích.
+008E21CA	PascalUnicode	
+008E21CC	PascalUnicode	
+008E21CE	PascalUnicode	
+008E21D0	PascalUnicode	
+008E21D2	PascalUnicode	
+008E21D4	PascalUnicode	
+008E21D6	PascalUnicode	
+008E21D8	PascalUnicode	
+008E21DA	PascalUnicode	
+008E21E0	PascalUnicode	
+008E21E2	PascalUnicode	
+008E21E4	PascalUnicode	
+008E21E6	PascalUnicode	
+008E21E8	PascalUnicode	
+008E21EA	PascalUnicode	
+008E21EC	PascalUnicode	
+008E21EE	PascalUnicode	
+008E21F0	PascalUnicode	Skrypt z tego filmu powoduje, że program Adobe Flash Player 10 działa wolno. Jeśli skrypt będzie nadal uruchominoy, komputer może przestać reagować. Czy chcesz przerwać działanie skryptu?
+008E2368	PascalUnicode	Adobe Flash Player 10
+008E2394	PascalUnicode	
+008E2396	PascalUnicode	
+008E2398	PascalUnicode	
+008E239A	PascalUnicode	
+008E239C	PascalUnicode	
+008E239E	PascalUnicode	
+008E23A0	PascalUnicode	
+008E23A2	PascalUnicode	
+008E23A4	PascalUnicode	
+008E23A6	PascalUnicode	
+008E23A8	PascalUnicode	
+008E23AA	PascalUnicode	
+008E23AC	PascalUnicode	
+008E23AE	PascalUnicode	
+008E23B0	PascalUnicode	
+008E23B2	PascalUnicode	Wybierz plik do wysłania za pomocą 
+008E23FA	PascalUnicode	Wybierz pliki do wysłania za pomocą 
+008E2444	PascalUnicode	Wybierz położenie pobierania za pomocą 
+008E2494	PascalUnicode	
+008E2496	PascalUnicode	
+008E2498	PascalUnicode	
+008E249A	PascalUnicode	
+008E24A0	PascalUnicode	
+008E24A2	PascalUnicode	
+008E24A4	PascalUnicode	
+008E24A6	PascalUnicode	
+008E24A8	PascalUnicode	
+008E24AA	PascalUnicode	
+008E24AC	PascalUnicode	
+008E24AE	PascalUnicode	
+008E24B0	PascalUnicode	
+008E24B2	PascalUnicode	
+008E24B4	PascalUnicode	
+008E24B6	PascalUnicode	
+008E24B8	PascalUnicode	
+008E24BA	PascalUnicode	
+008E24BC	PascalUnicode	
+008E24BE	PascalUnicode	Ostrzeżenie: Ten plik może być programem wykonywalnym lub może zawierać złośliwą treść. Należy zachować ostrożność przed otwarciem lub zapisaniem tego pliku.
+008E2600	PascalUnicode	
+008E2602	PascalUnicode	
+008E2604	PascalUnicode	Adobe Flash Player 10
+008E2630	PascalUnicode	Film Adobe Flash(*.swf)|*.swf;*.spl|Wszystkie pliki (*.*)|*.*||
+008E26B0	PascalUnicode	Projektor (*.exe)|*.exe||
+008E26E4	PascalUnicode	Copyright © 1996-2009 Adobe Systems Incorporated.  Wszelkie prawa zastrzeżone.
+008E2782	PascalUnicode	Podlega ochronie patentowej w USA. Numer patentu 6 879 327. Oczekujące wnioski patentowe w USA i innych krajach. Adobe i Flash są zastrzeżonymi znakami towarowymi lub znakami towarowymi w USA i/lub innych krajach.
+008E292E	PascalUnicode	
+008E2930	PascalUnicode	
+008E2932	PascalUnicode	
+008E2934	PascalUnicode	
+008E2936	PascalUnicode	
+008E2938	PascalUnicode	
+008E293A	PascalUnicode	
+008E293C	PascalUnicode	
+008E293E	PascalUnicode	
+008E2940	PascalUnicode	
+008E2942	PascalUnicode	
+008E2944	PascalUnicode	
+008E2946	PascalUnicode	
+008E2948	PascalUnicode	
+008E294A	PascalUnicode	
+008E294C	PascalUnicode	
+008E294E	PascalUnicode	
+008E2950	PascalUnicode	Этот ролик содержит сценарий, замедляющий работу Adobe Flash Player 10.  Если продолжить его выполнение, то компьютер может перестать отвечать на запросы.  Прервать сценарий?
+008E2AAE	PascalUnicode	Adobe Flash Player 10
+008E2ADA	PascalUnicode	
+008E2ADC	PascalUnicode	
+008E2ADE	PascalUnicode	
+008E2AE0	PascalUnicode	
+008E2AE2	PascalUnicode	
+008E2AE4	PascalUnicode	
+008E2AE8	PascalUnicode	
+008E2AEA	PascalUnicode	
+008E2AEC	PascalUnicode	
+008E2AEE	PascalUnicode	
+008E2AF0	PascalUnicode	
+008E2AF2	PascalUnicode	
+008E2AF4	PascalUnicode	
+008E2AF6	PascalUnicode	
+008E2AF8	PascalUnicode	
+008E2AFA	PascalUnicode	Выберите файл для отправки с помощью 
+008E2B46	PascalUnicode	Выберите файлы для отправки с помощью 
+008E2B94	PascalUnicode	Выберите местоположение для загрузки с помощью 
+008E2BF4	PascalUnicode	
+008E2BF6	PascalUnicode	
+008E2BF8	PascalUnicode	
+008E2BFA	PascalUnicode	
+008E2C00	PascalUnicode	
+008E2C02	PascalUnicode	
+008E2C04	PascalUnicode	
+008E2C06	PascalUnicode	
+008E2C08	PascalUnicode	
+008E2C0A	PascalUnicode	
+008E2C0C	PascalUnicode	
+008E2C0E	PascalUnicode	
+008E2C10	PascalUnicode	
+008E2C12	PascalUnicode	
+008E2C14	PascalUnicode	
+008E2C16	PascalUnicode	
+008E2C18	PascalUnicode	
+008E2C1A	PascalUnicode	
+008E2C1C	PascalUnicode	
+008E2C1E	PascalUnicode	Предупреждение. Этот файл может быть исполняемой программой или иметь вредоносное содержимое. Его следует открывать и сохранять с осторожностью.
+008E2D40	PascalUnicode	
+008E2D42	PascalUnicode	
+008E2D44	PascalUnicode	Adobe Flash Player 10
+008E2D70	PascalUnicode	Ролики Adobe Flash (*.swf)|*.swf;*.spl|Все файлы (*.*)|*.*||
+008E2DEA	PascalUnicode	Проектор (*.exe)|*.exe||
+008E2E1C	PascalUnicode	Авторские права © Adobe Systems Incorporated, 1996-2009.  Все права защищены.
+008E2EB8	PascalUnicode	Охраняется патентом США 6879327; патенты заявлены в США и др. странах. Adobe и Flash являются охраняемыми товарными знаками или товарными знаками в США и других странах.
+008E300C	PascalUnicode	
+008E300E	PascalUnicode	
+008E3010	PascalUnicode	
+008E3012	PascalUnicode	
+008E3014	PascalUnicode	
+008E3016	PascalUnicode	
+008E3018	PascalUnicode	
+008E301A	PascalUnicode	
+008E301C	PascalUnicode	
+008E3020	PascalUnicode	
+008E3022	PascalUnicode	
+008E3024	PascalUnicode	
+008E3026	PascalUnicode	
+008E3028	PascalUnicode	
+008E302A	PascalUnicode	
+008E302C	PascalUnicode	
+008E302E	PascalUnicode	
+008E3030	PascalUnicode	Bu filmdeki bir komut dosyası, Adobe Flash Player 10 uygulamasının yavaş çalışmasına neden oluyor.  Bu komut dosyası çalışmaya devam ederse bilgisayarınız yanıt vermeyebilir.  Komut dosyasını iptal etmek istiyor musunuz?
+008E31EA	PascalUnicode	Adobe Flash Player 10
+008E3216	PascalUnicode	
+008E3218	PascalUnicode	
+008E321A	PascalUnicode	
+008E321C	PascalUnicode	
+008E321E	PascalUnicode	
+008E3220	PascalUnicode	
+008E3228	PascalUnicode	
+008E322A	PascalUnicode	
+008E322C	PascalUnicode	
+008E322E	PascalUnicode	
+008E3230	PascalUnicode	
+008E3232	PascalUnicode	
+008E3234	PascalUnicode	
+008E3236	PascalUnicode	
+008E3238	PascalUnicode	
+008E323A	PascalUnicode	Yüklenecek dosyası seç
+008E3268	PascalUnicode	Yüklenecek dosyaları seç
+008E329A	PascalUnicode	İndirme için konum seç
+008E32C8	PascalUnicode	
+008E32CA	PascalUnicode	
+008E32CC	PascalUnicode	
+008E32CE	PascalUnicode	
+008E32D0	PascalUnicode	
+008E32D2	PascalUnicode	
+008E32D4	PascalUnicode	
+008E32D6	PascalUnicode	
+008E32D8	PascalUnicode	
+008E32DA	PascalUnicode	
+008E32DC	PascalUnicode	
+008E32DE	PascalUnicode	
+008E32E0	PascalUnicode	
+008E32E2	PascalUnicode	
+008E32E4	PascalUnicode	
+008E32E6	PascalUnicode	
+008E32E8	PascalUnicode	
+008E32EA	PascalUnicode	
+008E32EC	PascalUnicode	
+008E32EE	PascalUnicode	Uyarı: Bu dosya çalıştırılabilir bir program olabilir veya kötü amaçlı içerik içerebilir; kaydederken veya açarken dikkatli olun.
+008E33F8	PascalUnicode	
+008E33FA	PascalUnicode	
+008E33FC	PascalUnicode	Adobe Flash Player 10
+008E3428	PascalUnicode	Adobe Flash filmi (*.swf)|*.swf;*.spl|Tüm Dosyalar (*.*)|*.*||
+008E34A6	PascalUnicode	Projektör (*.exe)|*.exe||
+008E34DA	PascalUnicode	Telif Hakkı © 1996-2009, Adobe Systems Incorporated.  Tüm Hakları Saklıdır.
+008E3572	PascalUnicode	6,879,327 ABD Patenti ile ABD ve diğer ülkelerde Beklemede Olan Patentlerle korunmaktadır. Adobe ve Flash, ABD ve/veya diğer ülkelerde ticari marka veya tescilli ticari markalardır.
+008E36DE	PascalUnicode	
+008E36E0	PascalUnicode	
+008E36E2	PascalUnicode	
+008E36E4	PascalUnicode	
+008E36E6	PascalUnicode	
+008E36E8	PascalUnicode	
+008E36EA	PascalUnicode	
+008E36EC	PascalUnicode	
+008E36EE	PascalUnicode	
+FFDFF1AC	uchar[36]	
+FFDFFC00	wchar16[261]	

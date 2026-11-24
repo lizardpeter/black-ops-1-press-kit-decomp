@@ -1,0 +1,165 @@
+2026-11-24 17:30:40 INFO  (LoggingInitialization) Using log config file: jar:file:/opt/ghidra/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml  
+2026-11-24 17:30:40 INFO  (LoggingInitialization) Using log file: /tmp/raw/analyze.log  
+2026-11-24 17:30:40 DEBUG (GhidraObjectInputFilter) Including serial input filter: FileSystem/data/client.rmi.serial.filter  
+2026-11-24 17:30:40 INFO  (Preferences) Loading user preferences: /home/runner/.config/ghidra/ghidra_12.1.4_PUBLIC/preferences  
+2026-11-24 17:30:40 INFO  (ClassSearcher) Searching for classes...  
+2026-11-24 17:30:40 INFO  (ClassSearcher) Class search complete (780 ms)  
+2026-11-24 17:30:41 INFO  (DefaultSSLContextInitializer) Initializing SSL Context  
+2026-11-24 17:30:42 INFO  (SecureRandomFactory) Initializing Random Number Generator...  
+2026-11-24 17:30:42 INFO  (SecureRandomFactory) Random Number Generator initialization complete: NativePRNGNonBlocking  
+2026-11-24 17:30:42 INFO  (DefaultTrustManagerFactory) Trust manager disabled, cacerts have not been set  
+2026-11-24 17:30:43 INFO  (FileCacheMaintenanceDaemon) Starting cache cleanup: /var/tmp/runner-ghidra/fscache2  
+2026-11-24 17:30:43 INFO  (FileCacheMaintenanceDaemon) Finished cache cleanup, estimated storage used: 0  
+2026-11-24 17:30:43 INFO  (AnalyzeHeadless) Headless startup complete (5654 ms)  
+2026-11-24 17:30:43 INFO  (ClassSearcher) Class searcher loaded 59 extension points (20 false positives)  
+2026-11-24 17:30:44 INFO  (HeadlessAnalyzer) HEADLESS Script Paths:
+    /opt/ghidra/Ghidra/Features/SystemEmulation/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/GnuDemangler/ghidra_scripts
+    /home/runner/work/black-ops-1-press-kit-decomp/black-ops-1-press-kit-decomp/tools/ghidra
+    /opt/ghidra/Ghidra/Features/WildcardAssembler/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/DATA/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/DecompilerDependent/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/JVM/ghidra_scripts
+    /opt/ghidra/Ghidra/Debug/Debugger-rmi-trace/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/MicrosoftCodeAnalyzer/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/VersionTracking/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/PyGhidra/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/SwiftDemangler/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/Base/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/Atmel/ghidra_scripts
+    /opt/ghidra/Ghidra/Debug/Debugger/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/Decompiler/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/FunctionID/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/PDB/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/8051/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/PIC/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/FileFormats/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/BSim/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/BytePatterns/ghidra_scripts  
+2026-11-24 17:30:44 INFO  (HeadlessAnalyzer) HEADLESS: execution starts  
+2026-11-24 17:30:44 INFO  (HeadlessAnalyzer) Creating project: /tmp/proj/presskit  
+2026-11-24 17:30:44 DEBUG (DefaultProjectManager) No tools found; Installing default tools  
+2026-11-24 17:30:44 DEBUG (DefaultProjectManager) 	no recent project directories found  
+2026-11-24 17:30:44 INFO  (DefaultProject) Creating project: /tmp/proj/presskit  
+2026-11-24 17:30:44 INFO  (HeadlessAnalyzer) REPORT: Processing input files:   
+2026-11-24 17:30:44 INFO  (HeadlessAnalyzer)      project: /tmp/proj/presskit  
+2026-11-24 17:30:44 INFO  (HeadlessAnalyzer) IMPORTING: file:///tmp/in/mac_ppc_projector.exe  
+2026-11-24 17:30:45 INFO  (ProgramLoader) Using Loader: Mac OS X Mach-O  
+2026-11-24 17:30:45 INFO  (ProgramLoader) Using Language/Compiler: PowerPC:BE:64:VLE-32addr:default  
+2026-11-24 17:30:45 INFO  (ProgramLoader) Using Library Search Path: [., /bin, /lib, /lib64, /lib/x86_64-linux-gnu, /lib/aarch64-linux-gnu, /usr/bin, /usr/lib, /usr/X11R6/bin, /usr/X11R6/lib, /usr/java/packages/lib, /usr/lib64]  
+2026-11-24 17:30:46 INFO  (ProgramLoader) Additional info:
+Loading file:///tmp/in/mac_ppc_projector.exe?MD5=53ca59c2e2bbfee74edd80202d715424...
+------------------------------------------------
+
+Linking the External Programs of 'mac_ppc_projector.exe' to imported libraries...
+  [/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon] -> not found in project
+  [/System/Library/Frameworks/AGL.framework/Versions/A/AGL] -> not found in project
+  [/System/Library/Frameworks/QuickTime.framework/Versions/A/QuickTime] -> not found in project
+  [/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio] -> not found in project
+  [/System/Library/Frameworks/CoreAudioKit.framework/Versions/A/CoreAudioKit] -> not found in project
+  [/System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit] -> not found in project
+  [/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL] -> not found in project
+  [/System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration] -> not found in project
+  [/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit] -> not found in project
+  [/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation] -> not found in project
+  [/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate] -> not found in project
+  [/usr/lib/libstdc++.6.dylib] -> not found in project
+  [/usr/lib/libgcc_s.1.dylib] -> not found in project
+  [/usr/lib/libSystem.B.dylib] -> not found in project
+------------------------------------------------
+
+  
+2026-11-24 17:30:46 INFO  (HeadlessAnalyzer) IMPORTING: Loaded 0 additional files  
+2026-11-24 17:30:47 INFO  (HeadlessAnalyzer) REPORT: Execute script: PrepAnalysis.java   
+2026-11-24 17:30:48 INFO  (HeadlessAnalyzer) SCRIPT: /home/runner/work/black-ops-1-press-kit-decomp/black-ops-1-press-kit-decomp/tools/ghidra/PrepAnalysis.java  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> JVM max heap: 13312 MB, processors: 4  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Require pointer param data type = false  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Stored Value Pointer analysis = true  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Restrict Address to same 256M page = false  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: Stack.Max Threads = 2  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Propagate r30 register value = false  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Switch Table Recovery = true  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Trust values read from writable memory = true  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Mark dual instruction references = false  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: Stack.Create Local Variables = true  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Speculative reference max = 256  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: Decompiler Switch Analysis.Analysis Decompiler Timeout (sec) = 60  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Create Data from pointer = false  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: Stack = true  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer = true  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Propagate r2 register value = false  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Max Threads = 2  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> set PowerPC Constant Reference Analyzer.Max Threads = 1  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: Decompiler Switch Analysis = true  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Min absolute reference = 4  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Function parameter/return Pointer analysis = true  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: PowerPC Constant Reference Analyzer.Speculative reference min = 1024  
+2026-11-24 17:30:48 INFO  (GhidraScript) PrepAnalysis.java> option: Stack.Create Param Variables = false  
+2026-11-24 17:30:48 INFO  (HeadlessAnalyzer) ANALYZING all memory and code: file:///tmp/in/mac_ppc_projector.exe  
+2026-11-24 17:30:52 ERROR (PngDataType) Invalid PNG data at 005816a4  
+2026-11-24 17:30:52 ERROR (PngDataType) Invalid PNG data at 00582124  
+2026-11-24 17:30:52 ERROR (PngDataType) Invalid PNG data at 0058212c  
+2026-11-24 17:30:55 INFO  (DecompilerSwitchAnalyzer) hit non-returning function, restarting decompiler switch analyzer later  
+2026-11-24 17:30:56 WARN  (DecompileCallback) Decompiling 000dc900, pcode error at 000dd4e8: Unable to resolve constructor at 000dd4e8  
+2026-11-24 17:30:57 WARN  (DecompileCallback) Decompiling 000dc900, pcode error at 000dd10c: Unable to resolve constructor at 000dd10c  
+2026-11-24 17:30:57 WARN  (DecompileCallback) Decompiling 000dc900, pcode error at 000dcdc4: Unable to resolve constructor at 000dcdc4  
+2026-11-24 17:30:57 WARN  (DecompileCallback) Decompiling 000dc900, pcode error at 000dcb00: Unable to resolve constructor at 000dcb00  
+2026-11-24 17:33:02 DEBUG (CreateThunkFunctionCmd) Created new external location for address 8fe01008: <EXTERNAL>::EXT_FUN_8fe01008  
+2026-11-24 17:33:13 DEBUG (FidAnalyzer) No FID Libraries apply for language PowerPC:BE:64:VLE-32addr  
+2026-11-24 17:33:13 INFO  (PackedDatabaseCache) Packed database cache: /var/tmp/runner-ghidra/packed-db-cache  
+2026-11-24 17:33:13 DEBUG (PackedDatabaseCache) Caching packed database: /opt/ghidra/Ghidra/Features/Base/data/typeinfo/mac_10.9/mac_osx.gdt  
+2026-11-24 17:33:13 DEBUG (PackedDatabase) Unpacking database /opt/ghidra/Ghidra/Features/Base/data/typeinfo/mac_10.9/mac_osx.gdt -> /var/tmp/runner-ghidra/packed-db-cache/pdb12A17CE1/db.1.gbf  
+2026-11-24 17:33:13 DEBUG (PackedDatabaseCache) Cache update completed: /opt/ghidra/Ghidra/Features/Base/data/typeinfo/mac_10.9/mac_osx.gdt  
+2026-11-24 17:33:13 INFO  (ApplyDataArchiveAnalyzer) Applied data type archive: mac_osx  
+2026-11-24 17:33:13 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table at 006fe300: __cxxabiv1::__class_type_info::vtable  
+2026-11-24 17:33:13 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table at 006fe400: __cxxabiv1::__si_class_type_info::vtable  
+2026-11-24 17:33:13 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table at 006fe500: __cxxabiv1::__vmi_class_type_info::vtable  
+2026-11-24 17:33:14 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table: <EXTERNAL>::__cxxabiv1::__class_type_info::vtable  
+2026-11-24 17:33:14 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table: <EXTERNAL>::__cxxabiv1::__si_class_type_info::vtable  
+2026-11-24 17:33:14 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table: <EXTERNAL>::__cxxabiv1::__vmi_class_type_info::vtable  
+2026-11-24 17:33:51 INFO  (AutoAnalysisManager) -----------------------------------------------------
+    ASCII Strings                              0.579 secs
+    Apply Data Archives                        0.425 secs
+    CFStrings                                  0.038 secs
+    Call Convention ID                         0.057 secs
+    Call-Fixup Installer                       0.194 secs
+    Create Address Tables                      0.675 secs
+    Create Address Tables - One Time           1.584 secs
+    Create Function                            1.902 secs
+    Data Reference                             2.119 secs
+    Decompiler Switch Analysis                87.906 secs
+    Decompiler Switch Analysis - One Time     36.416 secs
+    Demangler GNU                              0.186 secs
+    Disassemble                                5.109 secs
+    Disassemble Entry Points                   4.324 secs
+    Embedded Media                             0.040 secs
+    External Entry References                  0.000 secs
+    Function ID                                0.017 secs
+    Function Start Pre Search                  0.085 secs
+    Function Start Search                      0.072 secs
+    Function Start Search After Code           0.102 secs
+    Function Start Search After Data           0.067 secs
+    Function Start Search delayed - One Time   0.281 secs
+    Mach-O Function Starts                     0.007 secs
+    Non-Returning Functions - Discovered       0.726 secs
+    Non-Returning Functions - Known            0.012 secs
+    PowerPC Constant Reference Analyzer       16.545 secs
+    Reference                                  2.778 secs
+    Shared Return Calls                        1.076 secs
+    Stack                                     16.495 secs
+    Subroutine References                      3.601 secs
+    Subroutine References - One Time           0.001 secs
+-----------------------------------------------------
+     Total Time   183 secs
+-----------------------------------------------------
+  
+2026-11-24 17:33:51 INFO  (HeadlessAnalyzer) REPORT: Analysis succeeded for file: file:///tmp/in/mac_ppc_projector.exe  
+2026-11-24 17:33:51 INFO  (HeadlessAnalyzer) REPORT: Execute script: ExportAll.java '/tmp/raw'   
+2026-11-24 17:33:51 INFO  (HeadlessAnalyzer) SCRIPT: /home/runner/work/black-ops-1-press-kit-decomp/black-ops-1-press-kit-decomp/tools/ghidra/ExportAll.java  
+2026-11-24 17:33:56 INFO  (GhidraScript) ExportAll.java> exported 5000 functions  
+2026-11-24 17:33:59 INFO  (GhidraScript) ExportAll.java> functions: 9249  
+2026-11-24 17:33:59 INFO  (HeadlessAnalyzer) ANALYZING changes made by post scripts: file:///tmp/in/mac_ppc_projector.exe  
+2026-11-24 17:33:59 INFO  (HeadlessAnalyzer) REPORT: Post-analysis succeeded for file: file:///tmp/in/mac_ppc_projector.exe  
+2026-11-24 17:34:00 INFO  (LocalFileSystem) /mac_ppc_projector.exe: file created (runner)  
+2026-11-24 17:34:00 INFO  (HeadlessAnalyzer) REPORT: Save succeeded for: /mac_ppc_projector.exe (presskit:/mac_ppc_projector.exe)  
+2026-11-24 17:34:00 INFO  (HeadlessAnalyzer) REPORT: Import succeeded  
