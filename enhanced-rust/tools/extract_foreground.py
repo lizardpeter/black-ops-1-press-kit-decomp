@@ -314,8 +314,8 @@ def build(data,output,jar):
                 for x,y in vertices:packed+=struct.pack('<ff',x/20,y/20)
     for selector,states in texture_states:
         packed.append(selector)
-        for rect,uv in states:
-            packed+=struct.pack('<8f',*rect,*uv)
+        for bounds,uv in states:
+            packed+=struct.pack('<8f',*bounds,*uv)
     assert len(packed)<=8*1024*1024
     (output/'timeline.pfg').write_bytes(packed)
     print('native vector root characters:',sorted(mesh_slots),'depth-split text sprites:',sorted(splits),'mesh runs:',len(overlay_slots))

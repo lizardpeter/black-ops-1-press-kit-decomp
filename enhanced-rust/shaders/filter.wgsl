@@ -11,7 +11,7 @@ struct VertexOutput {
  @location(1) opacity: vec2<f32>,
  @location(2) color: vec4<f32>,
 };
-struct GroupScale { scale: vec4<f32> };
+struct GroupScale { scale: vec4<f32>, };
 @group(1) @binding(0) var<uniform> groupScale: GroupScale;
 @vertex fn groupVertex(v: VertexInput)->VertexOutput {
  var o: VertexOutput;
