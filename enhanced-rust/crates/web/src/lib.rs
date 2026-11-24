@@ -30,7 +30,7 @@ impl WebPlayer{
         let render_format=config.format.add_srgb_suffix();
         if render_format!=config.format{config.view_formats.push(render_format);}
         surface.configure(&device,&config);
-        let renderer=Renderer::new(&device,render_format,VS,FS,"vertexMain","fragmentMain");
+        let renderer=Renderer::new(&device,&queue,render_format,VS,FS,"vertexMain","fragmentMain");
         Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,controls:ControlCache::default(),mouse:None,pressed:false})
     }
     pub fn resize(&mut self,w:u32,h:u32){let w=w.max(1);let h=h.max(1);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
@@ -44,6 +44,7 @@ impl WebPlayer{
     pub fn pointer_at(&mut self,x:f64,y:f64,pressed:bool){self.pointer();self.mouse=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y);self.pressed=pressed;}
     pub fn install_background(&mut self,bytes:&[u8])->Result<(),JsValue>{self.background=Some(BackgroundArt::new(BackgroundTimeline::read(bytes).map_err(error)?));Ok(())}
     pub fn install_foreground(&mut self,bytes:&[u8])->Result<(),JsValue>{self.foreground=Some(ForegroundArt::new(ForegroundTimeline::read(bytes).map_err(error)?));Ok(())}
+    pub fn install_menu(&mut self,bytes:&[u8])->Result<(),JsValue>{self.foreground.as_mut().ok_or_else(||JsValue::from_str("foreground missing"))?.install_menu(bytes).map_err(error)}
     pub fn install_controls(&mut self,bytes:&[u8])->Result<(),JsValue>{self.pack=Some(ControlPack::read(bytes).map_err(error)?);self.controls.clear();Ok(())}
     pub fn click(&mut self,x:f64,y:f64){self.pointer();if !self.input_ready(){return;}if let Some((x,y))=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y){let h=self.app.hit(x,y);self.app.activate(h,x);}}
     pub fn key(&mut self,key:&str){match key{
@@ -98,6 +99,7 @@ impl WebPlayer{
             self.controls.update(self.pack.as_ref(),&self.renderer,&self.device,&self.queue,ControlVisual{y:self.app.controls.y as f32,gallery,paused,progress,text,states});
         }else{self.controls.clear();}
         let fg_on=self.foreground_on();if fg_on{self.foreground.as_mut().unwrap().update(&self.renderer,&self.queue,self.app.frame);}
+        if fg_on{let selected=match self.mouse.map(|(x,y)|self.app.hit(x,y)){Some(Hit::Trailer(id)|Hit::Thumbnail(id))=>id,_=>0};self.foreground.as_mut().unwrap().update_menu(&self.renderer,&self.device,&self.queue,selected,self.pressed);}
         let paths=self.visible_paths();self.serial+=1;
         for p in &paths{if let Some((layer,used))=self.images.get_mut(p){*used=self.serial;if p.contains("_controls/")&&self.control_y!=self.app.controls.y as f32{self.renderer.reposition(&self.device,layer,[200.,self.app.controls.y as f32,880.,90.]);}}}
         self.control_y=self.app.controls.y as f32;

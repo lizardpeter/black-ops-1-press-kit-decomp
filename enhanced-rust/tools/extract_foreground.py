@@ -23,11 +23,17 @@ def matrix(x,y):return bits((0,1),(0,1),(17,5),(x*20,17),(y*20,17))
 def rect(w,h):return bits((17,5),(0,17),(w*20,17),(0,17),(h*20,17))
 def strip_sprite(d):return d[:4]+b''.join(tag(c,strip_sprite(v) if c==39 else v) for c,v in tags(d,4) if c not in (12,59))
 
-def source(data):
+def source(data, vector_menu=False):
     if hashlib.sha256(data).hexdigest()!=EXPECTED:raise ValueError('wrong original SWF')
     b=b'FWS'+data[3:8]+zlib.decompress(data[8:]);r=Bits(b,8);assert r.rect()==[0,25600,0,14400];header=r.at//8+4;ts=list(tags(b,header));defs=[];frames=[];live={}
     for c,d in ts:
-        if c in DEFINITIONS:defs.append(tag(c,strip_sprite(d) if c==39 else d))
+        if c in DEFINITIONS:
+            if c==39:
+                from extract_menu import strip_buttons
+                replacement=strip_buttons(d) if vector_menu else None
+                d2=strip_sprite(d) if replacement is None else replacement
+            else:d2=d
+            defs.append(tag(c,d2))
         if c in (26,70):
             r=Bits(d);flags=r.u8();f2=r.u8() if c==70 else 0;depth=r.u16();old=live.get(depth) if flags&1 else None
             cid,mat,alpha,flt,born=old or (None,(1,1,0,0,0,0),256,b'',len(frames)+1)
@@ -51,7 +57,9 @@ def source(data):
     return b[3:4],b''.join(defs),frames
 
 def build(data,output,jar):
-    version,defs,frames=source(data);output.mkdir(parents=True,exist_ok=True)
+    version,defs,frames=source(data,vector_menu=True);output.mkdir(parents=True,exist_ok=True)
+    from extract_menu import pack as pack_menu
+    (output/'menu.pkm').write_bytes(pack_menu(data,frames))
     variants=sorted({(cid,flt) for frame in frames for cid,_,alpha,flt,_ in frame if cid!=77 and alpha})
     # Render all reusable source characters in one synthetic, script-free timeline.
     body=bytearray(defs);keys=[]
@@ -78,7 +86,7 @@ def build(data,output,jar):
             assets[key]=(digests[digest],box[0]-ORIGIN[0],box[1]-ORIGIN[1])
     # Original #77 is an opaque black rectangle extending beyond all four stage edges.
     black=len(metadata);metadata.append((1,1));Image.new('RGBA',(1,1),(0,0,0,255)).save(output/f'{black}.png')
-    packed=bytearray(b'PFG1'+struct.pack('<HH',len(metadata),len(frames)))
+    packed=bytearray(b'PFG2'+struct.pack('<HH',len(metadata),len(frames)))
     for w,h in metadata:packed+=struct.pack('<HH',w,h)
     for f,frame in enumerate(frames,1):
         placements=[]
