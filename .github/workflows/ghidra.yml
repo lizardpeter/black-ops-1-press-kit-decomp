@@ -17,7 +17,6 @@ on:
       - tools/ghidra/**
       - tools/fetch_originals.py
       - tools/pdb/**
-      - .github/workflows/ghidra.yml
 
 concurrency:
   group: ghidra
@@ -102,7 +101,7 @@ jobs:
   decompile:
     needs: [setup, analyze]
     # run each build's shards even if another build's analysis failed
-    if: ${{ needs.analyze.result == 'success' && needs.decompile.result == 'success' && needs.setup.outputs.builds != '[]' }}
+    if: ${{ needs.analyze.result == 'success' && needs.setup.outputs.builds != '[]' }}
     runs-on: ubuntu-latest
     timeout-minutes: 350
     strategy:
@@ -143,11 +142,12 @@ jobs:
   publish:
     needs: [setup, analyze, decompile]
     # not after a cancel: a cancelled run's partial output must not overwrite good results
-    if: ${{ !cancelled() && needs.setup.outputs.builds != '[]' }}
+    if: ${{ needs.analyze.result == 'success' && needs.decompile.result == 'success' && needs.setup.outputs.builds != '[]' }}
     runs-on: ubuntu-latest
     permissions: { contents: write }
     steps:
       - uses: actions/checkout@v4
+        with: { ref: main, fetch-depth: 0 }
       - uses: actions/download-artifact@v4
         with: { path: /tmp/art }
       - name: Assemble analysis/<build>/

@@ -1,0 +1,89 @@
+name: ghidra-resume
+on:
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: 'Ghidra run with raw analyzed project artifacts'
+        required: true
+        default: '45449260151'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ghidra-resume.yml']
+concurrency:
+  group: ghidra
+  cancel-in-progress: false
+permissions:
+  actions: read
+  contents: read
+env:
+  SOURCE_RUN: ${{ inputs.source_run || '45449260151' }}
+  GHIDRA_TAG: Ghidra_12.1.4_build
+jobs:
+  decompile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [windows_projector, mac_x86_projector, mac_ppc_projector]
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '21'}
+      - name: Install Ghidra
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          gh release download "$GHIDRA_TAG" --repo NationalSecurityAgency/ghidra --pattern 'ghidra_*_PUBLIC_*.zip' --dir /tmp
+          unzip -q /tmp/ghidra_*.zip -d /opt && mv /opt/ghidra_* /opt/ghidra
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw-${{ matrix.build }}
+          path: /tmp/raw
+      - name: Resume analyzed project
+        run: |
+          mkdir -p /tmp/proj /tmp/out
+          tar -C /tmp/proj -xzf /tmp/raw/project.tar.gz
+          /opt/ghidra/support/analyzeHeadless /tmp/proj presskit -process ${{ matrix.build }}.exe -noanalysis -readOnly -scriptPath tools/ghidra -postScript Decompile.java /tmp/out/decomp-${{ matrix.shard }}.jsonl ${{ matrix.shard }} 6 90 -log /tmp/out/decompile-${{ matrix.shard }}.log
+          test -s /tmp/out/decomp-${{ matrix.shard }}.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: decomp-${{ matrix.build }}-${{ matrix.shard }}
+          path: /tmp/out
+          retention-days: 14
+  publish:
+    needs: decompile
+    runs-on: ubuntu-latest
+    permissions: {actions: read, contents: write}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          pattern: raw-*
+          path: /tmp/raw
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: decomp-*
+          path: /tmp/decomp
+      - name: Assemble and publish complete decompilation
+        run: |
+          for b in windows_projector mac_x86_projector mac_ppc_projector; do
+            raw=/tmp/raw/raw-$b
+            for i in 0 1 2 3 4 5; do
+              cp /tmp/decomp/decomp-$b-$i/* "$raw/"
+            done
+            python3 tools/ghidra/publish.py "$b" "$raw"
+          done
+          git config user.name ghidra-pipeline
+          git config user.email ghidra-pipeline@users.noreply.github.com
+          python3 tools/status.py
+          git add analysis STATUS.md
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish resumed native Ghidra decompilation"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; git rebase --abort || true; sleep 5; done
+          exit 1
