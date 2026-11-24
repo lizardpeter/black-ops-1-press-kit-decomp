@@ -54,14 +54,14 @@ impl WebPlayer{
         let out=Array::new();for e in self.app.effects(){let p=match e{
             Effect::Fullscreen=>pair("fullscreen",""),Effect::Quit=>pair("quit",""),Effect::Play(p)=>{self.video=None;pair("play",p)},Effect::StopVideo=>{self.video=None;pair("stop","")},Effect::ToggleVideo=>pair("toggle",""),Effect::Seek(v)=>pair("seek",&v.to_string()),Effect::Music(on)=>pair("music",if on{"1"}else{"0"}),Effect::Sound(id)=>pair("sound",&id.to_string()),Effect::Open(p)=>pair("open",p),Effect::ReadXml(p)=>{self.photo.clear();pair("xml",p)},Effect::Image(p)=>{self.photo=p.clone();pair("image",&p)}};out.push(&p);}out
     }
-    fn plan(&self)->AssetPlan{let mut p=AssetPlan::for_app(&self.app,self.layered,&self.photo);p.current.retain(|s|!s.starts_with("art/background/"));p.ahead.retain(|s|!s.starts_with("art/background/"));if let Some(bg)=&self.background{for i in bg.missing(){p.ahead.insert(0,format!("art/background-source/{i}.jpg"));}}if self.pack.is_some(){p.current.retain(|s|!s.contains("_controls/"));p.ahead.retain(|s|!s.contains("_controls/"));}p}
+    fn plan(&self)->AssetPlan{let mut p=AssetPlan::for_app(&self.app,self.layered,&self.photo);if let Some(bg)=&self.background{for i in bg.missing(){p.ahead.insert(0,format!("art/background-source/{i}.jpg"));}}if self.pack.is_some(){p.current.retain(|s|!s.contains("_controls/"));p.ahead.retain(|s|!s.contains("_controls/"));}p}
     fn paths(&self)->Vec<String>{self.plan().current}
     pub fn needed(&self)->Array{self.paths().into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
     pub fn prefetch(&self)->Array{self.plan().ahead.into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
-    pub fn ready(&self)->bool{self.paths().iter().all(|p|self.images.contains_key(p))}
+    pub fn ready(&self)->bool{self.paths().iter().all(|p|self.images.contains_key(p))&&(!self.layered||self.app.frame<56||matches!(self.app.scene(),Scene::Gallery|Scene::Video)||self.background.as_ref().is_some_and(|b|b.ready()))}
     fn input_ready(&self)->bool{
         let scene=self.app.scene();if scene==Scene::Gallery&&self.photo.is_empty(){return false;}
-        self.paths().iter().filter(|p|!p.starts_with("art/background/")).all(|p|self.images.contains_key(p))
+        self.ready()
     }
     pub fn cache_bytes(&self)->f64{self.images.values().map(|(l,_)|u64::from(l.texture.width())*u64::from(l.texture.height())*4).sum::<u64>() as f64}
     fn visible_paths(&mut self)->Vec<String>{

@@ -32,7 +32,7 @@ fn fragmentMain( _S1 : pixelInput_0, @builtin(position) pos_0 : vec4<f32>) -> pi
     var _S2 : f32 = _S1.opacity_0.y;
     if((_S2 >= 0.0f))
     {
-        var _S3 : pixelOutput_0 = pixelOutput_0( vec4<f32>(decodeSrgb_0(mix(encodeSrgb_0(c_2.xyz) * vec3<f32>(_S1.opacity_0.x), encodeSrgb_0((textureSample((secondaryTexture_0), (layerSampler_0), (_S1.uv_0))).xyz), vec3<f32>(_S2))), 1.0f) );
+        var _S3 : pixelOutput_0 = pixelOutput_0( vec4<f32>(decodeSrgb_0(mix(encodeSrgb_0(c_2.xyz) * vec3<f32>(_S1.opacity_0.x), encodeSrgb_0((textureSampleLevel((secondaryTexture_0), (layerSampler_0), (_S1.uv_0), (0.0f))).xyz), vec3<f32>(_S2))), 1.0f) );
         return _S3;
     }
     c_2[i32(3)] = c_2[i32(3)] * _S1.opacity_0.x;

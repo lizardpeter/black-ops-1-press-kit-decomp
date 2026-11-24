@@ -8,4 +8,4 @@ float3 decodeSrgb(float3 c) { return select(c <= 0.04045, c / 12.92, pow((c+0.05
 [shader("vertex")]
 VertexOutput vertexMain(VertexInput v) { VertexOutput o; o.pos=float4(v.pos,0,1); o.uv=v.uv; o.opacity=v.opacity; return o; }
 [shader("fragment")]
-float4 fragmentMain(VertexOutput v) : SV_Target0 { float4 c=layerTexture.Sample(layerSampler,v.uv); if(v.opacity.y>=0) { float3 a=encodeSrgb(c.rgb)*v.opacity.x; float3 b=encodeSrgb(secondaryTexture.Sample(layerSampler,v.uv).rgb); return float4(decodeSrgb(lerp(a,b,v.opacity.y)),1); } c.a*=v.opacity.x; return c; }
+float4 fragmentMain(VertexOutput v) : SV_Target0 { float4 c=layerTexture.Sample(layerSampler,v.uv); if(v.opacity.y>=0) { float3 a=encodeSrgb(c.rgb)*v.opacity.x; float3 b=encodeSrgb(secondaryTexture.SampleLevel(layerSampler,v.uv,0).rgb); return float4(decodeSrgb(lerp(a,b,v.opacity.y)),1); } c.a*=v.opacity.x; return c; }
