@@ -18,7 +18,7 @@ permissions:
 
 concurrency:
   group: black-ops-1-webgpu-pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -149,6 +149,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           compression-level: 0
+          include-hidden-files: true
 
   deploy:
     needs: build
@@ -167,6 +168,9 @@ jobs:
         with:
           name: webgpu-self-contained-site
           path: site
+
+      - name: Preserve static hosting marker
+        run: touch site/.nojekyll
 
       - name: Check GitHub Pages configuration
         id: pages
