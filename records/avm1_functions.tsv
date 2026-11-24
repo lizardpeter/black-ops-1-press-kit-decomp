@@ -27,3 +27,26 @@ presskit	2725082	videos.trl_5.onRelease	34	decompiled	src/navigation.cpp	play; v
 presskit	2725142	videos.trl_6.onRelease	34	decompiled	src/navigation.cpp	play; vid=6; music.stop()
 presskit	2726133	checkCounter	102	decompiled	src/navigation.cpp	increment; on exactly 50 reset, clear interval, hide mouse, Vmouse=0
 presskit	2726255	resetCounter	15	decompiled	src/navigation.cpp	counter=0
+presskit	3141434	screens.scrn_1.onRelease	16	decompiled	src/gallery.cpp	play; scr=0
+presskit	3141476	screens.scrn_2.onRelease	12	decompiled	src/gallery.cpp	play; scr=1
+presskit	3141514	screens.scrn_3.onRelease	12	decompiled	src/gallery.cpp	play; scr=2
+presskit	3141552	screens.scrn_4.onRelease	12	decompiled	src/gallery.cpp	play; scr=3
+presskit	3141590	screens.scrn_5.onRelease	12	decompiled	src/gallery.cpp	play; scr=4
+presskit	3141628	screens.scrn_6.onRelease	12	decompiled	src/gallery.cpp	play; scr=5
+presskit	3141666	screens.scrn_7.onRelease	12	decompiled	src/gallery.cpp	play; scr=6
+presskit	3141704	screens.scrn_8.onRelease	12	decompiled	src/gallery.cpp	play; scr=7
+presskit	3141742	screens.scrn_9.onRelease	12	decompiled	src/gallery.cpp	play; scr=8
+presskit	3141780	screens.scrn_10.onRelease	12	decompiled	src/gallery.cpp	play; scr=9
+presskit	3141818	screens.scrn_11.onRelease	12	decompiled	src/gallery.cpp	play; scr=10
+presskit	3141856	screens.scrn_12.onRelease	12	decompiled	src/gallery.cpp	play; scr=11
+presskit	3141894	screens.scrn_13.onRelease	12	decompiled	src/gallery.cpp	play; scr=12
+presskit	3141932	screens.scrn_14.onRelease	12	decompiled	src/gallery.cpp	play; scr=13
+presskit	3141970	screens.scrn_15.onRelease	12	decompiled	src/gallery.cpp	play; scr=14
+presskit	3142008	screens.scrn_16.onRelease	12	decompiled	src/gallery.cpp	play; scr=15
+presskit	3142046	screens.scrn_17.onRelease	12	decompiled	src/gallery.cpp	play; scr=16
+presskit	3142084	screens.scrn_18.onRelease	12	decompiled	src/gallery.cpp	play; scr=17
+presskit	3142122	screens.scrn_19.onRelease	12	decompiled	src/gallery.cpp	play; scr=18
+presskit	3142160	screens.scrn_20.onRelease	12	decompiled	src/gallery.cpp	play; scr=19
+presskit	3143190	loadXML	216	decompiled	src/gallery.cpp	failure content; reset images/descriptions, extract first child text in order, set total, call firstImage
+presskit	3143033	checkCounter	102	decompiled	src/navigation.cpp	gallery copy same decoded operations as frame 95
+presskit	3143155	resetCounter	15	decompiled	src/navigation.cpp	gallery copy sets counter=0

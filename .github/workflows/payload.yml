@@ -1,0 +1,24 @@
+name: payload
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - records/originals.tsv
+      - tools/fetch_payload.py
+      - .github/workflows/payload.yml
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify every R2 original
+        run: python3 tools/fetch_payload.py --manifest /tmp/originals-sha256.tsv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: originals-sha256
+          path: /tmp/originals-sha256.tsv
+          retention-days: 30

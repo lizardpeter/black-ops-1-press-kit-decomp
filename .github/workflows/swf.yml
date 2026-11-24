@@ -45,9 +45,38 @@ jobs:
             java -jar "$(cat /tmp/ffdec-jar)" -export script /tmp/avm1/$b/scripts /tmp/originals/$b.swf
             test -n "$(find /tmp/avm1/$b/scripts -type f -name '*.as' -print -quit)"
           done
+      - name: Verify authored identities
+        run: python3 tools/swf/verify_records.py /tmp/avm1
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: avm1-analysis
           path: /tmp/avm1/
           retention-days: 14
+  publish-index:
+    needs: analyze
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        with:
+          name: avm1-analysis
+          path: /tmp/avm1
+      - name: Publish compact generated evidence
+        run: |
+          python3 tools/swf/verify_records.py /tmp/avm1
+          for b in launcher presskit; do
+            mkdir -p analysis/$b
+            cp /tmp/avm1/$b/{metadata.json,functions.jsonl,action_blocks.jsonl} analysis/$b/
+          done
+          git config user.name "avm1-pipeline"
+          git config user.email "avm1-pipeline@users.noreply.github.com"
+          git add analysis/launcher analysis/presskit
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish verified AVM1 analysis indexes"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; git rebase --abort || true; sleep 5; done
+          exit 1

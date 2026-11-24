@@ -1,4 +1,6 @@
 #include "presskit/gallery.hpp"
+#include <limits>
+#include <stdexcept>
 namespace presskit {
 // presskit 3143802: AVM1 Add2, separator, Add2, total, Add2.
 std::string picture_num(int zero_based_index, int total) {
@@ -24,5 +26,22 @@ std::optional<ImageRequest> Gallery::previous() {
 std::optional<ImageRequest> Gallery::first() const {
     if (loaded != filesize) return std::nullopt;
     return request();
+}
+// Frame 101: scrn_1..scrn_20; play timeline then set zero-based scr.
+bool Gallery::select_thumbnail(int button) {
+    if(button<1 || button>20) return false;
+    timeline_playing=true;
+    index=button-1;
+    return true;
+}
+// Frame 105 loadXML at 3143190. Host XML parser supplies first child's text
+// from each entry, in source order. Original clears descriptions but never fills it.
+std::optional<ImageRequest> Gallery::xml_loaded(bool success, const std::vector<std::string>& first_child_values) {
+    if(!success) { content="file not loaded!"; return std::nullopt; }
+    if(first_child_values.size()>static_cast<std::size_t>(std::numeric_limits<int>::max())) throw std::length_error("XML count exceeds native state");
+    images=first_child_values;
+    descriptions.clear();
+    total=static_cast<int>(images.size());
+    return first();
 }
 }

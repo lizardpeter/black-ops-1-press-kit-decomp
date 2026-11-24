@@ -20,4 +20,10 @@ int main() {
     g.loaded=100; req=g.next(); check(req && req->index==1 && req->counter=="2 / 20");
     g.index=19; check(!g.next() && g.index==19);
     req=g.first(); check(req && req->index==19);
+    check(!g.select_thumbnail(0) && !g.select_thumbnail(21));
+    for(int i=1;i<=20;++i)check(g.select_thumbnail(i) && g.index==i-1 && g.timeline_playing);
+    g.descriptions.push_back("old"); g.select_thumbnail(2);
+    req=g.xml_loaded(true,{"a.jpg","b.jpg","c.jpg"});
+    check(req && req->index==1 && req->counter=="2 / 3" && g.total==3 && g.images[1]=="b.jpg" && g.descriptions.empty());
+    check(!g.xml_loaded(false,{}) && g.content=="file not loaded!" && g.total==3);
 }
