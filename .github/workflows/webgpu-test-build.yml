@@ -46,12 +46,12 @@ jobs:
         run: |
           python -m venv "$RUNNER_TEMP/presskit-venv"
           echo "$RUNNER_TEMP/presskit-venv/bin" >> "$GITHUB_PATH"
-          python -m pip install --upgrade pip pillow
+          "$RUNNER_TEMP/presskit-venv/bin/python" -m pip install --upgrade pip pillow
           cargo install wasm-bindgen-cli --version 0.2.130 --locked
 
       - name: Download offline SWF artwork rasterizer
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh release download version26.5.0 \
             --repo jindrapetrik/jpexs-decompiler \
@@ -96,7 +96,7 @@ jobs:
       - name: Compile Rust application to WebAssembly and test
         working-directory: enhanced-rust
         env:
-          PRESSKIT_FG_ASSETS: \${{ runner.temp }}/runtime/art/foreground-source
+          PRESSKIT_FG_ASSETS: ${{ runner.temp }}/runtime/art/foreground-source
         run: |
           sh tools/build_web.sh
           node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/wasm-core.test.mjs
