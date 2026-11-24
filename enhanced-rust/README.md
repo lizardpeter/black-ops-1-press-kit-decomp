@@ -60,3 +60,6 @@ After selecting **Settings → Pages → Build and deployment → GitHub Actions
 
 ### Menu-transition stability (2026-11-24)
 The WebAssembly host now holds a transition on its last complete frame until the next frame's exact foreground sprites and required background textures are ready. Background crossfades retain the previous complete texture pair while a newly referenced JPEG is still loading. This prevents the renderer from clearing the menu/background to black during an asset handoff. The browser asset queue now cancels obsolete requests, lets visible-frame downloads evict prefetch jobs, and limits foreground lookahead to two frames instead of eagerly scheduling every remaining sprite. The browser smoke script records and asserts every frame in the welcome-to-videos, videos-to-trailer and screens-to-gallery transitions. These regression checks are included in the browser smoke script; actual live-browser GPU execution still requires a WebGPU-capable browser run.
+
+
+GitHub Pages artifacts are named with both the workflow run ID and attempt number. This avoids duplicate default Pages artifact names when a deployment job is retried, so deploy-pages selects the exact artifact from the current attempt. The build also runs a delayed-background GPU regression test when a software or hardware adapter is available.

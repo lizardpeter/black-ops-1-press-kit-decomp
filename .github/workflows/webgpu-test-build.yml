@@ -111,6 +111,7 @@ jobs:
         run: |
           sh tools/build_web.sh
           cargo test --offline -p presskit-core
+          cargo test --offline -p presskit-renderer --test background
           node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/wasm-core.test.mjs
 
       - name: Assemble self-contained static website
@@ -182,12 +183,15 @@ jobs:
         if: steps.pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v4
         with:
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
           path: site
 
       - name: Deploy website
         if: steps.pages.outcome == 'success'
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Explain one-time Pages setting if not enabled
         if: steps.pages.outcome != 'success'
