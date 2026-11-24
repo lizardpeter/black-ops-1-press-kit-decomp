@@ -17,7 +17,7 @@ fn pair(kind:&str,value:&str)->Array{Array::of2(&kind.into(),&value.into())}
 pub struct WebPlayer{
     app:App,canvas:HtmlCanvasElement,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,
     config:wgpu::SurfaceConfiguration,renderer:Renderer,images:HashMap<String,(Layer,u64)>,video:Option<Layer>,
-    photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,pack:Option<ControlPack>,controls:ControlCache,mouse:Option<(f64,f64)>,pressed:bool,pending_menu:Option<Hit>,
+    photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,pack:Option<ControlPack>,launcher:Vec<Layer>,controls:ControlCache,mouse:Option<(f64,f64)>,pressed:bool,pending_menu:Option<Hit>,
 }
 #[wasm_bindgen]
 impl WebPlayer{
@@ -31,7 +31,7 @@ impl WebPlayer{
         if render_format!=config.format{config.view_formats.push(render_format);}
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,&queue,render_format,VS,FS,"vertexMain","fragmentMain");
-        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,controls:ControlCache::default(),mouse:None,pressed:false,pending_menu:None})
+        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,launcher:vec![],controls:ControlCache::default(),mouse:None,pressed:false,pending_menu:None})
     }
     pub fn resize(&mut self,w:u32,h:u32){let w=w.max(1);let h=h.max(1);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     pub fn advance(&mut self,ms:f64){
@@ -57,6 +57,7 @@ impl WebPlayer{
     pub fn install_background(&mut self,bytes:&[u8])->Result<(),JsValue>{self.background=Some(BackgroundArt::new(BackgroundTimeline::read(bytes).map_err(error)?));Ok(())}
     pub fn install_foreground(&mut self,bytes:&[u8])->Result<(),JsValue>{self.foreground=Some(ForegroundArt::new(ForegroundTimeline::read(bytes).map_err(error)?));Ok(())}
     pub fn install_menu(&mut self,bytes:&[u8])->Result<(),JsValue>{self.foreground.as_mut().ok_or_else(||JsValue::from_str("foreground missing"))?.install_menu(bytes).map_err(error)}
+    pub fn install_launcher(&mut self,bytes:&[u8])->Result<(),JsValue>{let pack=ControlPack::read_launcher(bytes).map_err(error)?;self.launcher=pack.launcher_layers(&self.renderer,&self.device,&self.queue);Ok(())}
     pub fn install_controls(&mut self,bytes:&[u8])->Result<(),JsValue>{self.pack=Some(ControlPack::read(bytes).map_err(error)?);self.controls.clear();Ok(())}
     pub fn click(&mut self,x:f64,y:f64){self.pointer();if !self.input_ready(){return;}if let Some((x,y))=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y){let h=self.app.hit(x,y);
             if self.app.steady_menu_frame(h).is_some(){self.pending_menu=Some(h);}
@@ -162,6 +163,7 @@ impl WebPlayer{
         if fg_on{layers.extend(self.foreground.as_ref().unwrap().layers());}
         if media{if let Some(v)=&self.video{layers.push(v);}}
         for p in paths{if let Some((layer,_))=self.images.get(&p){layers.push(layer);}}
+        if self.app.scene()==Scene::Launcher&&self.images.contains_key("art/launcher/1.png"){layers.extend(self.launcher.iter());}
         layers.extend(self.controls.layers().iter());
         self.renderer.render(&mut encoder,&view,&layers,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
         self.queue.submit([encoder.finish()]);frame.present();Ok(())

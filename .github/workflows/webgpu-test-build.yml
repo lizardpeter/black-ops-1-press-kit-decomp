@@ -94,6 +94,7 @@ jobs:
             "$RUNNER_TEMP/reference" \
             "$RUNNER_TEMP/runtime" \
             --ffdec-jar "$FFDEC_JAR" \
+            --launcher-swf "$RUNNER_TEMP/originals/launcher.swf" \
             --no-payload
           mkdir -p enhanced-rust/web/assets
           cp -a "$RUNNER_TEMP/runtime/art" enhanced-rust/web/assets/
