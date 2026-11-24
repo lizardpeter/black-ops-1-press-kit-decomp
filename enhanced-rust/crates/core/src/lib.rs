@@ -1,6 +1,7 @@
 //! Original application behavior, independently translated from faithful C++ and AVM1 evidence.
 //! No GPU, filesystem, audio or platform dependency.
 pub mod gallery;
+pub mod assets;
 pub mod layout;
 pub mod timeline;
 pub use gallery::Gallery;
