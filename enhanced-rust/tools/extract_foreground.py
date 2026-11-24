@@ -114,7 +114,7 @@ def build(data,output,jar):
             if cid==136:
                 assert not flt and alpha==256
                 placements.extend((idx,mat[4]+x,mat[5]+y,w,h,alpha) for idx,x,y,w,h in direct[cid])
-            if cid in (157,220):menu_after=len(placements)
+            if cid in (62,111,136,157,220):menu_after=len(placements)
         packed+=struct.pack('<BB',len(placements),menu_after)
         for a in placements:packed+=struct.pack('<HiiIIH',*a)
     (output/'timeline.pfg').write_bytes(packed)

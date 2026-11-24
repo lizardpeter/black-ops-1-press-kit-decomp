@@ -57,3 +57,7 @@ R2's existing public custom domain is active and the original `bo1-press-kit/pay
 
 ### Remaining source-vector inventory
 The build now enumerates every reachable original DefineText/DefineText2 object through the menu's reusable sprites and button definitions, including decoded glyph strings where the original font code tables are present. This inventory is used to target the remaining welcome, wallpaper and sidebar labels for source-derived vector reconstruction rather than manually tracing raster screenshots. The diagnostic does not execute Flash scripts or alter the source SWF.
+
+
+### Expanded source-derived menu typography
+The compact menu format now supports five text groups: trailer controls, screenshot controls, welcome/legal copy, sidebar text and wallpaper labels. The source extraction removes those text objects from the rasterized sprites and stores deduplicated original DefineFont3 glyph outlines with their original transforms and colors. The menu renderer tessellates these glyphs directly; interactive button state batches remain limited to the two actual button groups.
