@@ -1,0 +1,35 @@
+project = "t5_press_kit"
+title = "Call of Duty: Black Ops — 2010 press kit"
+graph = "re_t5_press_kit"
+r2_public = "https://r2.houseofkublai.com/"
+ghidra = "12.1.4"
+
+[[build]]
+id = "windows_projector"
+kind = "third_party_projector"
+analyze = true
+exe = { key = "bo1-press-kit/COD7-DVD-shell.exe", sha256 = "264a0d7e7071df9638bfae42d4bd443588c194c8766cf93c0539beb0a730e717", size = 4389184 }
+
+[[build]]
+id = "mac_ppc_projector"
+kind = "third_party_projector"
+analyze = true
+exe = { key = "bo1-press-kit/COD7-DVD-shell.app/Contents/MacOS/Flash Player", sha256 = "858f55d569ae2e5dd1d565d979f2824b6f3f5f6311a163c3821c8a5f8118dd7e", size = 12937768, slice_offset = 4096, slice_size = 6463456 }
+
+[[build]]
+id = "mac_x86_projector"
+kind = "third_party_projector"
+analyze = true
+exe = { key = "bo1-press-kit/COD7-DVD-shell.app/Contents/MacOS/Flash Player", sha256 = "858f55d569ae2e5dd1d565d979f2824b6f3f5f6311a163c3821c8a5f8118dd7e", size = 12937768, slice_offset = 6467584, slice_size = 6470184 }
+
+[[swf]]
+id = "launcher"
+key = "bo1-press-kit/COD7-DVD-shell.app/Contents/Resources/movie.swf"
+sha256 = "dc6d49c1629998abd4ddd10538aa081d84ac4779fdd9315ee987f5114e50d1d9"
+size = 45496
+
+[[swf]]
+id = "presskit"
+key = "bo1-press-kit/COD7-DVD.swf"
+sha256 = "1521acdea7d20691da8d917c0e306ce9e39208406377c836b68bc457400c8d8e"
+size = 2644728

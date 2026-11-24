@@ -1,0 +1,8 @@
+.work/
+build/
+__pycache__/
+*.pyc
+*.exe
+*.swf
+*.gpr
+*.rep/
