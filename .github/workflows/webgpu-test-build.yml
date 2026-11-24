@@ -50,13 +50,10 @@ jobs:
           cargo install wasm-bindgen-cli --version 0.2.130 --locked
 
       - name: Download offline SWF artwork rasterizer
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
-          gh release download version26.5.0 \
-            --repo jindrapetrik/jpexs-decompiler \
-            --pattern ffdec_26.5.0.zip \
-            --dir "$RUNNER_TEMP"
+          curl --fail --location --retry 3 \
+            --output "$RUNNER_TEMP/ffdec_26.5.0.zip" \
+            https://github.com/jindrapetrik/jpexs-decompiler/releases/download/version26.5.0/ffdec_26.5.0.zip
           mkdir "$RUNNER_TEMP/ffdec"
           unzip -q "$RUNNER_TEMP/ffdec_26.5.0.zip" -d "$RUNNER_TEMP/ffdec"
           echo "FFDEC_JAR=$(find "$RUNNER_TEMP/ffdec" -name ffdec.jar -print -quit)" >> "$GITHUB_ENV"
