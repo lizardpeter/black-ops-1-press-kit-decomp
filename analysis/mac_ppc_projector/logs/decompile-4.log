@@ -1,0 +1,53 @@
+2026-11-24 17:37:52 INFO  (LoggingInitialization) Using log config file: jar:file:/opt/ghidra/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml  
+2026-11-24 17:37:52 INFO  (LoggingInitialization) Using log file: /tmp/out/decompile-4.log  
+2026-11-24 17:37:52 DEBUG (GhidraObjectInputFilter) Including serial input filter: FileSystem/data/client.rmi.serial.filter  
+2026-11-24 17:37:52 INFO  (Preferences) Loading user preferences: /home/runner/.config/ghidra/ghidra_12.1.4_PUBLIC/preferences  
+2026-11-24 17:37:52 INFO  (ClassSearcher) Searching for classes...  
+2026-11-24 17:37:52 INFO  (ClassSearcher) Class search complete (559 ms)  
+2026-11-24 17:37:53 INFO  (DefaultSSLContextInitializer) Initializing SSL Context  
+2026-11-24 17:37:53 INFO  (SecureRandomFactory) Initializing Random Number Generator...  
+2026-11-24 17:37:53 INFO  (SecureRandomFactory) Random Number Generator initialization complete: NativePRNGNonBlocking  
+2026-11-24 17:37:53 INFO  (DefaultTrustManagerFactory) Trust manager disabled, cacerts have not been set  
+2026-11-24 17:37:53 INFO  (FileCacheMaintenanceDaemon) Starting cache cleanup: /var/tmp/runner-ghidra/fscache2  
+2026-11-24 17:37:53 INFO  (FileCacheMaintenanceDaemon) Finished cache cleanup, estimated storage used: 0  
+2026-11-24 17:37:54 INFO  (AnalyzeHeadless) Headless startup complete (2919 ms)  
+2026-11-24 17:37:54 INFO  (ClassSearcher) Class searcher loaded 59 extension points (20 false positives)  
+2026-11-24 17:37:54 INFO  (HeadlessAnalyzer) HEADLESS Script Paths:
+    /opt/ghidra/Ghidra/Features/SystemEmulation/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/GnuDemangler/ghidra_scripts
+    /home/runner/work/black-ops-1-press-kit-decomp/black-ops-1-press-kit-decomp/tools/ghidra
+    /opt/ghidra/Ghidra/Features/WildcardAssembler/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/DATA/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/DecompilerDependent/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/JVM/ghidra_scripts
+    /opt/ghidra/Ghidra/Debug/Debugger-rmi-trace/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/MicrosoftCodeAnalyzer/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/VersionTracking/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/PyGhidra/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/SwiftDemangler/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/Base/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/Atmel/ghidra_scripts
+    /opt/ghidra/Ghidra/Debug/Debugger/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/Decompiler/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/FunctionID/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/PDB/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/8051/ghidra_scripts
+    /opt/ghidra/Ghidra/Processors/PIC/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/FileFormats/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/BSim/ghidra_scripts
+    /opt/ghidra/Ghidra/Features/BytePatterns/ghidra_scripts  
+2026-11-24 17:37:54 INFO  (HeadlessAnalyzer) HEADLESS: execution starts  
+2026-11-24 17:37:54 INFO  (HeadlessAnalyzer) Opening existing project: /tmp/proj/presskit  
+2026-11-24 17:37:54 DEBUG (DefaultProjectManager) No tools found; Installing default tools  
+2026-11-24 17:37:54 DEBUG (DefaultProjectManager) 	no recent project directories found  
+2026-11-24 17:37:54 INFO  (HeadlessProject) Opening project: /tmp/proj/presskit  
+2026-11-24 17:37:55 INFO  (HeadlessAnalyzer) REPORT: Processing read-only project file: /mac_ppc_projector.exe  
+2026-11-24 17:37:55 INFO  (HeadlessAnalyzer) REPORT: Execute script: Decompile.java '/tmp/out/decomp-4.jsonl' '4' '6' '90'   
+2026-11-24 17:37:56 INFO  (HeadlessAnalyzer) SCRIPT: /home/runner/work/black-ops-1-press-kit-decomp/black-ops-1-press-kit-decomp/tools/ghidra/Decompile.java  
+2026-11-24 17:37:57 WARN  (DecompileCallback) Decompiling 000089d0, pcode error at 00008c70: Unable to resolve constructor at 00008c70  
+2026-11-24 17:37:57 WARN  (DecompileCallback) Decompiling 000089d0, pcode error at 00008df8: Unable to resolve constructor at 00008df8  
+2026-11-24 17:37:58 WARN  (DecompileCallback) Decompiling 0009e270, pcode error at 0009e290: Unable to resolve constructor at 0009e290  
+2026-11-24 17:37:59 WARN  (DecompileCallback) Decompiling 000e0ba0, pcode error at 000e0d08: Unable to resolve constructor at 000e0d08  
+2026-11-24 17:38:10 INFO  (GhidraScript) Decompile.java> shard 4: 1000 ok, 0 failed, 13s  
+2026-11-24 17:38:20 WARN  (DecompileCallback) Decompiling 0051a670, pcode error at 0051a6e4: Unable to resolve constructor at 0051a6e4  
+2026-11-24 17:38:21 INFO  (GhidraScript) Decompile.java> shard 4 done: 1389 ok, 0 failed  
