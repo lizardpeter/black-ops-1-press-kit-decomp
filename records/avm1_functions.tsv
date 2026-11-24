@@ -6,3 +6,24 @@ presskit	3143802	picture_num	37	decompiled	src/gallery.cpp	scr+1 concatenated wi
 presskit	3143432	nextImage	126	decompiled	src/gallery.cpp	increment before load equality guard; alpha 1; loadMovie image and 1; counter
 presskit	3143575	prevImage	104	decompiled	src/gallery.cpp	zero bound; decrement and load regardless of prior load completion
 presskit	3143696	firstImage	88	decompiled	src/gallery.cpp	load equality guard; no index reset
+presskit	2501236	nav.wallpaper.onRelease	14	decompiled	src/navigation.cpp	goto Wallpaper; play
+presskit	2501276	nav.videos.onRelease	11	decompiled	src/navigation.cpp	goto Videos; play
+presskit	2501313	nav.screens.onRelease	12	decompiled	src/navigation.cpp	goto Screens; play
+presskit	2501351	nav.URL.onRelease	36	decompiled	src/navigation.cpp	open original URL _blank
+presskit	2501407	Xclose.onRelease	19	decompiled	src/navigation.cpp	FSCommand quit
+presskit	2590009	wallpaper.wp1.onRelease	59	decompiled	src/navigation.cpp	GetURL exact path; empty target
+presskit	2590094	wallpaper.wp2.onRelease	59	decompiled	src/navigation.cpp	GetURL exact path; empty target
+presskit	2590179	wallpaper.wp3.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
+presskit	2590266	wallpaper.wp4.onRelease	59	decompiled	src/navigation.cpp	GetURL exact path; empty target
+presskit	2590351	wallpaper.wp5.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
+presskit	2590438	wallpaper.wp6.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
+presskit	2590525	wallpaper.wp7.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
+presskit	2590612	wallpaper.wp8.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
+presskit	2724842	videos.trl_1.onRelease	34	decompiled	src/navigation.cpp	play; vid=1; music.stop()
+presskit	2724902	videos.trl_2.onRelease	34	decompiled	src/navigation.cpp	play; vid=2; music.stop()
+presskit	2724962	videos.trl_3.onRelease	34	decompiled	src/navigation.cpp	play; vid=3; music.stop()
+presskit	2725022	videos.trl_4.onRelease	34	decompiled	src/navigation.cpp	play; vid=4; music.stop()
+presskit	2725082	videos.trl_5.onRelease	34	decompiled	src/navigation.cpp	play; vid=5; music.stop()
+presskit	2725142	videos.trl_6.onRelease	34	decompiled	src/navigation.cpp	play; vid=6; music.stop()
+presskit	2726133	checkCounter	102	decompiled	src/navigation.cpp	increment; on exactly 50 reset, clear interval, hide mouse, Vmouse=0
+presskit	2726255	resetCounter	15	decompiled	src/navigation.cpp	counter=0

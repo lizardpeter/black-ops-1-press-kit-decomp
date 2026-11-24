@@ -1,1 +1,2 @@
 id	build	va	function	source	kind	priority	description	evidence	enhanced
+B0001	presskit	2724962	videos.trl_3.onRelease	src/navigation.cpp	logic	medium	Button 3 selects vid=3 but frame 95 has no matching contentPath or play branch	AVM1 frame 91 handler and frame 95 conditions 1 2 4 5 6 at 2726848..2727132; no original movie 3 object in R2	planned
