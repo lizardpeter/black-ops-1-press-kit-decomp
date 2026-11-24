@@ -2,6 +2,7 @@ mod media;
 use media::Media;
 use presskit_core::{App,Effect,Hit,Scene,Stage};
 use presskit_renderer::{Renderer,Layer};
+use presskit_renderer::background::{BackgroundArt,BackgroundTimeline};
 use presskit_renderer::control_pack::{ControlPack,ControlCache,ControlVisual};
 use std::{sync::Arc,path::PathBuf,time::Instant};
 use winit::{application::ApplicationHandler,event::{WindowEvent,ElementState,MouseButton},event_loop::{ActiveEventLoop,EventLoop},window::{Window,WindowId}};
@@ -9,7 +10,7 @@ const VERTEX:&str=include_str!("../../../shaders/generated/vertex.wgsl");
 const FRAGMENT:&str=include_str!("../../../shaders/generated/fragment.wgsl");
 struct Gpu{
     window:Arc<Window>,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,config:wgpu::SurfaceConfiguration,renderer:Renderer,
-    art:Option<Layer>,bg:Option<Layer>,last_art:String,last_bg:u16,video:Option<Layer>,last_video:u64,chrome:Option<Layer>,chrome_kind:Scene,pack:Option<ControlPack>,controls:ControlCache
+    art:Option<Layer>,background:Option<BackgroundArt>,last_art:String,video:Option<Layer>,last_video:u64,chrome:Option<Layer>,chrome_kind:Scene,pack:Option<ControlPack>,controls:ControlCache
 }
 impl Gpu{
     async fn new(window:Arc<Window>)->Self{
@@ -21,7 +22,7 @@ impl Gpu{
         if let Some(f)=caps.formats.iter().find(|f|f.is_srgb()){config.format=*f;}
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,config.format,VERTEX,FRAGMENT,"vertexMain","fragmentMain");
-        Self{window,surface,device,queue,config,renderer,art:None,bg:None,last_art:String::new(),last_bg:0,video:None,last_video:0,chrome:None,chrome_kind:Scene::Launcher,pack:None,controls:ControlCache::default()}
+        Self{window,surface,device,queue,config,renderer,art:None,background:None,last_art:String::new(),video:None,last_video:0,chrome:None,chrome_kind:Scene::Launcher,pack:None,controls:ControlCache::default()}
     }
     fn resize(&mut self,w:u32,h:u32){if w>0&&h>0{self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     fn image(&self,path:&std::path::Path,rect:[f32;4])->Option<Layer>{
@@ -29,7 +30,7 @@ impl Gpu{
         Some(self.renderer.layer(&self.device,&self.queue,img.as_raw(),img.width(),img.height(),rect))
     }
     fn draw(&mut self,root:&std::path::Path,app:&App,photo:&Option<String>,media:&Media,states:[u8;4]){
-        let layered=root.join("art/foreground/75.png").is_file()&&root.join("art/background/221.png").is_file();
+        let layered=root.join("art/foreground/75.png").is_file()&&self.background.as_ref().is_some_and(|b|b.ready());
         let (path,rect)=match app.scene(){
             Scene::Launcher=>("art/launcher/1.png".to_string(),[390.,210.,500.,300.]),
             Scene::Gallery=>(photo.clone().unwrap_or_default(),[0.,0.,1280.,720.]),
@@ -38,9 +39,7 @@ impl Gpu{
         };
         if path!=self.last_art{self.art=if path.is_empty(){None}else{self.image(&root.join(&path),rect)};self.last_art=path;}
         let bg_on=layered&&app.frame>=56&&!matches!(app.scene(),Scene::Gallery|Scene::Video);
-        if bg_on&&app.background.frame!=self.last_bg{
-            self.bg=self.image(&root.join(format!("art/background/{}.png",app.background.frame)),[0.,0.,1280.,720.]);self.last_bg=app.background.frame;
-        }
+        if bg_on{if let Some(bg)=&mut self.background{bg.update(&self.renderer,&self.device,&self.queue,app.background.frame);}}
         let media_on=matches!(app.scene(),Scene::Video|Scene::Intro);
         if media_on&&self.last_video!=media.revision{self.last_video=media.revision;if let Some(p)=&media.frame{
             if let Some(v)=&self.video{self.queue.write_texture(wgpu::TexelCopyTextureInfo{texture:&v.texture,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},p,wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(media::WIDTH*4),rows_per_image:Some(media::HEIGHT)},wgpu::Extent3d{width:media::WIDTH,height:media::HEIGHT,depth_or_array_layers:1});}else{self.video=Some(self.renderer.layer(&self.device,&self.queue,p,media::WIDTH,media::HEIGHT,[0.,0.,1280.,720.]));}
@@ -55,7 +54,7 @@ impl Gpu{
         let view=frame.texture.create_view(&Default::default());
         let mut encoder=self.device.create_command_encoder(&Default::default());
         let stage=Stage::fit(f64::from(size.width),f64::from(size.height));
-        let mut layers=vec![];if bg_on{if let Some(b)=&self.bg{layers.push(b);}}if let Some(a)=&self.art{layers.push(a);}if media_on{if let Some(v)=&self.video{layers.push(v);}}if let Some(c)=&self.chrome{layers.push(c);}layers.extend(self.controls.layers().iter());
+        let mut layers=vec![];if bg_on{if let Some(b)=&self.background{layers.extend(b.layers(app.background.frame));}}if let Some(a)=&self.art{layers.push(a);}if media_on{if let Some(v)=&self.video{layers.push(v);}}if let Some(c)=&self.chrome{layers.push(c);}layers.extend(self.controls.layers().iter());
         self.renderer.render(&mut encoder,&view,&layers,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
         self.queue.submit([encoder.finish()]);frame.present();
     }
@@ -88,7 +87,7 @@ impl ApplicationHandler for Host{
     fn resumed(&mut self,ev:&ActiveEventLoop){
         if self.gpu.is_none(){
             let w=Arc::new(ev.create_window(Window::default_attributes().with_title("Black Ops Press Kit — Rust development").with_inner_size(winit::dpi::LogicalSize::new(1280.,720.))).expect("window"));
-            let mut gpu=pollster::block_on(Gpu::new(w));gpu.pack=std::fs::read(self.root.join("art/vector/controls.pkv")).ok().and_then(|b|ControlPack::read(&b).ok());self.gpu=Some(gpu);self.last=Instant::now();
+            let mut gpu=pollster::block_on(Gpu::new(w));gpu.pack=std::fs::read(self.root.join("art/vector/controls.pkv")).ok().and_then(|b|ControlPack::read(&b).ok());if let Ok(bytes)=std::fs::read(self.root.join("art/background-source/timeline.pbg")){if let Ok(t)=BackgroundTimeline::read(&bytes){let mut bg=BackgroundArt::new(t);for i in 0..4{if let Some(l)=gpu.image(&self.root.join(format!("art/background-source/{i}.jpg")),[0.,0.,1280.,720.]){let _=bg.install(i,l);}}if bg.ready(){gpu.background=Some(bg);}}}self.gpu=Some(gpu);self.last=Instant::now();
         }
     }
     fn window_event(&mut self,ev:&ActiveEventLoop,_:WindowId,event:WindowEvent){

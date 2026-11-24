@@ -8,3 +8,4 @@ wgpu.workspace = true
 bytemuck.workspace = true
 [dev-dependencies]
 pollster.workspace = true
+image.workspace = true
