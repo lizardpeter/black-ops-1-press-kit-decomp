@@ -56,3 +56,7 @@ The workflow publishes a downloadable `webgpu-self-contained-site` Actions artif
 
 ### Publishing after enabling GitHub Pages
 After selecting **Settings → Pages → Build and deployment → GitHub Actions**, push this README or any other change under `enhanced-rust/` to `main`, or use Actions → `webgpu-test-build` → Run workflow. The workflow rebuilds and verifies the complete static package, then deploys that exact artifact. A green build alone does not mean browser GPU playback has been tested; use `web/browser-smoke.mjs` on a WebGPU-capable browser/machine for that separate end-to-end check.
+
+
+### Menu-transition stability (2026-11-24)
+The WebAssembly host now holds a transition on its last complete frame until the next frame's exact foreground sprites and required background textures are ready. Background crossfades retain the previous complete texture pair while a newly referenced JPEG is still loading. This prevents the renderer from clearing the menu/background to black during an asset handoff. The browser asset queue now cancels obsolete requests, lets visible-frame downloads evict prefetch jobs, and limits foreground lookahead to two frames instead of eagerly scheduling every remaining sprite. The browser smoke script records and asserts every frame in the welcome-to-videos, videos-to-trailer and screens-to-gallery transitions. These regression checks are included in the browser smoke script; actual live-browser GPU execution still requires a WebGPU-capable browser run.

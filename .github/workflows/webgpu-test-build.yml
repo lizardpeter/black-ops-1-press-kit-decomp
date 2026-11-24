@@ -110,6 +110,7 @@ jobs:
           PRESSKIT_FG_ASSETS: ${{ runner.temp }}/runtime/art/foreground-source
         run: |
           sh tools/build_web.sh
+          cargo test --offline -p presskit-core
           node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/wasm-core.test.mjs
 
       - name: Assemble self-contained static website

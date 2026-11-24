@@ -34,7 +34,11 @@ impl WebPlayer{
         Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,controls:ControlCache::default(),mouse:None,pressed:false})
     }
     pub fn resize(&mut self,w:u32,h:u32){let w=w.max(1);let h=h.max(1);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
-    pub fn advance(&mut self,ms:f64){self.app.advance(ms);}
+    pub fn advance(&mut self,ms:f64){
+        let foreground_ready=self.foreground.as_ref().is_none_or(|fg|fg.ready_frame(self.app.frame));
+        let background_ready=!self.layered||self.app.frame<56||self.background.as_ref().is_some_and(|bg|bg.ready_frame(self.app.background.frame));
+        self.app.advance_when_ready(ms,foreground_ready&&background_ready);
+    }
     pub fn scene(&self)->String{format!("{:?}",self.app.scene())}
     pub fn frame(&self)->u16{self.app.frame}
     pub fn controls_y(&self)->f64{self.app.controls.y}
@@ -58,7 +62,25 @@ impl WebPlayer{
             Effect::Fullscreen=>pair("fullscreen",""),Effect::Quit=>pair("quit",""),Effect::Play(p)=>{self.video=None;pair("play",p)},Effect::StopVideo=>{self.video=None;pair("stop","")},Effect::ToggleVideo=>pair("toggle",""),Effect::Seek(v)=>pair("seek",&v.to_string()),Effect::Music(on)=>pair("music",if on{"1"}else{"0"}),Effect::Sound(id)=>pair("sound",&id.to_string()),Effect::Open(p)=>pair("open",p),Effect::ReadXml(p)=>{self.photo.clear();pair("xml",p)},Effect::Image(p)=>{self.photo=p.clone();pair("image",&p)}};out.push(&p);}out
     }
     fn foreground_on(&self)->bool{self.layered&&self.foreground.is_some()&&matches!(self.app.scene(),Scene::Transition|Scene::Welcome|Scene::Wallpapers|Scene::Videos|Scene::Screens)}
-    fn plan(&self)->AssetPlan{let mut p=AssetPlan::for_app(&self.app,self.layered,&self.photo);if let Some(bg)=&self.background{for i in bg.missing(){p.ahead.insert(0,format!("art/background-source/{i}.jpg"));}}if let Some(fg)=&self.foreground{p.current.retain(|s|!s.starts_with("art/foreground/"));p.ahead.retain(|s|!s.starts_with("art/foreground/"));if self.foreground_on(){for i in fg.missing_frame(self.app.frame){p.current.push(format!("art/foreground-source/{}",fg.filename(i)));}}for i in fg.missing(){p.ahead.push(format!("art/foreground-source/{}",fg.filename(i)));}}if self.pack.is_some(){p.current.retain(|s|!s.contains("_controls/"));p.ahead.retain(|s|!s.contains("_controls/"));}p}
+    fn plan(&self)->AssetPlan{
+        let mut p=AssetPlan::for_app(&self.app,self.layered,&self.photo);
+        if let Some(bg)=&self.background{for i in bg.missing(){p.ahead.insert(0,format!("art/background-source/{i}.jpg"));}}
+        if let Some(fg)=&self.foreground{
+            p.current.retain(|s|!s.starts_with("art/foreground/"));
+            p.ahead.retain(|s|!s.starts_with("art/foreground/"));
+            if self.foreground_on(){
+                for i in fg.missing_frame(self.app.frame){p.current.push(format!("art/foreground-source/{}",fg.filename(i)));}
+                // Only fetch a short horizon. The rest of the foreground is not
+                // needed to navigate the menu and must not starve visible frames.
+                for step in 1..=2u16{
+                    let frame=if self.app.rewinding{self.app.frame.saturating_sub(step)}else{self.app.frame.saturating_add(step)};
+                    if (1..=105).contains(&frame){for i in fg.missing_frame(frame){p.ahead.push(format!("art/foreground-source/{}",fg.filename(i)));}}
+                }
+            }
+        }
+        if self.pack.is_some(){p.current.retain(|s|!s.contains("_controls/"));p.ahead.retain(|s|!s.contains("_controls/"));}
+        p
+    }
     fn paths(&self)->Vec<String>{self.plan().current}
     pub fn needed(&self)->Array{self.paths().into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
     pub fn prefetch(&self)->Array{self.plan().ahead.into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}

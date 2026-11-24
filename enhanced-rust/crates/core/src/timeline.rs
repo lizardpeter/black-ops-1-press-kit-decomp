@@ -85,7 +85,11 @@ impl App{
         if self.frame>=56{self.background.advance(1000./24.);}
         if matches!(self.scene(),Scene::Gallery|Scene::Video){self.controls.tick();}
     }
-    pub fn advance(&mut self,ms:f64){
+    pub fn advance(&mut self,ms:f64){self.advance_when_ready(ms,true);}
+    /// Keep timeline transitions on their last complete frame until the next
+    /// frame's required artwork has arrived. Static scenes are never gated.
+    pub fn advance_when_ready(&mut self,ms:f64,transition_ready:bool){
+        if self.scene()==Scene::Transition&&!transition_ready{return;}
         if !ms.is_finite()||ms<=0.{return;}
         self.credit+=ms.min(250.);
         while self.credit>=1000./24.{self.credit-=1000./24.;self.tick();}
@@ -101,5 +105,38 @@ impl App{
             105=>{self.playing=false;self.controls=Controls{y:1346.,..Controls::default()};self.effects.push(Effect::ReadXml(SCREEN_XML));}
             _=>{}
         }
+    }
+}
+
+
+#[cfg(test)]
+mod transition_tests {
+    use super::*;
+    #[test]
+    fn menu_transition_waits_for_current_frame_artwork() {
+        let mut app=App::default();
+        app.launched=true;
+        app.frame=75;
+        app.activate(Hit::Videos,0.);
+        assert_eq!(app.scene(),Scene::Transition);
+        assert_eq!(app.frame,86);
+        app.advance_when_ready(1000./24.,false);
+        assert_eq!(app.frame,86);
+        for expected in 87..=91 {
+            app.advance_when_ready(1000./24.,true);
+            assert_eq!(app.frame,expected);
+        }
+        assert_eq!(app.scene(),Scene::Videos);
+    }
+
+    #[test]
+    fn readiness_gate_does_not_block_non_transition_scenes() {
+        let mut app=App::default();
+        app.launched=true;
+        app.frame=91;
+        app.playing=true;
+        app.advance_when_ready(1000./24.,false);
+        assert_eq!(app.frame,92);
+        assert_eq!(app.scene(),Scene::Transition);
     }
 }

@@ -16,12 +16,22 @@ impl BackgroundTimeline{
 pub struct BackgroundArt{timeline:BackgroundTimeline,textures:[Option<Layer>;4],last:u16,pair:Option<Layer>,pair_ids:Option<(usize,usize)>}
 impl BackgroundArt{
  pub fn new(timeline:BackgroundTimeline)->Self{Self{timeline,textures:std::array::from_fn(|_|None),last:0,pair:None,pair_ids:None}}
- pub fn install(&mut self,i:usize,layer:Layer)->Result<(),&'static str>{if i>=4||layer.texture.width()!=1280||layer.texture.height()!=720{return Err("invalid original background texture");}self.textures[i]=Some(layer);self.last=0;self.pair=None;self.pair_ids=None;Ok(())}
+ pub fn install(&mut self,i:usize,layer:Layer)->Result<(),&'static str>{
+  if i>=4||layer.texture.width()!=1280||layer.texture.height()!=720{return Err("invalid original background texture");}
+  let replaces_visible=self.pair_ids.is_some_and(|(a,b)|a==i||b==i);
+  self.textures[i]=Some(layer);
+  if replaces_visible{self.last=0;self.pair=None;self.pair_ids=None;}
+  Ok(())
+ }
  pub fn ready(&self)->bool{self.textures.iter().all(Option::is_some)}
+ pub fn ready_frame(&self,frame:u16)->bool{self.timeline.frame(frame).iter().all(|e|self.textures[e.image].is_some())}
  pub fn missing(&self)->Vec<usize>{(0..4).filter(|&i|self.textures[i].is_none()).collect()}
  pub fn update(&mut self,r:&Renderer,d:&wgpu::Device,q:&wgpu::Queue,frame:u16){
   if self.last==frame{return;}let f=self.timeline.frame(frame);let a=f[0];let b=f.get(1).copied().unwrap_or(Exposure{image:a.image,alpha:0});
-  let Some(first)=&self.textures[a.image] else{self.pair=None;self.pair_ids=None;return;};let Some(second)=&self.textures[b.image] else{self.pair=None;self.pair_ids=None;return;};
+  // If a transition references a texture still in flight, retain the last
+  // complete pair instead of clearing the stage to black for a frame.
+  let Some(first)=&self.textures[a.image] else{return;};
+  let Some(second)=&self.textures[b.image] else{return;};
   if self.pair_ids!=Some((a.image,b.image)){self.pair=Some(r.background_pair(d,first,second));self.pair_ids=Some((a.image,b.image));}
   if let Some(l)=&self.pair{r.set_background_opacity(q,l,[a.alpha as f32/256.,b.alpha as f32/256.]);}self.last=frame;
  }
