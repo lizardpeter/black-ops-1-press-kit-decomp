@@ -83,41 +83,75 @@ def native_art(data,frames):
         try:batches=render_character(ts,shape)
         except ValueError:continue
         if len(batches)==1 and batches[0][1]:native[sid]=batches
-    clones={};extra=bytearray();overlays={}
-    for sid,ids,clone in ((50,(47,49),65000),(111,(110,),65001)):
+    # Split opaque, unfiltered one-frame sprites into contiguous depth runs.
+    # Keep each mask and its clipped children together in the same raster run.
+    # Text moved to geometry can now sit *between* raster runs, not just above.
+    splits={};extra=bytearray();overlays={};next_id=65000
+    for sid,ids in ((50,(31,33,47,49)),(62,(55,)),(111,(110,))):
         if not any(cid==sid and a==256 and not flt for frame in frames for cid,_,a,flt,_ in frame):continue
-        sprite=sprites[sid];children=[];rest=[]
+        sprite=sprites[sid]
+        assert struct.unpack_from('<H',sprite,2)[0]==1
+        parts=[];run=[];kind=None;seen=[];mask_end=0;last_depth=0
+        def flush():
+            nonlocal next_id,kind,run
+            if not run:return
+            key=next_id;next_id+=1
+            assert key not in sprites and key not in ts
+            if kind=='raster':
+                extra.extend(tag(39,struct.pack('<H',key)+sprite[2:4]+b''.join(tag(c,d) for c,d in run)+tag(1)+tag(0)))
+            else:
+                overlays[key]=[batch for batches in run for batch in batches]
+            parts.append((kind,key));run=[]
         for c,d in tags(sprite,4):
-            if c==26 and d[0]&2:
-                r=Bits(d);flags=r.u8();depth=r.u16();cid=r.u16()
-                children.append((depth,cid))
-                if cid in ids:
-                    assert flags==6
-                    m=r.matrix();assert r.at//8==len(d)
-                    overlays.setdefault(sid,[]).extend((rgba,[transform(m,p) for p in points]) for rgba,points in render_character(ts,cid) if points)
-                    continue
-            if c not in (12,59):rest.append(tag(c,d))
-        assert tuple(cid for _,cid in sorted(children)[-len(ids):])==ids
-        assert overlays.get(sid)
-        clones[sid]=clone;extra+=tag(39,struct.pack('<H',clone)+sprite[2:4]+b''.join(rest))
-    return native,overlays,clones,bytes(extra)
+            if c in (0,1,12,59):continue
+            # These three source sprites use only fresh PlaceObject2 records.
+            assert c==26
+            r=Bits(d);flags=r.u8();depth=r.u16();cid=r.u16()
+            assert flags&2 and not flags&1 and depth>last_depth
+            last_depth=depth
+            if cid in ids:
+                assert flags==6 and depth>mask_end
+                m=r.matrix();assert r.at//8==len(d)
+                batches=[(rgba,[transform(m,p) for p in points]) for rgba,points in render_character(ts,cid) if points]
+                assert batches
+                seen.append(cid);item=batches;new_kind='mesh'
+            else:
+                if flags&64:
+                    # Mask end is the last field in this source PlaceObject2.
+                    mask_end=max(mask_end,struct.unpack_from('<H',d,len(d)-2)[0])
+                    assert mask_end>depth
+                item=(c,d);new_kind='raster'
+            if kind!=new_kind:flush();kind=new_kind
+            run.append(item)
+        flush()
+        assert tuple(seen)==ids and parts
+        splits[sid]=parts
+    return native,overlays,splits,bytes(extra)
 
 def build(data,output,jar):
     version,defs,frames=source(data,vector_menu=True);output.mkdir(parents=True,exist_ok=True)
     from extract_menu import pack as pack_menu
     (output/'menu.pkm').write_bytes(pack_menu(data,frames))
-    native,overlays,clones,extra=native_art(data,frames)
-    # Use a distinct raster variant for partially converted, opaque root sprites.
-    variants=sorted({(cid,flt,cid in clones and alpha==256 and not flt) for frame in frames for cid,_,alpha,flt,_ in frame if alpha and not(cid in native and not flt)})
+    native,overlays,splits,extra=native_art(data,frames)
+    # Raster only the depth runs that remain after native conversion.
+    variants=set()
+    for frame in frames:
+        for cid,_,alpha,flt,_ in frame:
+            if not alpha or (cid in native and not flt):continue
+            parts=splits.get(cid) if alpha==256 and not flt else None
+            if parts:
+                variants.update((cid,flt,key) for kind,key in parts if kind=='raster')
+            else:variants.add((cid,flt,cid))
+    variants=sorted(variants)
     # Render all reusable source characters in one synthetic, script-free timeline.
     body=bytearray(defs+extra);keys=[]
-    for i,(cid,flt,split) in enumerate(variants):
+    for i,(cid,flt,export_id) in enumerate(variants):
         if i:body+=tag(28,struct.pack('<H',1))
-        m=matrix(*ORIGIN);export_id=clones[cid] if split else cid
+        m=matrix(*ORIGIN)
         if flt:body+=tag(70,struct.pack('<BBHH',6,1,1,export_id)+m+flt)
         else:body+=tag(26,struct.pack('<BHH',6,1,export_id)+m)
         count=4 if cid==51 else 1
-        for n in range(count):body+=tag(1);keys.append((cid,flt,split,n))
+        for n in range(count):body+=tag(1);keys.append((cid,flt,export_id,n))
     body+=tag(0);header=rect(*SIZE)+struct.pack('<HH',24*256,len(keys));swf=b'FWS'+version+struct.pack('<I',8+len(header)+len(body))+header+body
     with tempfile.TemporaryDirectory() as tmp:
         tmp=Path(tmp);(tmp/'characters.swf').write_bytes(swf);(tmp/'frames').mkdir()
@@ -153,8 +187,18 @@ def build(data,output,jar):
                 x,y=(0,0) if cid==77 else mat[4:]
                 placements.append((mesh_slots[cid],x,y,20,20,alpha));continue
             n=(f-born)%4 if cid==51 else 0
-            split=cid in clones and alpha==256 and not flt
-            a=assets[cid,flt,split,n]
+            parts=splits.get(cid) if alpha==256 and not flt else None
+            if parts:
+                for kind,key in parts:
+                    if kind=='mesh':
+                        placements.append((overlay_slots[key],mat[4],mat[5],20,20,256))
+                    else:
+                        a=assets[cid,flt,key,0]
+                        if a is None:continue
+                        idx,x,y=a;w,h=metadata[idx]
+                        placements.append((idx,mat[4]+20*x,mat[5]+20*y,w*20,h*20,256))
+                continue
+            a=assets[cid,flt,cid,n]
             if a is None:continue
             if cid in direct and cid!=136:
                 assert not flt and alpha==256
@@ -163,7 +207,6 @@ def build(data,output,jar):
             if cid==136:
                 assert not flt and alpha==256
                 placements.extend((idx,mat[4]+x,mat[5]+y,w,h,alpha) for idx,x,y,w,h in direct[cid])
-            if split:placements.append((overlay_slots[cid],mat[4],mat[5],20,20,256))
             if cid in (136,157,220):menu_after=len(placements)
         packed+=struct.pack('<BB',len(placements),menu_after)
         for a in placements:packed+=struct.pack('<HiiIIH',*a)
@@ -175,7 +218,7 @@ def build(data,output,jar):
             for x,y in vertices:packed+=struct.pack('<ff',x/20,y/20)
     assert len(packed)<=8*1024*1024
     (output/'timeline.pfg').write_bytes(packed)
-    print('native vector root characters:',sorted(mesh_slots),'split text overlays:',sorted(overlay_slots))
+    print('native vector root characters:',sorted(mesh_slots),'depth-split text sprites:',sorted(splits),'mesh runs:',len(overlay_slots))
     print(f'{len(metadata)} reusable cropped textures, {len(keys)} source variants, {len(packed)} timeline bytes; {sum(p.stat().st_size for p in output.iterdir())} bytes total')
 
 def main():
