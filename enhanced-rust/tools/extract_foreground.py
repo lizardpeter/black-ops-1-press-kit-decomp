@@ -39,7 +39,7 @@ def source(data, vector_menu=False):
                 from extract_labels import strip as strip_labels
                 d2=strip_labels(d2)
                 if struct.unpack_from('<H',d2)[0]==136:
-                    d2=d2[:4]+b''.join(tag(k,v) for k,v in tags(d2,4) if not(k==26 and v[0]&2 and struct.unpack_from('<H',v,3)[0]==118))
+                    d2=d2[:4]+b''.join(tag(k,v) for k,v in tags(d2,4) if not(k==26 and v[0]&2 and struct.unpack_from('<H',v,3)[0] in (118,132)))
             defs.append(tag(c,d2))
         if c in (26,70):
             r=Bits(d);flags=r.u8();f2=r.u8() if c==70 else 0;depth=r.u16();old=live.get(depth) if flags&1 else None
@@ -89,7 +89,7 @@ def native_art(data,frames):
     # Keep each mask and its clipped children together in the same raster run.
     # Text moved to geometry can now sit *between* raster runs, not just above.
     splits={};extra=bytearray();overlays={};next_id=65000
-    for sid,ids in ((50,(31,33,47,49)),(62,(55,)),(111,(110,))):
+    for sid,ids in ((62,(55,)),(111,(110,))):
         if not any(cid==sid and a==256 and not flt for frame in frames for cid,_,a,flt,_ in frame):continue
         sprite=sprites[sid]
         assert struct.unpack_from('<H',sprite,2)[0]==1
@@ -155,11 +155,17 @@ def build(data,output,jar):
     (output/'menu.pkm').write_bytes(pack_menu(data,frames))
     native,overlays,splits,extra=native_art(data,frames)
     quit_states,wallpaper_states,wallpaper_places=native_buttons(data)
+    from extract_sidebar import extract as sidebar_extract
+    sidebar=sidebar_extract(data)
+    from extract_controls import tags as dictionary,render_character
+    overlays[63999]=render_character(dictionary(data),132)
+    for kind,key,value in sidebar:
+        if kind=='mesh':overlays[key]=value
     # Raster only the depth runs that remain after native conversion.
     variants=set()
     for frame in frames:
         for cid,_,alpha,flt,_ in frame:
-            if not alpha or (cid in native and not flt) or (cid==115 and alpha==256 and not flt):continue
+            if not alpha or (cid in native and not flt) or (cid in (50,115) and alpha==256 and not flt):continue
             parts=splits.get(cid) if alpha==256 and not flt else None
             if parts:
                 variants.update((cid,flt,key) for kind,key in parts if kind=='raster')
@@ -195,15 +201,21 @@ def build(data,output,jar):
     button_slots={};button_meshes=[]
     for selector,states in [(255,quit_states)]+[(i,wallpaper_states) for i,_,_ in wallpaper_places]:
         button_slots[selector]=len(metadata);metadata.append((1,1));button_meshes.append((selector,states))
+    sidebar_slots={};texture_states=[]
+    for kind,key,value in sidebar:
+        if kind=='mesh':continue
+        im,states=value;idx=len(metadata);sidebar_slots[key]=idx
+        metadata.append(im.size);im.save(output/f'{idx}.png',optimize=True)
+        texture_states.append((key,states))
     from extract_thumbnails import extract as extract_thumbnails
     thumbnails=extract_thumbnails(data);jpeg_start=len(metadata);direct={}
     for sid,rows in thumbnails.items():
         direct[sid]=[]
         for cid,x,y,w,h,iw,ih,raw in rows:
             idx=len(metadata);metadata.append((iw,ih));(output/f'{idx}.jpg').write_bytes(raw);direct[sid].append((idx,x,y,w,h))
-    packed=bytearray(b'PFG5'+struct.pack('<HH',len(metadata),len(frames)))
+    packed=bytearray(b'PFG6'+struct.pack('<HH',len(metadata),len(frames)))
     mesh_ids=set(mesh_slots.values())|set(overlay_slots.values())
-    for i,(w,h) in enumerate(metadata):packed+=struct.pack('<HHB',w,h,3 if i in button_slots.values() else 2 if i in mesh_ids else int(i>=jpeg_start))
+    for i,(w,h) in enumerate(metadata):packed+=struct.pack('<HHB',w,h,4 if i in sidebar_slots.values() else 3 if i in button_slots.values() else 2 if i in mesh_ids else int(i>=jpeg_start))
     for f,frame in enumerate(frames,1):
         placements=[];menu_after=255
         for cid,mat,alpha,flt,born in frame:
@@ -211,6 +223,11 @@ def build(data,output,jar):
             if cid in mesh_slots and not flt:
                 x,y=(0,0) if cid==77 else mat[4:]
                 placements.append((mesh_slots[cid],x,y,20,20,alpha));continue
+            if cid==50 and alpha==256 and not flt:
+                for kind,key,_ in sidebar:
+                    slot=overlay_slots[key] if kind=='mesh' else sidebar_slots[key]
+                    placements.append((slot,mat[4],mat[5],20,20,256))
+                continue
             if cid==115 and alpha==256 and not flt:
                 placements.append((button_slots[255],mat[4],mat[5],20,20,256));continue
             if cid==136:
@@ -236,6 +253,7 @@ def build(data,output,jar):
             idx,x,y=a;w,h=metadata[idx];placements.append((idx,mat[4]+20*x,mat[5]+20*y,w*20,h*20,alpha))
             if cid==136:
                 assert not flt and alpha==256
+                placements.append((overlay_slots[63999],mat[4],mat[5],20,20,256))
                 placements.extend((idx,mat[4]+x,mat[5]+y,w,h,alpha) for idx,x,y,w,h in direct[cid])
             if cid in (136,157,220):menu_after=len(placements)
         packed+=struct.pack('<BB',len(placements),menu_after)
@@ -254,6 +272,10 @@ def build(data,output,jar):
                 assert vertices and len(vertices)%3==0
                 packed+=struct.pack('<4BI',*rgba,len(vertices))
                 for x,y in vertices:packed+=struct.pack('<ff',x/20,y/20)
+    for selector,states in texture_states:
+        packed.append(selector)
+        for rect,uv in states:
+            packed+=struct.pack('<8f',*rect,*uv)
     assert len(packed)<=8*1024*1024
     (output/'timeline.pfg').write_bytes(packed)
     print('native vector root characters:',sorted(mesh_slots),'depth-split text sprites:',sorted(splits),'mesh runs:',len(overlay_slots))

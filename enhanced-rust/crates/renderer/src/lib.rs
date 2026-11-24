@@ -82,6 +82,7 @@ impl Renderer{
         Layer{binding,vertices:self.vertices(device,[0.,0.,1280.,720.]),texture:first.texture.clone(),count:6}
     }
     pub fn set_background_opacity(&self,queue:&wgpu::Queue,layer:&Layer,alpha:[f32;2]){queue.write_buffer(&layer.vertices,0,bytemuck::cast_slice(&Self::quad([0.,0.,1280.,720.],alpha,[1.;4])));}
+    pub fn set_opacity_uv(&self,queue:&wgpu::Queue,layer:&Layer,rect:[f32;4],opacity:f32,uv:[f32;4]){let mut verts=Self::quad(rect,[opacity,-1.],[1.;4]);for v in &mut verts{v.uv=[uv[0]+v.uv[0]*(uv[2]-uv[0]),uv[1]+v.uv[1]*(uv[3]-uv[1])];}queue.write_buffer(&layer.vertices,0,bytemuck::cast_slice(&verts));}
     pub fn set_opacity(&self,queue:&wgpu::Queue,layer:&Layer,rect:[f32;4],opacity:f32){queue.write_buffer(&layer.vertices,0,bytemuck::cast_slice(&Self::quad(rect,[opacity,-1.],[1.;4])));}
     pub fn reposition(&self,device:&wgpu::Device,layer:&mut Layer,rect:[f32;4]){layer.vertices=self.vertices(device,rect);}
     #[cfg(target_arch="wasm32")]

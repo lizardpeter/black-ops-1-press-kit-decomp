@@ -9,7 +9,7 @@ SHAPES={136:134,157:142,220:212}
 def rectangles(d):
     r=Bits(d,2);r.rect();styles=[];offset=0;edges={};x=y=0;f0=f1=0
     def read_styles():
-        n=r.u8();assert n==2
+        n=r.u8();assert n in (1,2)
         for _ in range(n):
             assert r.u8()==0x43
             cid=r.u16();m=r.matrix();assert m[:4]==(20,20,0,0)
