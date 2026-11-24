@@ -1,5 +1,10 @@
 name: check
-on: [push, pull_request]
+on:
+  workflow_dispatch:
+  push:
+    paths: ['faithful/**', 'enhanced/**', 'CMakeLists.txt', 'records/**', 'tools/swf/verify_records.py', '.github/workflows/check.yml']
+  pull_request:
+    paths: ['faithful/**', 'enhanced/**', 'CMakeLists.txt', 'records/**', 'tools/swf/verify_records.py']
 jobs:
   check:
     strategy:

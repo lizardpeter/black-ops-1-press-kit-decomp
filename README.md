@@ -1,13 +1,11 @@
-# black-ops-1-press-kit-decomp
+# Black Ops 2010 press-kit reconstruction
 
-Evidence-driven reconstruction of the 2010 Black Ops press-kit application, distinct from the T5 game.
+Three separate targets, sharing original evidence and offline asset tools. **Primary development: enhanced-rust (Rust, wgpu, Slang).**
 
-- Windows and macOS Adobe projector binaries: historical reference only, out of reconstruction scope.
-- Shared launcher and main press-kit SWFs: AVM1 bytecode analysis and faithful native reconstruction.
-- Original media stays in R2; do not commit executables, media, SWFs, or Flash runtime binaries.
+- `faithful/`: C++ application reconstruction, reference Qt host, original behavior.
+- `enhanced/`: separate optional C++ enhancements linked to faithful library.
+- `enhanced-rust/`: independent Rust application, no C++/Qt/Adobe runtime dependency.
+- `analysis/`, `records/`, `tools/`, `shared/`: original evidence, ledger, extraction and shared fixtures.
 
-See [AGENTS.md](AGENTS.md), [target.toml](target.toml), [STATUS.md](STATUS.md), and [initial evidence](docs/originals.md).
-
-Build and test: `cmake -S . -B build && cmake --build build && ctest --test-dir build --output-on-failure`.
-
-Adobe projector analysis is disabled by owner decision. SWF application analysis runs independently in Actions. The SWF workflow exports AVM1 timelines, bytecode and FFDec ActionScript into a restricted-retention artifact. The reconstructed library is not yet a playable application. The payload workflow downloads and hashes the full recorded R2 inventory without committing the original files.
+C++: `cmake -S . -B build && cmake --build build && ctest --test-dir build --output-on-failure`.
+Rust: see [enhanced-rust/README.md](enhanced-rust/README.md). Original assets stay in R2, not Git. Adobe projector and library decompilation are out of scope.

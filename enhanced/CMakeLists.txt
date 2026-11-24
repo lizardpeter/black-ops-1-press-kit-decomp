@@ -1,0 +1,6 @@
+add_library(presskit_enhanced STATIC src/gallery.cpp)
+target_include_directories(presskit_enhanced PUBLIC include)
+target_link_libraries(presskit_enhanced PUBLIC presskit)
+add_executable(enhanced_cpp_tests tests/gallery.cpp)
+target_link_libraries(enhanced_cpp_tests PRIVATE presskit_enhanced)
+add_test(NAME enhanced_cpp COMMAND enhanced_cpp_tests)

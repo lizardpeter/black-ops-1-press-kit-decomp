@@ -1,74 +1,74 @@
 build	offset	name	body_size	status	src	evidence
-launcher	1529	onEnterFrame	104	decompiled	src/launcher.cpp	stage dimensions; center at half-width minus 640 and half-height minus 360
-launcher	1656	yes.onRelease	105	decompiled	src/launcher.cpp	load main SWF, fullscreen, hide four controls
-launcher	1781	no.onRelease	19	decompiled	src/launcher.cpp	FSCommand quit
-presskit	3143802	picture_num	37	decompiled	src/gallery.cpp	scr+1 concatenated with separator and total
-presskit	3143432	nextImage	126	decompiled	src/gallery.cpp	increment before load equality guard; alpha 1; loadMovie image and 1; counter
-presskit	3143575	prevImage	104	decompiled	src/gallery.cpp	zero bound; decrement and load regardless of prior load completion
-presskit	3143696	firstImage	88	decompiled	src/gallery.cpp	load equality guard; no index reset
-presskit	2501236	nav.wallpaper.onRelease	14	decompiled	src/navigation.cpp	goto Wallpaper; play
-presskit	2501276	nav.videos.onRelease	11	decompiled	src/navigation.cpp	goto Videos; play
-presskit	2501313	nav.screens.onRelease	12	decompiled	src/navigation.cpp	goto Screens; play
-presskit	2501351	nav.URL.onRelease	36	decompiled	src/navigation.cpp	open original URL _blank
-presskit	2501407	Xclose.onRelease	19	decompiled	src/navigation.cpp	FSCommand quit
-presskit	2590009	wallpaper.wp1.onRelease	59	decompiled	src/navigation.cpp	GetURL exact path; empty target
-presskit	2590094	wallpaper.wp2.onRelease	59	decompiled	src/navigation.cpp	GetURL exact path; empty target
-presskit	2590179	wallpaper.wp3.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
-presskit	2590266	wallpaper.wp4.onRelease	59	decompiled	src/navigation.cpp	GetURL exact path; empty target
-presskit	2590351	wallpaper.wp5.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
-presskit	2590438	wallpaper.wp6.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
-presskit	2590525	wallpaper.wp7.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
-presskit	2590612	wallpaper.wp8.onRelease	61	decompiled	src/navigation.cpp	GetURL exact path; empty target
-presskit	2724842	videos.trl_1.onRelease	34	decompiled	src/navigation.cpp	play; vid=1; music.stop()
-presskit	2724902	videos.trl_2.onRelease	34	decompiled	src/navigation.cpp	play; vid=2; music.stop()
-presskit	2724962	videos.trl_3.onRelease	34	decompiled	src/navigation.cpp	play; vid=3; music.stop()
-presskit	2725022	videos.trl_4.onRelease	34	decompiled	src/navigation.cpp	play; vid=4; music.stop()
-presskit	2725082	videos.trl_5.onRelease	34	decompiled	src/navigation.cpp	play; vid=5; music.stop()
-presskit	2725142	videos.trl_6.onRelease	34	decompiled	src/navigation.cpp	play; vid=6; music.stop()
-presskit	2726133	checkCounter	102	decompiled	src/navigation.cpp	increment; on exactly 50 reset, clear interval, hide mouse, Vmouse=0
-presskit	2726255	resetCounter	15	decompiled	src/navigation.cpp	counter=0
-presskit	3141434	screens.scrn_1.onRelease	16	decompiled	src/gallery.cpp	play; scr=0
-presskit	3141476	screens.scrn_2.onRelease	12	decompiled	src/gallery.cpp	play; scr=1
-presskit	3141514	screens.scrn_3.onRelease	12	decompiled	src/gallery.cpp	play; scr=2
-presskit	3141552	screens.scrn_4.onRelease	12	decompiled	src/gallery.cpp	play; scr=3
-presskit	3141590	screens.scrn_5.onRelease	12	decompiled	src/gallery.cpp	play; scr=4
-presskit	3141628	screens.scrn_6.onRelease	12	decompiled	src/gallery.cpp	play; scr=5
-presskit	3141666	screens.scrn_7.onRelease	12	decompiled	src/gallery.cpp	play; scr=6
-presskit	3141704	screens.scrn_8.onRelease	12	decompiled	src/gallery.cpp	play; scr=7
-presskit	3141742	screens.scrn_9.onRelease	12	decompiled	src/gallery.cpp	play; scr=8
-presskit	3141780	screens.scrn_10.onRelease	12	decompiled	src/gallery.cpp	play; scr=9
-presskit	3141818	screens.scrn_11.onRelease	12	decompiled	src/gallery.cpp	play; scr=10
-presskit	3141856	screens.scrn_12.onRelease	12	decompiled	src/gallery.cpp	play; scr=11
-presskit	3141894	screens.scrn_13.onRelease	12	decompiled	src/gallery.cpp	play; scr=12
-presskit	3141932	screens.scrn_14.onRelease	12	decompiled	src/gallery.cpp	play; scr=13
-presskit	3141970	screens.scrn_15.onRelease	12	decompiled	src/gallery.cpp	play; scr=14
-presskit	3142008	screens.scrn_16.onRelease	12	decompiled	src/gallery.cpp	play; scr=15
-presskit	3142046	screens.scrn_17.onRelease	12	decompiled	src/gallery.cpp	play; scr=16
-presskit	3142084	screens.scrn_18.onRelease	12	decompiled	src/gallery.cpp	play; scr=17
-presskit	3142122	screens.scrn_19.onRelease	12	decompiled	src/gallery.cpp	play; scr=18
-presskit	3142160	screens.scrn_20.onRelease	12	decompiled	src/gallery.cpp	play; scr=19
-presskit	3143190	loadXML	216	decompiled	src/gallery.cpp	failure content; reset images/descriptions, extract first child text in order, set total, call firstImage
-presskit	3143033	checkCounter	102	decompiled	src/navigation.cpp	gallery copy same decoded operations as frame 95
-presskit	3143155	resetCounter	15	decompiled	src/navigation.cpp	gallery copy sets counter=0
-presskit	2726385	onMouseMove	48	decompiled	src/media.cpp	show mouse; Vmouse=1; counter=0
-presskit	2726447	onMouseDown	48	decompiled	src/media.cpp	same as move
-presskit	2726515	control.onEnterFrame	140	decompiled	src/media.cpp	checkCounter only when Vmouse==1; target y visible/hidden
-presskit	2726745	movctrl.close.onRelease	15	decompiled	src/media.cpp	install stopRoll2 callback
-presskit	2726798	vlistener.complete	15	decompiled	src/media.cpp	install stopRoll2 callback
-presskit	2727367	movctrl.onEnterFrame	505	decompiled	src/media.cpp	ceil easing and time strings; model host field updates
-presskit	3143953	onMouseMove	48	decompiled	src/media.cpp	gallery copy
-presskit	3144015	onMouseDown	48	decompiled	src/media.cpp	gallery copy
-presskit	3144083	control.onEnterFrame	140	decompiled	src/media.cpp	gallery copy
-presskit	3144313	scrctrl.close.onRelease	15	decompiled	src/media.cpp	install stopRoll2
-presskit	3144409	scrctrl.onEnterFrame	98	decompiled	src/media.cpp	ceil easing and mouse y offset
-presskit	3144803	listen.onKeyDown	109	decompiled	src/gallery.cpp	37 prev 39 next
-presskit	3144962	previous_btn.onRelease	16	decompiled	src/gallery.cpp	call prevImage
-presskit	3145004	next_btn.onRelease	16	decompiled	src/gallery.cpp	call nextImage
-presskit	3145040	onEnterFrame	192	decompiled	src/media.cpp	bytes total/loaded; progress; alpha increment while <500
-presskit	485976	listener.complete	1	decompiled	src/timeline.cpp	play root timeline
-presskit	2724774	stopRoll2	1	decompiled	src/timeline.cpp	prevFrame while control persists until menu
-presskit	3141398	stopRoll2	1	decompiled	src/timeline.cpp	gallery copy prevFrame
-presskit	2377744	Play	19	decompiled	src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
-presskit	2378254	Play	19	decompiled	src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
-presskit	2378764	Play	19	decompiled	src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
-presskit	2379274	Play	19	decompiled	src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
+launcher	1529	onEnterFrame	104	decompiled	faithful/src/launcher.cpp	stage dimensions; center at half-width minus 640 and half-height minus 360
+launcher	1656	yes.onRelease	105	decompiled	faithful/src/launcher.cpp	load main SWF, fullscreen, hide four controls
+launcher	1781	no.onRelease	19	decompiled	faithful/src/launcher.cpp	FSCommand quit
+presskit	3143802	picture_num	37	decompiled	faithful/src/gallery.cpp	scr+1 concatenated with separator and total
+presskit	3143432	nextImage	126	decompiled	faithful/src/gallery.cpp	increment before load equality guard; alpha 1; loadMovie image and 1; counter
+presskit	3143575	prevImage	104	decompiled	faithful/src/gallery.cpp	zero bound; decrement and load regardless of prior load completion
+presskit	3143696	firstImage	88	decompiled	faithful/src/gallery.cpp	load equality guard; no index reset
+presskit	2501236	nav.wallpaper.onRelease	14	decompiled	faithful/src/navigation.cpp	goto Wallpaper; play
+presskit	2501276	nav.videos.onRelease	11	decompiled	faithful/src/navigation.cpp	goto Videos; play
+presskit	2501313	nav.screens.onRelease	12	decompiled	faithful/src/navigation.cpp	goto Screens; play
+presskit	2501351	nav.URL.onRelease	36	decompiled	faithful/src/navigation.cpp	open original URL _blank
+presskit	2501407	Xclose.onRelease	19	decompiled	faithful/src/navigation.cpp	FSCommand quit
+presskit	2590009	wallpaper.wp1.onRelease	59	decompiled	faithful/src/navigation.cpp	GetURL exact path; empty target
+presskit	2590094	wallpaper.wp2.onRelease	59	decompiled	faithful/src/navigation.cpp	GetURL exact path; empty target
+presskit	2590179	wallpaper.wp3.onRelease	61	decompiled	faithful/src/navigation.cpp	GetURL exact path; empty target
+presskit	2590266	wallpaper.wp4.onRelease	59	decompiled	faithful/src/navigation.cpp	GetURL exact path; empty target
+presskit	2590351	wallpaper.wp5.onRelease	61	decompiled	faithful/src/navigation.cpp	GetURL exact path; empty target
+presskit	2590438	wallpaper.wp6.onRelease	61	decompiled	faithful/src/navigation.cpp	GetURL exact path; empty target
+presskit	2590525	wallpaper.wp7.onRelease	61	decompiled	faithful/src/navigation.cpp	GetURL exact path; empty target
+presskit	2590612	wallpaper.wp8.onRelease	61	decompiled	faithful/src/navigation.cpp	GetURL exact path; empty target
+presskit	2724842	videos.trl_1.onRelease	34	decompiled	faithful/src/navigation.cpp	play; vid=1; music.stop()
+presskit	2724902	videos.trl_2.onRelease	34	decompiled	faithful/src/navigation.cpp	play; vid=2; music.stop()
+presskit	2724962	videos.trl_3.onRelease	34	decompiled	faithful/src/navigation.cpp	play; vid=3; music.stop()
+presskit	2725022	videos.trl_4.onRelease	34	decompiled	faithful/src/navigation.cpp	play; vid=4; music.stop()
+presskit	2725082	videos.trl_5.onRelease	34	decompiled	faithful/src/navigation.cpp	play; vid=5; music.stop()
+presskit	2725142	videos.trl_6.onRelease	34	decompiled	faithful/src/navigation.cpp	play; vid=6; music.stop()
+presskit	2726133	checkCounter	102	decompiled	faithful/src/navigation.cpp	increment; on exactly 50 reset, clear interval, hide mouse, Vmouse=0
+presskit	2726255	resetCounter	15	decompiled	faithful/src/navigation.cpp	counter=0
+presskit	3141434	screens.scrn_1.onRelease	16	decompiled	faithful/src/gallery.cpp	play; scr=0
+presskit	3141476	screens.scrn_2.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=1
+presskit	3141514	screens.scrn_3.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=2
+presskit	3141552	screens.scrn_4.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=3
+presskit	3141590	screens.scrn_5.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=4
+presskit	3141628	screens.scrn_6.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=5
+presskit	3141666	screens.scrn_7.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=6
+presskit	3141704	screens.scrn_8.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=7
+presskit	3141742	screens.scrn_9.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=8
+presskit	3141780	screens.scrn_10.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=9
+presskit	3141818	screens.scrn_11.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=10
+presskit	3141856	screens.scrn_12.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=11
+presskit	3141894	screens.scrn_13.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=12
+presskit	3141932	screens.scrn_14.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=13
+presskit	3141970	screens.scrn_15.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=14
+presskit	3142008	screens.scrn_16.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=15
+presskit	3142046	screens.scrn_17.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=16
+presskit	3142084	screens.scrn_18.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=17
+presskit	3142122	screens.scrn_19.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=18
+presskit	3142160	screens.scrn_20.onRelease	12	decompiled	faithful/src/gallery.cpp	play; scr=19
+presskit	3143190	loadXML	216	decompiled	faithful/src/gallery.cpp	failure content; reset images/descriptions, extract first child text in order, set total, call firstImage
+presskit	3143033	checkCounter	102	decompiled	faithful/src/navigation.cpp	gallery copy same decoded operations as frame 95
+presskit	3143155	resetCounter	15	decompiled	faithful/src/navigation.cpp	gallery copy sets counter=0
+presskit	2726385	onMouseMove	48	decompiled	faithful/src/media.cpp	show mouse; Vmouse=1; counter=0
+presskit	2726447	onMouseDown	48	decompiled	faithful/src/media.cpp	same as move
+presskit	2726515	control.onEnterFrame	140	decompiled	faithful/src/media.cpp	checkCounter only when Vmouse==1; target y visible/hidden
+presskit	2726745	movctrl.close.onRelease	15	decompiled	faithful/src/media.cpp	install stopRoll2 callback
+presskit	2726798	vlistener.complete	15	decompiled	faithful/src/media.cpp	install stopRoll2 callback
+presskit	2727367	movctrl.onEnterFrame	505	decompiled	faithful/src/media.cpp	ceil easing and time strings; model host field updates
+presskit	3143953	onMouseMove	48	decompiled	faithful/src/media.cpp	gallery copy
+presskit	3144015	onMouseDown	48	decompiled	faithful/src/media.cpp	gallery copy
+presskit	3144083	control.onEnterFrame	140	decompiled	faithful/src/media.cpp	gallery copy
+presskit	3144313	scrctrl.close.onRelease	15	decompiled	faithful/src/media.cpp	install stopRoll2
+presskit	3144409	scrctrl.onEnterFrame	98	decompiled	faithful/src/media.cpp	ceil easing and mouse y offset
+presskit	3144803	listen.onKeyDown	109	decompiled	faithful/src/gallery.cpp	37 prev 39 next
+presskit	3144962	previous_btn.onRelease	16	decompiled	faithful/src/gallery.cpp	call prevImage
+presskit	3145004	next_btn.onRelease	16	decompiled	faithful/src/gallery.cpp	call nextImage
+presskit	3145040	onEnterFrame	192	decompiled	faithful/src/media.cpp	bytes total/loaded; progress; alpha increment while <500
+presskit	485976	listener.complete	1	decompiled	faithful/src/timeline.cpp	play root timeline
+presskit	2724774	stopRoll2	1	decompiled	faithful/src/timeline.cpp	prevFrame while control persists until menu
+presskit	3141398	stopRoll2	1	decompiled	faithful/src/timeline.cpp	gallery copy prevFrame
+presskit	2377744	Play	19	decompiled	faithful/src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
+presskit	2378254	Play	19	decompiled	faithful/src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
+presskit	2378764	Play	19	decompiled	faithful/src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)
+presskit	2379274	Play	19	decompiled	faithful/src/background.cpp	clearInterval(nInterval); play(); surrounding frame stop and setInterval(Play,2000)

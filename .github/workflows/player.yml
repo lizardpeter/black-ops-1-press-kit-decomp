@@ -4,9 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - runtime/**
-      - src/**
-      - include/**
+      - faithful/runtime/**
+      - faithful/src/**
+      - faithful/include/**
       - CMakeLists.txt
       - tools/prepare_player_assets.py
       - .github/workflows/player.yml
@@ -42,9 +42,9 @@ jobs:
         env:
           QT_QPA_PLATFORM: offscreen
           QT_MEDIA_BACKEND: ffmpeg
-        run: timeout 60 build/presskit_player /tmp/player --smoke
+        run: timeout 60 build/faithful/presskit_player /tmp/player --smoke
       - uses: actions/upload-artifact@v4
         with:
           name: native-player-linux
-          path: build/presskit_player
+          path: build/faithful/presskit_player
           retention-days: 14

@@ -6,3 +6,6 @@ __pycache__/
 *.swf
 *.gpr
 *.rep/
+
+/enhanced-rust/target/
+/enhanced-rust/.cargo/
