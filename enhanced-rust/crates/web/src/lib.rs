@@ -38,22 +38,26 @@ impl WebPlayer{
     pub fn gallery_counter(&self)->String{self.app.gallery.counter()}
     pub fn media_time(&self,position:f64,duration:f64)->String{format!("{}/{}",flash_time(position),flash_time(duration))}
     pub fn pointer(&mut self){self.app.controls.activity();}
-    pub fn click(&mut self,x:f64,y:f64){self.pointer();if !self.ready(){return;}if let Some((x,y))=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y){let h=self.app.hit(x,y);self.app.activate(h,x);}}
+    pub fn click(&mut self,x:f64,y:f64){self.pointer();if !self.input_ready(){return;}if let Some((x,y))=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y){let h=self.app.hit(x,y);self.app.activate(h,x);}}
     pub fn key(&mut self,key:&str){match key{
         "Enter" if self.app.scene()==Scene::Launcher=>self.app.activate(Hit::Accept,0.),
         "Escape" if self.app.scene()==Scene::Intro=>self.media_complete(),
-        "Escape"=>self.app.activate(Hit::Close,0.),"ArrowLeft"=>self.app.activate(Hit::Previous,0.),"ArrowRight"=>self.app.activate(Hit::Next,0.)," "=>self.app.activate(Hit::PlayPause,0.),_=>{}}}
+        "Escape"=>self.app.activate(Hit::Close,0.),"ArrowLeft" if self.input_ready()=>self.app.activate(Hit::Previous,0.),"ArrowRight" if self.input_ready()=>self.app.activate(Hit::Next,0.)," "=>self.app.activate(Hit::PlayPause,0.),_=>{}}}
     pub fn media_complete(&mut self){self.app.media_complete();self.video=None;}
     pub fn xml_loaded(&mut self,paths:Array){if self.app.scene()!=Scene::Gallery||self.app.rewinding{return;}self.app.xml_loaded(paths.iter().filter_map(|v|v.as_string()).filter(|v|v.starts_with("payload/screens/")&&!v.contains("..")).collect());}
     pub fn effects(&mut self)->Array{
         let out=Array::new();for e in self.app.effects(){let p=match e{
-            Effect::Fullscreen=>pair("fullscreen",""),Effect::Quit=>pair("quit",""),Effect::Play(p)=>{self.video=None;pair("play",p)},Effect::StopVideo=>{self.video=None;pair("stop","")},Effect::ToggleVideo=>pair("toggle",""),Effect::Seek(v)=>pair("seek",&v.to_string()),Effect::Music(on)=>pair("music",if on{"1"}else{"0"}),Effect::Sound(id)=>pair("sound",&id.to_string()),Effect::Open(p)=>pair("open",p),Effect::ReadXml(p)=>pair("xml",p),Effect::Image(p)=>{self.photo=p.clone();pair("image",&p)}};out.push(&p);}out
+            Effect::Fullscreen=>pair("fullscreen",""),Effect::Quit=>pair("quit",""),Effect::Play(p)=>{self.video=None;pair("play",p)},Effect::StopVideo=>{self.video=None;pair("stop","")},Effect::ToggleVideo=>pair("toggle",""),Effect::Seek(v)=>pair("seek",&v.to_string()),Effect::Music(on)=>pair("music",if on{"1"}else{"0"}),Effect::Sound(id)=>pair("sound",&id.to_string()),Effect::Open(p)=>pair("open",p),Effect::ReadXml(p)=>{self.photo.clear();pair("xml",p)},Effect::Image(p)=>{self.photo=p.clone();pair("image",&p)}};out.push(&p);}out
     }
     fn plan(&self)->AssetPlan{AssetPlan::for_app(&self.app,self.layered,&self.photo)}
     fn paths(&self)->Vec<String>{self.plan().current}
     pub fn needed(&self)->Array{self.paths().into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
     pub fn prefetch(&self)->Array{self.plan().ahead.into_iter().filter(|p|!self.images.contains_key(p)).map(JsValue::from).collect()}
     pub fn ready(&self)->bool{self.paths().iter().all(|p|self.images.contains_key(p))}
+    fn input_ready(&self)->bool{
+        let scene=self.app.scene();if scene==Scene::Gallery&&self.photo.is_empty(){return false;}
+        self.paths().iter().filter(|p|!p.starts_with("art/background/")).all(|p|self.images.contains_key(p))
+    }
     pub fn cache_bytes(&self)->f64{self.images.values().map(|(l,_)|u64::from(l.texture.width())*u64::from(l.texture.height())*4).sum::<u64>() as f64}
     fn visible_paths(&mut self)->Vec<String>{
         let mut paths=self.paths();
@@ -95,4 +99,25 @@ impl WebPlayer{
         self.renderer.render(&mut encoder,&view,&layers,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
         self.queue.submit([encoder.finish()]);frame.present();Ok(())
     }
+}
+
+
+/// Run the actual shared application logic inside the compiled WASM module,
+/// without creating a GPU surface. This is not a browser graphics test.
+#[wasm_bindgen]
+pub fn wasm_core_smoke()->bool{
+    let mut app=App::default();app.activate(Hit::Accept,0.);
+    if !app.effects().contains(&Effect::Play(presskit_core::INTRO)){return false;}
+    app.media_complete();for _ in 0..74{app.tick();}
+    if app.scene()!=Scene::Welcome{return false;}
+    app.activate(Hit::Videos,0.);for _ in 0..5{app.tick();}
+    app.activate(Hit::Trailer(4),0.);for _ in 0..4{app.tick();}
+    if app.scene()!=Scene::Video||!app.effects().contains(&Effect::Play(presskit_core::trailer(4).unwrap())){return false;}
+    app.media_complete();for _ in 0..4{app.tick();}
+    app.activate(Hit::Screens,0.);for _ in 0..5{app.tick();}
+    app.activate(Hit::Thumbnail(20),0.);for _ in 0..4{app.tick();}
+    app.xml_loaded((1..=20).map(|i|format!("payload/screens/{i}.jpg")).collect());
+    let plan=AssetPlan::for_app(&app,true,"payload/screens/20.jpg");
+    app.activate(Hit::Previous,0.);
+    app.scene()==Scene::Gallery&&app.gallery.counter()=="19 / 20"&&plan.ahead.contains(&"payload/screens/19.jpg".into())
 }

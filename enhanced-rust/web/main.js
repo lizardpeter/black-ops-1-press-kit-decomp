@@ -4,8 +4,8 @@ const canvas=document.querySelector('#gpu'),video=document.querySelector('#video
 const status=document.querySelector('#status'),retry=document.querySelector('#retry');
 const assets=new URL('./assets/',location.href);
 const asset=p=>new URL(p,assets).href;
-let videoStamp=0;
-if(video.requestVideoFrameCallback){const next=()=>{videoStamp++;video.requestVideoFrameCallback(next);};video.requestVideoFrameCallback(next);}
+let videoStamp=0,lastVideoCallback=-Infinity;
+if(video.requestVideoFrameCallback){const next=(now)=>{videoStamp++;lastVideoCallback=now;video.requestVideoFrameCallback(next);};video.requestVideoFrameCallback(next);}
 let player,stopped=false,last=performance.now(),musicWanted=false,mediaGeneration=0,xmlGeneration=0;
 const music=new Audio(asset('art/sounds/1.mp3'));music.loop=true;music.volume=.65;
 let audioContext;const buffers=new Map();
@@ -38,5 +38,5 @@ function point(e){const r=canvas.getBoundingClientRect();return [(e.clientX-r.le
 canvas.addEventListener('pointermove',()=>player?.pointer());
 canvas.addEventListener('pointerup',e=>{if(!player||stopped)return;audioUnlock();canvas.focus();player.click(...point(e));dispatch();});
 window.addEventListener('keydown',e=>{if(!player||stopped||!['Enter','Escape','ArrowLeft','ArrowRight',' '].includes(e.key))return;e.preventDefault();audioUnlock();if(e.key==='Escape'&&player.scene()==='Intro')stopMedia();player.key(e.key);dispatch();});
-function frame(now){if(stopped)return;try{player.advance(Math.min(250,now-last));last=now;dispatch();assetsQueue.pump(player.needed(),player.prefetch(),now);player.draw(video,video.requestVideoFrameCallback?videoStamp:video.currentTime);requestAnimationFrame(frame);}catch(e){notice(`WebGPU: ${e.message||e}`);console.error(e);}}
+function frame(now){if(stopped)return;try{player.advance(Math.min(250,now-last));last=now;dispatch();assetsQueue.pump(player.needed(),player.prefetch(),now);player.draw(video,now-lastVideoCallback<100?videoStamp:-2-Math.floor(video.currentTime*30));requestAnimationFrame(frame);}catch(e){notice(`WebGPU: ${e.message||e}`);console.error(e);}}
 try{if(!navigator.gpu)throw Error('WebGPU unavailable (use HTTPS or localhost with WebGPU enabled)');await init();const layered=(await fetch(asset('art/background/221.png'),{method:'HEAD'})).ok;player=await WebPlayer.create(canvas,layered);resize();new ResizeObserver(resize).observe(canvas);notice('');requestAnimationFrame(frame);if(new URLSearchParams(location.search).has('debug'))window.presskit={player,video};}catch(e){notice(`Initialization failed: ${e.message||e}`);console.error(e);}
