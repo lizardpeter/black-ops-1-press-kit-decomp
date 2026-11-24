@@ -52,7 +52,11 @@ impl MenuPack {
  }
  pub fn label_layers(&self,r:&Renderer,d:&wgpu::Device,q:&wgpu::Queue,group:u8)->Vec<Layer>{
   if !(1..=3).contains(&group){return vec![];}
-  self.labels[usize::from(group-1)].iter().filter_map(|b|r.mesh(d,q,b.rgba,&b.vertices)).collect()
+  self.label_layers_shifted(r,d,q,group,0.)
+ }
+ fn label_layers_shifted(&self,r:&Renderer,d:&wgpu::Device,q:&wgpu::Queue,group:u8,dx:f32)->Vec<Layer>{
+  if !(1..=3).contains(&group){return vec![];}
+  self.labels[usize::from(group-1)].iter().filter_map(|b|{if dx==0.{r.mesh(d,q,b.rgba,&b.vertices)}else{let v:Vec<_>=b.vertices.iter().map(|p|[p[0]+dx,p[1]]).collect();r.mesh(d,q,b.rgba,&v)}}).collect()
  }
  pub fn group(&self,frame:u16)->u8{self.frames[usize::from(frame.clamp(1,105)-1)]}
  pub fn layers(&self,r:&Renderer,d:&wgpu::Device,q:&wgpu::Queue,group:u8,selected:u8,pressed:bool)->Vec<Layer>{
@@ -61,9 +65,9 @@ impl MenuPack {
   batches.into_iter().filter_map(|((_,rgba),v)|r.mesh(d,q,rgba,&v)).collect()
  }
 }
-#[derive(Default)]pub struct MenuCache{key:Option<(u8,u8,bool)>,layers:Vec<Layer>,labels:Vec<Layer>}
+#[derive(Default)]pub struct MenuCache{key:Option<(u8,u8,bool,bool)>,layers:Vec<Layer>,labels:Vec<Layer>}
 impl MenuCache{
- pub fn update(&mut self,p:&MenuPack,r:&Renderer,d:&wgpu::Device,q:&wgpu::Queue,frame:u16,selected:u8,pressed:bool){let group=p.group(frame);let key=(group,selected,pressed);if self.key==Some(key){return;}if self.key.map(|k|k.0)!=Some(group){self.labels=p.label_layers(r,d,q,group);}self.layers=p.layers(r,d,q,group,selected,pressed);self.key=Some(key);}
+ pub fn update(&mut self,p:&MenuPack,r:&Renderer,d:&wgpu::Device,q:&wgpu::Queue,frame:u16,selected:u8,pressed:bool){let group=p.group(frame);let shifted=group==3&&(82..=84).contains(&frame);let key=(group,selected,pressed,shifted);if self.key==Some(key){return;}if self.key.map(|k|(k.0,k.3))!=Some((group,shifted)){self.labels=p.label_layers_shifted(r,d,q,group,if shifted{-0.85}else{0.});}self.layers=p.layers(r,d,q,group,selected,pressed);self.key=Some(key);}
  pub fn labels(&self)->&[Layer]{&self.labels}
  pub fn layers(&self)->&[Layer]{&self.layers}
 }

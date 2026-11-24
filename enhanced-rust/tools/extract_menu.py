@@ -36,11 +36,11 @@ def pack(data,frames):
         placements=button_placements(sprites[sid]);groups.append(placements)
         out.append(len(placements))
         for row in placements:out+=struct.pack('<Bii',*row)
-    for frame in frames:
+    for n,frame in enumerate(frames,1):
         matches=[(cid,m,a,flt) for cid,m,a,flt,_ in frame if cid in GROUPS]
         assert len(matches)<=1
         if not matches:out.append(0);continue
-        cid,m,a,flt=matches[0];assert [c for c,_,a,_,_ in frame if a][:4]==[96,80,99,cid];assert m==(1,1,0,0,10537,860) and a==256 and not flt
+        cid,m,a,flt=matches[0];assert [c for c,_,a,_,_ in frame if a][:4]==[96,80,99,cid];assert m==(1,1,0,0,10520 if cid==136 and n in (82,83,84) else 10537,860) and a==256 and not flt,(n,cid,m,a,flt)
         out.append(GROUPS[cid])
     for sid in BUTTONS:
         for state in range(3):

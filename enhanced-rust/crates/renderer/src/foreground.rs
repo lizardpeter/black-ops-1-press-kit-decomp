@@ -7,10 +7,10 @@ struct MeshBatch{rgba:[u8;4],vertices:Vec<[f32;2]>}
 pub struct ForegroundTimeline{vector_menu:bool,explicit_menu_depth:bool,dimensions:Vec<(u32,u32)>,codecs:Vec<u8>,meshes:Vec<Vec<MeshBatch>>,menu_after:Vec<u8>,frames:Vec<Vec<Placement>>}
 impl ForegroundTimeline{
  pub fn read(bytes:&[u8])->Result<Self,&'static str>{
-  let v4=bytes.get(..4)==Some(b"PFG4");let v3=v4||bytes.get(..4)==Some(b"PFG3");let vector_menu=v3||bytes.get(..4)==Some(b"PFG2");if (!vector_menu&&bytes.get(..4)!=Some(b"PFG1"))||bytes.len()>if v4{8*1024*1024}else{65536}{return Err("invalid foreground timeline");}let mut p=4;
+  let v4=bytes.get(..4)==Some(b"PFG4");let v3=v4||bytes.get(..4)==Some(b"PFG3");let vector_menu=v3||bytes.get(..4)==Some(b"PFG2");if (!vector_menu&&bytes.get(..4)!=Some(b"PFG1"))||bytes.len()>(if v4{8*1024*1024}else{65536}){return Err("invalid foreground timeline");}let mut p=4;
   fn take<const N:usize>(b:&[u8],p:&mut usize)->Result<[u8;N],&'static str>{let end=p.checked_add(N).ok_or("timeline overflow")?;let data=b.get(*p..end).ok_or("truncated foreground")?;*p=end;Ok(data.try_into().unwrap())}
   let count=u16::from_le_bytes(take(bytes,&mut p)?) as usize;let frames=u16::from_le_bytes(take(bytes,&mut p)?);if !(1..=256).contains(&count)||frames!=105{return Err("invalid foreground counts");}
-  let mut dimensions=Vec::with_capacity(count);let mut memory=0u64;let mut codecs=Vec::with_capacity(count);for _ in 0..count{let w=u32::from(u16::from_le_bytes(take(bytes,&mut p)?));let h=u32::from(u16::from_le_bytes(take(bytes,&mut p)?));if w==0||h==0||w>4096||h>4096{return Err("invalid sprite dimensions");}memory+=u64::from(w)*u64::from(h)*4;dimensions.push((w,h));let codec=if v3{take::<1>(bytes,&mut p)?[0]}else{0};if codec>if v4{2}else{1}{return Err("invalid foreground codec");}if codec==2&&(w,h)!=(1,1){return Err("invalid mesh placeholder");}codecs.push(codec);}if memory>96*1024*1024{return Err("foreground texture budget exceeded");}
+  let mut dimensions=Vec::with_capacity(count);let mut memory=0u64;let mut codecs=Vec::with_capacity(count);for _ in 0..count{let w=u32::from(u16::from_le_bytes(take(bytes,&mut p)?));let h=u32::from(u16::from_le_bytes(take(bytes,&mut p)?));if w==0||h==0||w>4096||h>4096{return Err("invalid sprite dimensions");}memory+=u64::from(w)*u64::from(h)*4;dimensions.push((w,h));let codec=if v3{take::<1>(bytes,&mut p)?[0]}else{0};if codec>(if v4{2}else{1}){return Err("invalid foreground codec");}if codec==2&&(w,h)!=(1,1){return Err("invalid mesh placeholder");}codecs.push(codec);}if memory>96*1024*1024{return Err("foreground texture budget exceeded");}
   let mut timeline=Vec::with_capacity(105);let mut menu_after=Vec::with_capacity(105);for _ in 0..frames{let n=take::<1>(bytes,&mut p)?[0];let after=if v3{take::<1>(bytes,&mut p)?[0]}else{4};if v3&&after!=255&&(after==0||after>n){return Err("invalid menu insertion");}menu_after.push(after);if n>64{return Err("invalid placement count");}let mut placements=vec![];
    for _ in 0..n{let a=Placement{image:u16::from_le_bytes(take(bytes,&mut p)?) as usize,x:i32::from_le_bytes(take(bytes,&mut p)?),y:i32::from_le_bytes(take(bytes,&mut p)?),width:u32::from_le_bytes(take(bytes,&mut p)?),height:u32::from_le_bytes(take(bytes,&mut p)?),alpha:u16::from_le_bytes(take(bytes,&mut p)?)};
     if a.image>=count||a.alpha>256||a.width==0||a.height==0||a.width>100000||a.height>100000||a.x.unsigned_abs()>100000||a.y.unsigned_abs()>100000||placements.iter().any(|b:&Placement|b.image==a.image){return Err("invalid or duplicate sprite placement");}placements.push(a);}
@@ -23,7 +23,7 @@ impl ForegroundTimeline{
  pub fn frame(&self,n:u16)->&[Placement]{&self.frames[usize::from(n.clamp(1,105)-1)]}
  pub fn filename(&self,i:usize)->String{format!("{i}.{}",match self.codecs.get(i){Some(1)=>"jpg",Some(2)=>"mesh",_=>"png"})}
  pub fn validate_menu(&self,menu:&MenuPack)->Result<(),&'static str>{
-  if !self.vector_menu{return Err("menu pack requires PFG2 or PFG3");}
+  if !self.vector_menu{return Err("menu pack requires PFG2, PFG3 or PFG4");}
   if self.explicit_menu_depth{for f in 1..=105u16{let active=self.menu_after[usize::from(f-1)]!=255;if active!=(menu.group(f)!=0){return Err("menu activation does not match foreground depth map");}}}
   Ok(())
  }
@@ -46,3 +46,24 @@ impl ForegroundArt{
  pub fn layers(&self)->Vec<&Layer>{let Some(f)=self.last else{return vec![];};let mut layers=vec![];for (i,p) in self.timeline.frame(f).iter().enumerate(){if let Some(l)=self.textures[p.image].as_ref(){layers.push(l);}if let Some(mesh)=self.mesh_layers.get(&p.image){layers.extend(mesh.iter());}if i+1==usize::from(self.timeline.menu_after[usize::from(f-1)])&&self.menu.as_ref().is_some_and(|m|m.group(f)>0){layers.extend(self.menu_cache.labels());layers.extend(self.menu_cache.layers());}}layers}
 }
 #[cfg(test)]mod tests{use super::*;#[test]fn rejects_bad_inputs(){let mut b=b"PFG1\x01\0\x69\0\x01\0\x01\0".to_vec();b.extend([0;105]);let t=ForegroundTimeline::read(&b).unwrap();assert_eq!(t.count(),1);assert!(t.frame(105).is_empty());b.push(0);assert!(ForegroundTimeline::read(&b).is_err());b.pop();b[8]=0;assert!(ForegroundTimeline::read(&b).is_err());}}
+
+#[cfg(test)]mod mesh_tests{
+ use super::*;
+ fn fixture()->Vec<u8>{
+  let mut b=b"PFG4\x01\0\x69\0\x01\0\x01\0\x02".to_vec();
+  b.extend([1,255]);b.extend(0u16.to_le_bytes());b.extend(40i32.to_le_bytes());b.extend((-20i32).to_le_bytes());b.extend(20u32.to_le_bytes());b.extend(20u32.to_le_bytes());b.extend(128u16.to_le_bytes());
+  for _ in 1..105{b.extend([0,255]);}
+  b.extend(1u16.to_le_bytes());b.extend([255,255,255,255]);b.extend(3u32.to_le_bytes());
+  for n in [0f32,0.,1.,0.,0.,1.]{b.extend(n.to_le_bytes());}b
+ }
+ #[test]fn inline_geometry_needs_no_texture_and_retains_transform(){
+  let t=ForegroundTimeline::read(&fixture()).unwrap();assert!(t.is_mesh(0));assert_eq!(t.frame(1)[0].rect(),[2.,-1.,1.,1.]);assert_eq!(t.frame(1)[0].alpha,128);
+  assert_eq!(t.meshes[0][0].vertices,vec![[0.,0.],[1.,0.],[0.,1.]]);
+  let a=ForegroundArt::new(t);assert!(a.missing().is_empty());assert!(a.missing_frame(1).is_empty());
+ }
+ #[test]fn rejects_corrupt_geometry(){
+  let mut b=fixture();b.pop();assert!(ForegroundTimeline::read(&b).is_err());
+  let mut b=fixture();let n=b.len();b[n-4..].copy_from_slice(&f32::NAN.to_le_bytes());assert!(ForegroundTimeline::read(&b).is_err());
+  let mut b=fixture();b[12]=255;assert!(ForegroundTimeline::read(&b).is_err());
+ }
+}
