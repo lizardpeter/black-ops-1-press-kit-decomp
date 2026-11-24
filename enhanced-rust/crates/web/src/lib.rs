@@ -22,9 +22,11 @@ impl WebPlayer{
         let surface=instance.create_surface(wgpu::SurfaceTarget::Canvas(canvas.clone())).map_err(error)?;
         let adapter=instance.request_adapter(&wgpu::RequestAdapterOptions{compatible_surface:Some(&surface),..Default::default()}).await.ok_or_else(||JsValue::from_str("WebGPU adapter unavailable"))?;
         let (device,queue)=adapter.request_device(&wgpu::DeviceDescriptor::default(),None).await.map_err(error)?;
-        let config=surface.get_default_config(&adapter,canvas.width().max(1),canvas.height().max(1)).ok_or_else(||JsValue::from_str("surface configuration unavailable"))?;
+        let mut config=surface.get_default_config(&adapter,canvas.width().max(1),canvas.height().max(1)).ok_or_else(||JsValue::from_str("surface configuration unavailable"))?;
+        let render_format=config.format.add_srgb_suffix();
+        if render_format!=config.format{config.view_formats.push(render_format);}
         surface.configure(&device,&config);
-        let renderer=Renderer::new(&device,config.format,VS,FS,"vertexMain","fragmentMain");
+        let renderer=Renderer::new(&device,render_format,VS,FS,"vertexMain","fragmentMain");
         Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.})
     }
     pub fn resize(&mut self,w:u32,h:u32){let w=w.max(1);let h=h.max(1);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
@@ -62,20 +64,23 @@ impl WebPlayer{
     }
     pub fn draw(&mut self,video:HtmlVideoElement)->Result<(),JsValue>{
         let media=matches!(self.app.scene(),Scene::Intro|Scene::Video)&&!self.app.playing;
+        let paused=video.paused();let progress=if video.duration().is_finite()&&video.duration()>0.{(video.current_time()/video.duration()).clamp(0.,1.) as f32}else{0.};
         if media&&video.ready_state()>=2&&video.video_width()>0{
             let source=wgpu::ExternalImageSource::HTMLVideoElement(video);
             if self.video.as_ref().is_some_and(|v|v.texture.width()==source.width()&&v.texture.height()==source.height()){
                 Renderer::copy_external(&self.queue,self.video.as_ref().unwrap(),source);
             }else{self.video=Some(self.renderer.external_layer(&self.device,&self.queue,source,[0.,0.,1280.,720.]));}
         }
+        let vectors=if self.app.scene()==Scene::Video{self.renderer.video_vectors(&self.device,&self.queue,self.app.controls.y as f32,paused,progress)}else{vec![]};
         let paths=self.paths();self.serial+=1;
         for p in &paths{if let Some((layer,used))=self.images.get_mut(p){*used=self.serial;if p.contains("_controls/")&&self.control_y!=self.app.controls.y as f32{self.renderer.reposition(&self.device,layer,[200.,self.app.controls.y as f32,880.,90.]);}}}
         self.control_y=self.app.controls.y as f32;
         let frame=match self.surface.get_current_texture(){Ok(f)=>f,Err(wgpu::SurfaceError::Lost|wgpu::SurfaceError::Outdated)=>{self.surface.configure(&self.device,&self.config);return Ok(());},Err(e)=>return Err(error(e))};
-        let view=frame.texture.create_view(&Default::default());let mut encoder=self.device.create_command_encoder(&Default::default());
+        let view=frame.texture.create_view(&wgpu::TextureViewDescriptor{format:Some(self.config.format.add_srgb_suffix()),..Default::default()});let mut encoder=self.device.create_command_encoder(&Default::default());
         let stage=Stage::fit(self.config.width.into(),self.config.height.into());let mut layers=vec![];
         if media{if let Some(v)=&self.video{layers.push(v);}}
         for p in paths{if let Some((layer,_))=self.images.get(&p){layers.push(layer);}}
+        layers.extend(vectors.iter());
         self.renderer.render(&mut encoder,&view,&layers,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
         self.queue.submit([encoder.finish()]);frame.present();Ok(())
     }

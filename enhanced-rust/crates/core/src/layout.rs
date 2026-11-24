@@ -49,8 +49,8 @@ pub fn hit_media(scene:Scene,x:f64,y:f64,cy:f64)->Hit{
         if inside(x,y,215.,cy,112.,31.){return Hit::Previous;}
         if inside(x,y,365.,cy,114.6,31.){return Hit::Next;}
     }else{
-        if inside(x,y,215.,cy,112.,31.){return Hit::PlayPause;}
-        if inside(x,y,241.,cy+48.,785.,24.){return Hit::Seek;}
+        if inside(x,y,215.,cy,66.,31.){return Hit::PlayPause;}
+        if inside(x,y,204.,cy+48.,872.,24.){return Hit::Seek;}
     }
     Hit::None
 }

@@ -1,9 +1,10 @@
 //! Portable texture compositor. Shader sources are offline Slang output.
 use wgpu::util::DeviceExt;
+pub mod vector;
 #[repr(C)]
 #[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
 pub struct Vertex{pub pos:[f32;2],pub uv:[f32;2]}
-pub struct Layer {pub binding:wgpu::BindGroup,pub vertices:wgpu::Buffer,pub texture:wgpu::Texture}
+pub struct Layer {pub binding:wgpu::BindGroup,pub vertices:wgpu::Buffer,pub texture:wgpu::Texture,pub count:u32}
 pub struct Renderer {pipeline:wgpu::RenderPipeline,layout:wgpu::BindGroupLayout,sampler:wgpu::Sampler}
 impl Renderer{
     pub fn new(device:&wgpu::Device,format:wgpu::TextureFormat,vertex:&str,fragment:&str,vs_entry:&str,fs_entry:&str)->Self{
@@ -44,7 +45,13 @@ impl Renderer{
         let binding=device.create_bind_group(&wgpu::BindGroupDescriptor{label:None,layout:&self.layout,entries:&[
             wgpu::BindGroupEntry{binding:0,resource:wgpu::BindingResource::TextureView(&view)},
             wgpu::BindGroupEntry{binding:1,resource:wgpu::BindingResource::Sampler(&self.sampler)}
-        ]});Layer{binding,vertices,texture}
+        ]});Layer{binding,vertices,texture,count:6}
+    }
+    pub fn polygon(&self,device:&wgpu::Device,queue:&wgpu::Queue,rgba:[u8;4],points:&[[f32;2]])->Option<Layer>{
+        let triangles=vector::triangulate(points)?;
+        let verts:Vec<_>=triangles.iter().map(|p|Vertex{pos:[p[0]/640.-1.,1.-p[1]/360.],uv:[0.5,0.5]}).collect();
+        let mut layer=self.layer(device,queue,&rgba,1,1,[0.,0.,1.,1.]);
+        layer.vertices=device.create_buffer_init(&wgpu::util::BufferInitDescriptor{label:Some("vector mesh"),contents:bytemuck::cast_slice(&verts),usage:wgpu::BufferUsages::VERTEX});layer.count=verts.len() as u32;Some(layer)
     }
     pub fn reposition(&self,device:&wgpu::Device,layer:&mut Layer,rect:[f32;4]){layer.vertices=self.vertices(device,rect);}
     #[cfg(target_arch="wasm32")]
@@ -62,6 +69,6 @@ impl Renderer{
     pub fn render(&self,encoder:&mut wgpu::CommandEncoder,target:&wgpu::TextureView,layers:&[&Layer],viewport:[f32;4]){
         let mut pass=encoder.begin_render_pass(&wgpu::RenderPassDescriptor{label:None,color_attachments:&[Some(wgpu::RenderPassColorAttachment{view:target,resolve_target:None,ops:wgpu::Operations{load:wgpu::LoadOp::Clear(wgpu::Color::BLACK),store:wgpu::StoreOp::Store}})],depth_stencil_attachment:None,timestamp_writes:None,occlusion_query_set:None});
         let [x,y,w,h]=viewport;pass.set_viewport(x,y,w,h,0.,1.);pass.set_pipeline(&self.pipeline);
-        for layer in layers{pass.set_bind_group(0,&layer.binding,&[]);pass.set_vertex_buffer(0,layer.vertices.slice(..));pass.draw(0..6,0..1);}
+        for layer in layers{pass.set_bind_group(0,&layer.binding,&[]);pass.set_vertex_buffer(0,layer.vertices.slice(..));pass.draw(0..layer.count,0..1);}
     }
 }

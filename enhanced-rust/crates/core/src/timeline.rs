@@ -74,7 +74,7 @@ impl App{
             Hit::Previous if scene==Scene::Gallery=>{if let Some(p)=self.gallery.previous(){self.effects.push(Effect::Image(p));}}
             Hit::Next if scene==Scene::Gallery=>{if let Some(p)=self.gallery.next(){self.effects.push(Effect::Image(p));}}
             Hit::PlayPause if scene==Scene::Video=>self.effects.push(Effect::ToggleVideo),
-            Hit::Seek if scene==Scene::Video=>self.effects.push(Effect::Seek(((x-241.)/785.).clamp(0.,1.))),
+            Hit::Seek if scene==Scene::Video=>self.effects.push(Effect::Seek(((x-204.)/872.).clamp(0.,1.))),
             _=>{}
         }
     }
