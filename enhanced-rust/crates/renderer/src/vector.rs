@@ -35,6 +35,10 @@ pub fn triangulate(points:&[[f32;2]])->Option<Vec<[f32;2]>>{
 impl Renderer{
     /// Replace the baked play/pause skin and time field with original vector geometry.
     /// Progress width is an enhanced native mapping of the original progress shape.
+    pub fn gallery_vectors(&self,device:&wgpu::Device,queue:&wgpu::Queue,y:f32,text:&str)->Vec<Layer>{
+        let mut layers=vec![self.layer(device,queue,&GOLD,1,1,[861.,y,93.,31.])];
+        if let Some(t)=self.counter(device,queue,text,y,true){layers.push(t);}layers
+    }
     pub fn video_vectors(&self,device:&wgpu::Device,queue:&wgpu::Queue,y:f32,paused:bool,progress:f32)->Vec<Layer>{
         let mut layers=vec![];
         let mut add=|p:&[[f32;2]],x:f32,dy:f32,sx:f32,color:[u8;4]|{

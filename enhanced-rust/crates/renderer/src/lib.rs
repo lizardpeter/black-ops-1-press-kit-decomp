@@ -1,6 +1,7 @@
 //! Portable texture compositor. Shader sources are offline Slang output.
 use wgpu::util::DeviceExt;
 pub mod vector;
+pub mod font;
 #[repr(C)]
 #[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
 pub struct Vertex{pub pos:[f32;2],pub uv:[f32;2]}
@@ -49,6 +50,10 @@ impl Renderer{
     }
     pub fn polygon(&self,device:&wgpu::Device,queue:&wgpu::Queue,rgba:[u8;4],points:&[[f32;2]])->Option<Layer>{
         let triangles=vector::triangulate(points)?;
+        self.mesh(device,queue,rgba,&triangles)
+    }
+    pub fn mesh(&self,device:&wgpu::Device,queue:&wgpu::Queue,rgba:[u8;4],triangles:&[[f32;2]])->Option<Layer>{
+        if triangles.is_empty()||triangles.len()%3!=0{return None;}
         let verts:Vec<_>=triangles.iter().map(|p|Vertex{pos:[p[0]/640.-1.,1.-p[1]/360.],uv:[0.5,0.5]}).collect();
         let mut layer=self.layer(device,queue,&rgba,1,1,[0.,0.,1.,1.]);
         layer.vertices=device.create_buffer_init(&wgpu::util::BufferInitDescriptor{label:Some("vector mesh"),contents:bytemuck::cast_slice(&verts),usage:wgpu::BufferUsages::VERTEX});layer.count=verts.len() as u32;Some(layer)

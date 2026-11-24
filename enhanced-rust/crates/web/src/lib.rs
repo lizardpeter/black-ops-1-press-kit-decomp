@@ -66,12 +66,16 @@ impl WebPlayer{
         let media=matches!(self.app.scene(),Scene::Intro|Scene::Video)&&!self.app.playing;
         let paused=video.paused();let progress=if video.duration().is_finite()&&video.duration()>0.{(video.current_time()/video.duration()).clamp(0.,1.) as f32}else{0.};
         if media&&video.ready_state()>=2&&video.video_width()>0{
-            let source=wgpu::ExternalImageSource::HTMLVideoElement(video);
+            let source=wgpu::ExternalImageSource::HTMLVideoElement(video.clone());
             if self.video.as_ref().is_some_and(|v|v.texture.width()==source.width()&&v.texture.height()==source.height()){
                 Renderer::copy_external(&self.queue,self.video.as_ref().unwrap(),source);
             }else{self.video=Some(self.renderer.external_layer(&self.device,&self.queue,source,[0.,0.,1280.,720.]));}
         }
-        let vectors=if self.app.scene()==Scene::Video{self.renderer.video_vectors(&self.device,&self.queue,self.app.controls.y as f32,paused,progress)}else{vec![]};
+        let vectors=if self.app.scene()==Scene::Video{
+            let mut v=self.renderer.video_vectors(&self.device,&self.queue,self.app.controls.y as f32,paused,progress);
+            let text=self.media_time(video.current_time(),if video.duration().is_finite(){video.duration()}else{0.});
+            if let Some(t)=self.renderer.counter(&self.device,&self.queue,&text,self.app.controls.y as f32,false){v.push(t);}v
+        }else if self.app.scene()==Scene::Gallery{self.renderer.gallery_vectors(&self.device,&self.queue,self.app.controls.y as f32,&self.app.gallery.counter())}else{vec![]};
         let paths=self.paths();self.serial+=1;
         for p in &paths{if let Some((layer,used))=self.images.get_mut(p){*used=self.serial;if p.contains("_controls/")&&self.control_y!=self.app.controls.y as f32{self.renderer.reposition(&self.device,layer,[200.,self.app.controls.y as f32,880.,90.]);}}}
         self.control_y=self.app.controls.y as f32;

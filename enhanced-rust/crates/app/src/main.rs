@@ -45,7 +45,11 @@ impl Gpu{
             if let Some(v)=&self.video{self.queue.write_texture(wgpu::TexelCopyTextureInfo{texture:&v.texture,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},p,wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(media::WIDTH*4),rows_per_image:Some(media::HEIGHT)},wgpu::Extent3d{width:media::WIDTH,height:media::HEIGHT,depth_or_array_layers:1});}else{self.video=Some(self.renderer.layer(&self.device,&self.queue,p,media::WIDTH,media::HEIGHT,[0.,0.,1280.,720.]));}
         }else{self.video=None;}}
         if matches!(app.scene(),Scene::Video|Scene::Gallery){if self.chrome_kind!=app.scene(){self.chrome=self.image(&root.join(if app.scene()==Scene::Video{"art/video_controls/1.png"}else{"art/gallery_controls/1.png"}),[200.,app.controls.y as f32,880.,90.]);self.chrome_kind=app.scene();}if let Some(c)=&mut self.chrome{self.renderer.reposition(&self.device,c,[200.,app.controls.y as f32,880.,90.]);}}else{self.chrome=None;self.chrome_kind=Scene::Launcher;}
-        let vectors=if app.scene()==Scene::Video{self.renderer.video_vectors(&self.device,&self.queue,app.controls.y as f32,media.paused,if media.duration()>0.{(media.position()/media.duration())as f32}else{0.})}else{vec![]};
+        let vectors=if app.scene()==Scene::Video{
+            let mut v=self.renderer.video_vectors(&self.device,&self.queue,app.controls.y as f32,media.paused,if media.duration()>0.{(media.position()/media.duration())as f32}else{0.});
+            let text=format!("{}/{}",presskit_core::flash_time(media.position()),presskit_core::flash_time(media.duration()));
+            if let Some(t)=self.renderer.counter(&self.device,&self.queue,&text,app.controls.y as f32,false){v.push(t);}v
+        }else if app.scene()==Scene::Gallery{self.renderer.gallery_vectors(&self.device,&self.queue,app.controls.y as f32,&app.gallery.counter())}else{vec![]};
         let size=self.window.inner_size();if size.width==0||size.height==0{return;}
         let frame=match self.surface.get_current_texture(){Ok(f)=>f,Err(wgpu::SurfaceError::Lost|wgpu::SurfaceError::Outdated)=>{self.resize(size.width,size.height);return;},Err(e)=>{eprintln!("surface: {e}");return;}};
         let view=frame.texture.create_view(&Default::default());
