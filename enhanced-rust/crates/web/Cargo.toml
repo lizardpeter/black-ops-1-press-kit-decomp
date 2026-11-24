@@ -1,0 +1,15 @@
+[package]
+name = "presskit-web"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+[lib]
+crate-type = ["cdylib", "rlib"]
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+presskit-core.workspace = true
+presskit-renderer.workspace = true
+wgpu.workspace = true
+wasm-bindgen = "=0.2.130"
+wasm-bindgen-futures = "=0.4.80"
+js-sys = "=0.3.107"
+web-sys = { version = "=0.3.107", features = ["HtmlCanvasElement", "HtmlVideoElement", "HtmlMediaElement", "ImageBitmap"] }

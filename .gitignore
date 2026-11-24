@@ -9,3 +9,6 @@ __pycache__/
 
 /enhanced-rust/target/
 /enhanced-rust/.cargo/
+
+/enhanced-rust/web/pkg/
+/enhanced-rust/web/assets/
