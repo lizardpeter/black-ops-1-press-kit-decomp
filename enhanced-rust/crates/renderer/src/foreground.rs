@@ -46,7 +46,7 @@ impl ForegroundTimeline{
     let up=read_batches(&mut p,selector!=255)?;let over=read_batches(&mut p,false)?;let down=read_batches(&mut p,false)?;
     buttons.insert(i,(selector,[up,over,down]));
    }else if codec==4{
-    let selector=take::<1>(bytes,&mut p)?[0];if !(240..=244).contains(&selector)||!selectors.insert(selector){return Err("invalid textured selector");}
+    let selector=take::<1>(bytes,&mut p)?[0];if selector!=0&&(!(240..=244).contains(&selector)||!selectors.insert(selector)){return Err("invalid textured selector");}
     let mut states=[TextureState{rect:[0.;4],uv:[0.;4]};3];
     for state in &mut states{
      for x in state.rect.iter_mut().chain(state.uv.iter_mut()){*x=f32::from_le_bytes(take(bytes,&mut p)?);if !x.is_finite(){return Err("invalid textured state");}}

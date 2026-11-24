@@ -21,7 +21,7 @@ def extract(data):
                 assert code in (6,21);im=Image.open(io.BytesIO(d[2:])).convert('RGBA')
             images[i]=im
         return images[i]
-    def visit(cid,m,out):
+    def visit(cid,m,out,scaled=False):
         code,d=defs[cid]
         if code==39:
             assert struct.unpack_from('<H',d,2)[0]==1
@@ -31,7 +31,7 @@ def extract(data):
                 assert c==26
                 r=Bits(v);assert r.u8()==6;dep=r.u16();i=r.u16();local=r.matrix()
                 assert dep>depth and r.at//8==len(v);depth=dep
-                visit(i,compose(m,local),out)
+                visit(i,compose(m,local),out,scaled)
             return
         if code in (11,33):
             batches=render_character(ts,cid)
@@ -45,9 +45,10 @@ def extract(data):
                     xs=sorted({a[0] for a,_,_ in path});ys=sorted({a[1] for a,_,_ in path})
                     assert len(xs)==len(ys)==2 and mat[4:]==(xs[0],ys[0])
                     im=image(i);assert (xs[1]-xs[0],ys[1]-ys[0])==(im.width*20,im.height*20)
-                    assert m[:4]==(1,1,0,0)
+                    assert m[2:4]==(0,0) and m[0]>0 and m[1]>0
+                    if not scaled:assert m[:4]==(1,1,0,0)
                     x,y=transform(m,(xs[0],ys[0]))
-                    out.append(('bitmap',i,x,y,im.width*20,im.height*20))
+                    out.append(('bitmap',i,x,y,im.width*20*m[0],im.height*20*m[1]))
                 else:
                     batches.append((fill,tessellate(paths,.2)))
         if batches:
@@ -58,4 +59,19 @@ def extract(data):
     for cid in ROOTS:
         out=[];visit(cid,(1,1,0,0,0,0),out);assert out;roots[cid]=out
     assert 84 in images and any(kind=='mesh' for kind,*_ in roots[96])
-    return images,meshes,roots
+    from extract_labels import LABELS
+    from extract_thumbnails import SHAPES
+    menus={}
+    for sid in (136,157,220):
+        c,d=defs[sid];out=[]
+        for c,v in tags(d,4):
+            if c!=26 or not v[0]&2:continue
+            r=Bits(v);flags=r.u8();depth=r.u16();i=r.u16()
+            if i in (122,128):
+                assert flags==6;m=r.matrix();assert r.at//8==len(v)
+                visit(i,m,out,True)
+            else:assert i in LABELS[sid] or i in (118,132,155,219,SHAPES[sid])
+        assert len(out)==(9 if sid==136 else 1)
+        assert all(row[0]=='bitmap' for row in out)
+        menus[sid]=out
+    return images,meshes,roots,menus

@@ -171,14 +171,17 @@ def nested_sidebar(data):
     raw=b'FWS'+data[3:8]+zlib.decompress(data[8:]);r=Bits(raw,8);r.rect()
     d=next(d for c,d in tags(raw,r.at//8+4) if c==39 and struct.unpack_from('<H',d)[0]==51)
     assert struct.unpack_from('<H',d,2)[0]==4
-    f=1;found=[];removed=[]
+    f=1;found=[];removed=[];intro=[]
     for c,v in tags(d,4):
         if c==1:f+=1
         elif c==28 and struct.unpack('<H',v)[0]==3:removed.append(f)
         elif c==70:
             r=Bits(v);flags=r.u8();f2=r.u8();depth=r.u16()
-            if not flags&2:continue
-            cid=r.u16()
+            cid=r.u16() if flags&2 else None
+            if depth==1:
+                assert f2==1 and (flags,cid)==((6,24) if f==1 else (5,None))
+                m=r.matrix();assert m[:4]==(1,1,0,0) and blur_y(v[r.at//8:])==15.
+                intro.append(m[4:]);continue
             if cid!=50:continue
             assert (flags,f2,depth,f)==(38,1,3,1)
             m=r.matrix();assert m[:4]==(1,1,0,0)
@@ -186,166 +189,120 @@ def nested_sidebar(data):
             found.append((m[4],m[5],blur_y(v[r.at//8:])))
     assert len(found)==1 and removed==[2]
     assert found[0]==(639,14815,15.)
-    return found[0]
+    assert intro==[(0,0),(0,806),(0,1613),(0,2420)]
+    return (*found[0],intro)
 
 def build(data,output,jar):
-    version,defs,frames=source(data,vector_menu=True);output.mkdir(parents=True,exist_ok=True)
+    # Runtime foreground contains original bitmaps and source geometry only.
+    # FFDec is retained in the CLI for legacy callers and reference exports,
+    # but is not invoked to generate any runtime foreground artwork.
+    _,_,frames=source(data);output.mkdir(parents=True,exist_ok=True)
     from extract_menu import pack as pack_menu
     (output/'menu.pkm').write_bytes(pack_menu(data,frames))
-    native,overlays,splits,extra=native_art(data,frames)
     from extract_bitmap_art import extract as direct_art
-    bitmaps,solid_runs,static_roots=direct_art(data)
-    overlays.update(solid_runs)
-    quit_states,wallpaper_states,wallpaper_places=native_buttons(data)
+    bitmaps,overlays,static_roots,menu_strips=direct_art(data)
     from extract_sidebar import extract as sidebar_extract
-    sidebar=sidebar_extract(data);nested_x,nested_y,nested_blur=nested_sidebar(data)
+    sidebar=sidebar_extract(data);nested_x,nested_y,nested_blur,intro=nested_sidebar(data)
     from extract_controls import tags as dictionary,render_character
     overlays[63999]=render_character(dictionary(data),132)
+    overlays[77]=[((0,0,0,255),[(0,0),(0,14400),(25600,0),(25600,0),(0,14400),(25600,14400)])]
     for kind,key,value in sidebar:
         if kind=='mesh':overlays[key]=value
-    # Raster only the depth runs that remain after native conversion.
-    variants=set()
-    for frame in frames:
-        for cid,_,alpha,flt,_ in frame:
-            if not alpha or cid==50 or cid in static_roots or (cid in native and not flt) or (cid==115 and alpha==256 and not flt):continue
-            parts=splits.get(cid) if cid==62 or (alpha==256 and not flt) else None
-            if parts:
-                variants.update((cid,b'',key) for kind,key in parts if kind=='raster')
-            else:variants.add((cid,flt,cid))
-    variants=sorted(variants)
-    # Render all reusable source characters in one synthetic, script-free timeline.
-    body=bytearray(defs+extra);keys=[]
-    for i,(cid,flt,export_id) in enumerate(variants):
-        if i:body+=tag(28,struct.pack('<H',1))
-        m=matrix(*ORIGIN)
-        if flt:body+=tag(70,struct.pack('<BBHH',6,1,1,export_id)+m+flt)
-        else:body+=tag(26,struct.pack('<BHH',6,1,export_id)+m)
-        count=4 if cid==51 else 1
-        for n in range(count):body+=tag(1);keys.append((cid,flt,export_id,n))
-    body+=tag(0);header=rect(*SIZE)+struct.pack('<HH',24*256,len(keys));swf=b'FWS'+version+struct.pack('<I',8+len(header)+len(body))+header+body
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp=Path(tmp);(tmp/'characters.swf').write_bytes(swf);(tmp/'frames').mkdir()
-        subprocess.run(['java','-Djava.awt.headless=true','-jar',str(jar),'-ignorebackground','-format','frame:png','-export','frame',str(tmp/'frames'),str(tmp/'characters.swf')],check=True,stdout=subprocess.DEVNULL)
-        paths=sorted((tmp/'frames').rglob('*.png'),key=lambda p:int(p.stem));assert len(paths)==len(keys),(len(paths),len(keys))
-        assets={};metadata=[];digests={}
-        for key,p in zip(keys,paths):
-            im=Image.open(p).convert('RGBA');assert im.size==SIZE;box=im.getchannel('A').getbbox()
-            if box is None:assets[key]=None;continue
-            if box[0]==0 or box[1]==0 or box[2]==SIZE[0] or box[3]==SIZE[1]:raise ValueError(f'character clipped at export: {key} {box}')
-            im=im.crop(box);digest=hashlib.sha256(im.tobytes()+struct.pack('<II',*im.size)).digest()
-            if digest not in digests:
-                idx=len(metadata);digests[digest]=idx;im.save(output/f'{idx}.png',optimize=True);metadata.append(im.size)
-            assets[key]=(digests[digest],box[0]-ORIGIN[0],box[1]-ORIGIN[1])
-    bitmap_slots={}
-    for cid,im in sorted(bitmaps.items()):
-        idx=len(metadata);bitmap_slots[cid]=idx;metadata.append(im.size);im.save(output/f'{idx}.png',optimize=True)
-    mesh_slots={};overlay_slots={};meshes=[]
-    for table,dest in ((native,mesh_slots),(overlays,overlay_slots)):
-        for cid,batches in sorted(table.items()):
-            dest[cid]=len(metadata);metadata.append((1,1));meshes.append(batches)
-    button_slots={};button_meshes=[]
+    quit_states,wallpaper_states,wallpaper_places=native_buttons(data)
+    metadata=[];codecs=[];bitmap_slots={};overlay_slots={};meshes=[];button_slots={};button_meshes=[];sidebar_slots={};texture_states=[]
+    def slot(w,h,codec):
+        i=len(metadata);metadata.append((w,h));codecs.append(codec);return i
+    def png(im,codec=0):
+        i=slot(*im.size,codec);im.save(output/f'{i}.png',optimize=True);return i
+    for cid,im in sorted(bitmaps.items()):bitmap_slots[cid]=png(im)
+    # #51 and #53 use the same original #22 image but independent placements.
+    intro_slot=png(bitmaps[22])
+    for cid,batches in sorted(overlays.items()):
+        overlay_slots[cid]=slot(1,1,2);meshes.append(batches)
     for selector,states in [(255,quit_states)]+[(i,wallpaper_states) for i,_,_ in wallpaper_places]:
-        button_slots[selector]=len(metadata);metadata.append((1,1));button_meshes.append((selector,states))
-    sidebar_slots={};texture_states=[]
+        button_slots[selector]=slot(1,1,3);button_meshes.append((selector,states))
     for kind,key,value in sidebar:
         if kind=='mesh':continue
-        im,states=value;idx=len(metadata);sidebar_slots[key]=idx
-        metadata.append(im.size);im.save(output/f'{idx}.png',optimize=True)
-        texture_states.append((key,states))
+        im,states=value;sidebar_slots[key]=png(im,4);texture_states.append((key,states))
+    strip_slots={}
+    for sid,rows in menu_strips.items():
+        strip_slots[sid]=[]
+        for kind,key,x,y,w,h in rows:
+            i=png(bitmaps[key],4);strip_slots[sid].append(i)
+            texture_states.append((0,[((x/20,y/20,w/20,h/20),(0.,0.,1.,1.))]*3))
     from extract_thumbnails import extract as extract_thumbnails
-    thumbnails=extract_thumbnails(data);jpeg_start=len(metadata);direct={}
-    for sid,rows in thumbnails.items():
+    direct={}
+    for sid,rows in extract_thumbnails(data).items():
         direct[sid]=[]
         for cid,x,y,w,h,iw,ih,raw in rows:
-            idx=len(metadata);metadata.append((iw,ih));(output/f'{idx}.jpg').write_bytes(raw);direct[sid].append((idx,x,y,w,h))
+            i=slot(iw,ih,1);(output/f'{i}.jpg').write_bytes(raw);direct[sid].append((i,x,y,w,h))
     packed=bytearray(b'PFG7'+struct.pack('<HH',len(metadata),len(frames)))
-    mesh_ids=set(mesh_slots.values())|set(overlay_slots.values())
-    for i,(w,h) in enumerate(metadata):packed+=struct.pack('<HHB',w,h,4 if i in sidebar_slots.values() else 3 if i in button_slots.values() else 2 if i in mesh_ids else int(i>=jpeg_start))
+    for (w,h),codec in zip(metadata,codecs):packed+=struct.pack('<HHB',w,h,codec)
     for f,frame in enumerate(frames,1):
         placements=[];menu_after=255;filters=[]
         def group(start,alpha,blur):
             if len(placements)>start and (alpha!=256 or blur):filters.append((start,len(placements),alpha,blur))
+        def mesh(key,x,y,alpha=256):placements.append((overlay_slots[key],x,y,20,20,alpha))
         for cid,mat,alpha,flt,born in frame:
             if not alpha:continue
+            x,y=mat[4:]
             if cid in static_roots:
                 start=len(placements)
-                for kind,key,x,y,w,h in static_roots[cid]:
-                    slot=bitmap_slots[key] if kind=='bitmap' else overlay_slots[key]
-                    placements.append((slot,mat[4]+x,mat[5]+y,w,h,256))
+                for kind,key,dx,dy,w,h in static_roots[cid]:
+                    if kind=='mesh':mesh(key,x+dx,y+dy)
+                    else:
+                        assert all(int(v)==v for v in (dx,dy,w,h))
+                        placements.append((bitmap_slots[key],x+int(dx),y+int(dy),int(w),int(h),256))
                 group(start,alpha,blur_y(flt));continue
-            if cid in mesh_slots and not flt:
-                x,y=(0,0) if cid==77 else mat[4:]
-                placements.append((mesh_slots[cid],x,y,20,20,alpha));continue
+            if cid==77:
+                assert not flt;mesh(77,0,0,alpha);continue
             if cid in (50,51):
-                x,y=mat[4:];blur=blur_y(flt)
+                blur=blur_y(flt)
                 if cid==51:
                     assert not flt
-                    a=assets[51,b'',51,(f-born)%4]
-                    if a is not None:
-                        idx,dx,dy=a;w,h=metadata[idx];placements.append((idx,x+20*dx,y+20*dy,w*20,h*20,alpha))
-                    if (f-born)%4!=0:continue
+                    n=(f-born)%4;dx,dy=intro[n];w,h=bitmaps[22].size
+                    start=len(placements);placements.append((intro_slot,x+dx,y+dy,w*20,h*20,256));group(start,alpha,15.)
+                    if n!=0:continue
                     x+=nested_x;y+=nested_y;blur=nested_blur
                 start=len(placements)
                 for kind,key,_ in sidebar:
-                    slot=overlay_slots[key] if kind=='mesh' else sidebar_slots[key]
-                    placements.append((slot,x,y,20,20,256))
-                group(start,alpha,blur)
-                continue
-            if cid==115 and alpha==256 and not flt:
-                placements.append((button_slots[255],mat[4],mat[5],20,20,256));continue
+                    i=overlay_slots[key] if kind=='mesh' else sidebar_slots[key]
+                    placements.append((i,x,y,20,20,256))
+                group(start,alpha,blur);continue
+            if cid==115:
+                assert alpha==256 and not flt;placements.append((button_slots[255],x,y,20,20,256));continue
+            assert cid in direct and alpha==256 and not flt
             if cid==136:
-                assert alpha==256 and not flt
-                placements.extend((button_slots[i],mat[4]+x,mat[5]+y,20,20,256) for i,x,y in wallpaper_places)
-            n=(f-born)%4 if cid==51 else 0
-            parts=splits.get(cid) if cid==62 or (alpha==256 and not flt) else None
-            if parts:
-                start=len(placements)
-                for kind,key in parts:
-                    if kind=='mesh':
-                        placements.append((overlay_slots[key],mat[4],mat[5],20,20,256))
-                    else:
-                        a=assets[cid,b'',key,0]
-                        if a is None:continue
-                        idx,x,y=a;w,h=metadata[idx]
-                        placements.append((idx,mat[4]+20*x,mat[5]+20*y,w*20,h*20,256))
-                group(start,alpha,blur_y(flt))
-                continue
-            a=assets[cid,flt,cid,n]
-            if a is None:continue
-            if cid in direct and cid!=136:
-                assert not flt and alpha==256
-                placements.extend((idx,mat[4]+x,mat[5]+y,w,h,alpha) for idx,x,y,w,h in direct[cid])
-            idx,x,y=a;w,h=metadata[idx];placements.append((idx,mat[4]+20*x,mat[5]+20*y,w*20,h*20,alpha))
-            if cid==136:
-                assert not flt and alpha==256
-                placements.append((overlay_slots[63999],mat[4],mat[5],20,20,256))
-                placements.extend((idx,mat[4]+x,mat[5]+y,w,h,alpha) for idx,x,y,w,h in direct[cid])
-            if cid in (136,157,220):menu_after=len(placements)
+                placements.extend((button_slots[i],x+dx,y+dy,20,20,256) for i,dx,dy in wallpaper_places)
+                placements.extend((i,x,y,20,20,256) for i in strip_slots[cid])
+                mesh(63999,x,y)
+                placements.extend((i,x+dx,y+dy,w,h,256) for i,dx,dy,w,h in direct[cid])
+            else:
+                placements.extend((i,x+dx,y+dy,w,h,256) for i,dx,dy,w,h in direct[cid])
+                placements.extend((i,x,y,20,20,256) for i in strip_slots[cid])
+            menu_after=len(placements)
+        assert len(placements)<=64 and len(filters)<=8
+        assert len({p[0] for p in placements})==len(placements)
         packed+=struct.pack('<BBB',len(placements),menu_after,len(filters))
         for a in placements:packed+=struct.pack('<HiiIIH',*a)
         for span in filters:packed+=struct.pack('<BBHf',*span)
-    for batches in meshes:
-        packed+=struct.pack('<H',len(batches))
-        for rgba,vertices in batches:
+    def batches(values):
+        packed.extend(struct.pack('<H',len(values)))
+        for rgba,vertices in values:
             assert vertices and len(vertices)%3==0
-            packed+=struct.pack('<4BI',*rgba,len(vertices))
-            for x,y in vertices:packed+=struct.pack('<ff',x/20,y/20)
+            packed.extend(struct.pack('<4BI',*rgba,len(vertices)))
+            for x,y in vertices:packed.extend(struct.pack('<ff',x/20,y/20))
+    for values in meshes:batches(values)
     for selector,states in button_meshes:
         packed.append(selector)
-        for batches in states:
-            packed+=struct.pack('<H',len(batches))
-            for rgba,vertices in batches:
-                assert vertices and len(vertices)%3==0
-                packed+=struct.pack('<4BI',*rgba,len(vertices))
-                for x,y in vertices:packed+=struct.pack('<ff',x/20,y/20)
+        for values in states:batches(values)
     for selector,states in texture_states:
         packed.append(selector)
-        for bounds,uv in states:
-            packed+=struct.pack('<8f',*bounds,*uv)
+        for bounds,uv in states:packed+=struct.pack('<8f',*bounds,*uv)
     assert len(packed)<=8*1024*1024
     (output/'timeline.pfg').write_bytes(packed)
-    print('native vector root characters:',sorted(mesh_slots),'depth-split text sprites:',sorted(splits),'mesh runs:',len(overlay_slots))
-    print(f'{len(metadata)} reusable cropped textures, {len(keys)} source variants, {len(packed)} timeline bytes; {sum(p.stat().st_size for p in output.iterdir())} bytes total')
+    print(f'Native foreground: {len(frames)} frames, {len(meshes)} mesh entries, {len(button_meshes)} vector buttons, {len(texture_states)} clipped bitmap entries; no baked runtime sprites')
+    print(f'{len(metadata)} source slots, {len(packed)} timeline bytes; {sum(p.stat().st_size for p in output.iterdir())} bytes total')
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('swf',type=Path);p.add_argument('output',type=Path);p.add_argument('--ffdec-jar',type=Path,required=True);a=p.parse_args();build(a.swf.read_bytes(),a.output,a.ffdec_jar)
