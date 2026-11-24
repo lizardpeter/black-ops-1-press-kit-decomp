@@ -17,7 +17,7 @@ fn original_crossfade_gpu(){
 fn delayed_background_texture_keeps_last_complete_pair(){
  pollster::block_on(async{
   let instance=wgpu::Instance::default();
-  let Ok(adapter)=instance.request_adapter(&Default::default()).await else{eprintln!("no adapter; skipped delayed-background GPU check");return;};
+  let Some(adapter)=instance.request_adapter(&Default::default()).await else{eprintln!("no adapter; skipped delayed-background GPU check");return;};
   let Ok((device,queue))=adapter.request_device(&Default::default(),None).await else{eprintln!("no device; skipped delayed-background GPU check");return;};
   let renderer=Renderer::new(&device,&queue,wgpu::TextureFormat::Rgba8UnormSrgb,include_str!("../../../shaders/generated/vertex.wgsl"),include_str!("../../../shaders/generated/fragment.wgsl"),"vertexMain","fragmentMain");
   let mut bytes=b"PBG1\xdd\0".to_vec();
