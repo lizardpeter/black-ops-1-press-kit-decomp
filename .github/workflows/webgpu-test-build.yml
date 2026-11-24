@@ -107,7 +107,7 @@ jobs:
       - name: Compile Rust application to WebAssembly and test
         working-directory: enhanced-rust
         env:
-          PRESSKIT_FG_ASSETS: ${ runner.temp }}/runtime/art/foreground-source
+          PRESSKIT_FG_ASSETS: ${{ runner.temp }}/runtime/art/foreground-source
         run: |
           sh tools/build_web.sh
           node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/wasm-core.test.mjs
@@ -160,7 +160,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Download the exact tested site artifact
         uses: actions/download-artifact@v4
