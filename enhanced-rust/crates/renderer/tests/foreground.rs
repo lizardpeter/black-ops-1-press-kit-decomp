@@ -31,7 +31,13 @@ fn source_foreground_gpu_matches_all_105_reference_frames(){
   }
   eprintln!("worst foreground GPU gamma MAE: frame {} {:.4}/255",worst.0,worst.1);assert!(worst.1<1.5);
   if matches!(bytes[3],b'2'|b'3'){
-   let pack=MenuPack::read(&std::fs::read(assets.join("menu.pkm")).unwrap()).unwrap();let white=r.layer(&d,&q,&[255,255,255,255],1,1,[0.,0.,1280.,720.]);
+   let menu_bytes=std::fs::read(assets.join("menu.pkm")).unwrap();let pack=MenuPack::read(&menu_bytes).unwrap();
+   if menu_bytes.starts_with(b"PKM3"){
+    for frame in 1..=105u16{assert_eq!(pack.group(frame)==3,[77,79,81,82,83,84].contains(&frame));}
+    assert!(!pack.label_layers(&r,&d,&q,3).is_empty(),"wallpaper glyph geometry missing");
+    assert!(pack.layers(&r,&d,&q,3,1,true).is_empty(),"wallpaper label group must not draw trailer buttons");
+   }
+   let white=r.layer(&d,&q,&[255,255,255,255],1,1,[0.,0.,1280.,720.]);
    for (group,y,normal,down) in [(1u8,240usize,[153u8;3],[102u8;3]),(2,190,[167,165,166],[123,121,121])]{
     for (selected,pressed,expected) in [(0,false,normal),(1,false,[255;3]),(1,true,down)]{
      let geometry=pack.layers(&r,&d,&q,group,selected,pressed);assert!(geometry.len()<=4);let mut layers=vec![&white];layers.extend(geometry.iter());let data=draw(&layers);
