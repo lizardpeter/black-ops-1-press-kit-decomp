@@ -39,7 +39,7 @@ def tags(data):
         h=struct.unpack_from('<H',b,p)[0];p+=2;c,n=h>>6,h&63
         if n==63:n=struct.unpack_from('<I',b,p)[0];p+=4
         d=b[p:p+n];p+=n
-        if c in (2,22,32,11,33,34,75):out[struct.unpack_from('<H',d)[0]]=(c,d)
+        if c in (2,22,32,11,33,34,75,83):out[struct.unpack_from('<H',d)[0]]=(c,d)
         if c==0:break
     return out
 
@@ -120,8 +120,63 @@ def font_glyph(data,index):
     raw=data[table+off(index):table+off(index+1)]
     return [p for _,paths in edges(Bits(raw)) for p in paths]
 
+def render_shape4_strokes(r):
+    """The source quit button (#112/#113) uses opaque, round, scaling strokes.
+    Reject unsupported Shape4 styles instead of approximating arbitrary SWFs.
+    """
+    r.rect();flags=r.u8()
+    if flags!=1:raise ValueError('unsupported Shape4 flags')
+    styles=[];segments=[]
+    def read_styles():
+        if r.u8()!=0:raise ValueError('Shape4 fills unsupported in stroke subset')
+        n=r.u8()
+        if n==255:n=r.u16()
+        for _ in range(n):
+            width=r.u16();flags=r.u16()
+            if not width or flags!=0:raise ValueError('unsupported LINESTYLE2')
+            rgba=tuple(r.u8() for _ in range(4))
+            if rgba[3]!=255:raise ValueError('non-opaque stroke')
+            styles.append((width,rgba));segments.append([])
+        return r.read(4),r.read(4)
+    nf,nl=read_styles();x=y=0;line=offset=0
+    while True:
+        if r.read(1):
+            straight=r.read(1);n=r.read(4)+2;old=(x,y)
+            if not straight:raise ValueError('unexpected curved quit stroke')
+            if r.read(1):x+=r.read(n,True);y+=r.read(n,True)
+            elif r.read(1):y+=r.read(n,True)
+            else:x+=r.read(n,True)
+            if line:segments[line-1].append((old,(x,y)))
+        else:
+            flags=r.read(5)
+            if not flags:break
+            if flags&1:n=r.read(5);x=r.read(n,True);y=r.read(n,True)
+            if flags&2 and r.read(nf):raise ValueError('unexpected fill0')
+            if flags&4 and r.read(nf):raise ValueError('unexpected fill1')
+            if flags&8:
+                v=r.read(nl);line=offset+v if v else 0
+            if flags&16:
+                r.align();offset=len(styles);nf,nl=read_styles()
+    out=[]
+    for (width,rgba),edges in zip(styles,segments):
+        radius=width/2;verts=[];points=set()
+        for a,b in edges:
+            dx,dy=b[0]-a[0],b[1]-a[1];length=math.hypot(dx,dy)
+            if not length:continue
+            nx,ny=-dy/length*radius,dx/length*radius
+            p=(a[0]+nx,a[1]+ny);q=(a[0]-nx,a[1]-ny)
+            s=(b[0]+nx,b[1]+ny);t=(b[0]-nx,b[1]-ny)
+            verts.extend((p,q,s,s,q,t));points.update((a,b))
+        # Opaque same-color coverage makes overlapping joins/caps a union.
+        for x,y in sorted(points):
+            ring=[(x+radius*math.cos(i*math.tau/32),y+radius*math.sin(i*math.tau/32)) for i in range(32)]
+            for i in range(32):verts.extend(((x,y),ring[i],ring[(i+1)%32]))
+        if verts:out.append((rgba,verts))
+    return out
+
 def render_character(ts,id):
     code,data=ts[id];r=Bits(data);r.u16();r.rect()
+    if code==83:return render_shape4_strokes(r)
     if code in (2,22,32):return [(col,tessellate(paths,.2)) for col,paths in edges(r,code)]
     if code not in (11,33):raise ValueError(f'unsupported visible character {id}')
     mat=r.matrix();ng,na=r.u8(),r.u8();out=[];font=None;height=None;x=y=0;col=(0,0,0,255)

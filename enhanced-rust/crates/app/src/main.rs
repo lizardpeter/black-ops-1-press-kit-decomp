@@ -44,7 +44,7 @@ impl Gpu{
         let bg_on=layered&&app.frame>=56&&!matches!(app.scene(),Scene::Gallery|Scene::Video);
         if bg_on{if let Some(bg)=&mut self.background{bg.update(&self.renderer,&self.device,&self.queue,app.background.frame);}}
         if fg_on{self.foreground.as_mut().unwrap().update(&self.renderer,&self.queue,app.frame);}
-        if fg_on{let selected=match hit{Hit::Trailer(id)|Hit::Thumbnail(id)=>id,_=>0};self.foreground.as_mut().unwrap().update_menu(&self.renderer,&self.device,&self.queue,selected,pressed);}
+        if fg_on{let selected=match hit{Hit::Trailer(id)|Hit::Thumbnail(id)|Hit::Wallpaper(id)=>id,Hit::Quit=>255,_=>0};self.foreground.as_mut().unwrap().update_menu(&self.renderer,&self.device,&self.queue,selected,pressed);}
         let media_on=matches!(app.scene(),Scene::Video|Scene::Intro);
         if media_on&&self.last_video!=media.revision{self.last_video=media.revision;if let Some(p)=&media.frame{
             if let Some(v)=&self.video{self.queue.write_texture(wgpu::TexelCopyTextureInfo{texture:&v.texture,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},p,wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(media::WIDTH*4),rows_per_image:Some(media::HEIGHT)},wgpu::Extent3d{width:media::WIDTH,height:media::HEIGHT,depth_or_array_layers:1});}else{self.video=Some(self.renderer.layer(&self.device,&self.queue,p,media::WIDTH,media::HEIGHT,[0.,0.,1280.,720.]));}

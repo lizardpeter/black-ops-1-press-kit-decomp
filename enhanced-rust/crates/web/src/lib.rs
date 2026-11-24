@@ -152,7 +152,7 @@ impl WebPlayer{
             self.controls.update(self.pack.as_ref(),&self.renderer,&self.device,&self.queue,ControlVisual{y:self.app.controls.y as f32,gallery,paused,progress,text,states});
         }else{self.controls.clear();}
         let fg_on=self.foreground_on();if fg_on{self.foreground.as_mut().unwrap().update(&self.renderer,&self.queue,self.app.frame);}
-        if fg_on{let selected=match self.mouse.map(|(x,y)|self.app.hit(x,y)){Some(Hit::Trailer(id)|Hit::Thumbnail(id))=>id,_=>0};self.foreground.as_mut().unwrap().update_menu(&self.renderer,&self.device,&self.queue,selected,self.pressed);}
+        if fg_on{let selected=match self.mouse.map(|(x,y)|self.app.hit(x,y)){Some(Hit::Trailer(id)|Hit::Thumbnail(id)|Hit::Wallpaper(id))=>id,Some(Hit::Quit)=>255,_=>0};self.foreground.as_mut().unwrap().update_menu(&self.renderer,&self.device,&self.queue,selected,self.pressed);}
         let paths=self.visible_paths();self.serial+=1;
         for p in &paths{if let Some((layer,used))=self.images.get_mut(p){*used=self.serial;if p.contains("_controls/")&&self.control_y!=self.app.controls.y as f32{self.renderer.reposition(&self.device,layer,[200.,self.app.controls.y as f32,880.,90.]);}}}
         self.control_y=self.app.controls.y as f32;

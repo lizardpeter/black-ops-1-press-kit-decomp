@@ -38,6 +38,8 @@ def source(data, vector_menu=False):
                 d2=strip(d2)
                 from extract_labels import strip as strip_labels
                 d2=strip_labels(d2)
+                if struct.unpack_from('<H',d2)[0]==136:
+                    d2=d2[:4]+b''.join(tag(k,v) for k,v in tags(d2,4) if not(k==26 and v[0]&2 and struct.unpack_from('<H',v,3)[0]==118))
             defs.append(tag(c,d2))
         if c in (26,70):
             r=Bits(d);flags=r.u8();f2=r.u8() if c==70 else 0;depth=r.u16();old=live.get(depth) if flags&1 else None
@@ -128,16 +130,36 @@ def native_art(data,frames):
         splits[sid]=parts
     return native,overlays,splits,bytes(extra)
 
+def native_buttons(data):
+    from extract_controls import tags as dictionary,render_button
+    ts=dictionary(data)
+    quit_states=[render_button(ts,115,i) for i in range(3)]
+    wallpaper_states=[render_button(ts,118,i) for i in range(3)]
+    assert all(quit_states) and not wallpaper_states[0] and all(wallpaper_states[1:])
+    raw=b'FWS'+data[3:8]+zlib.decompress(data[8:]);r=Bits(raw,8);r.rect()
+    panel=next(d for c,d in tags(raw,r.at//8+4) if c==39 and struct.unpack_from('<H',d)[0]==136)
+    placements=[]
+    for c,d in tags(panel,4):
+        if c!=26 or not d[0]&2 or struct.unpack_from('<H',d,3)[0]!=118:continue
+        r=Bits(d);assert r.u8()==38;depth=r.u16();assert r.u16()==118
+        m=r.matrix();assert m[:4]==(1,1,0,0)
+        assert depth in range(1,16,2)
+        placements.append((len(placements)+1,m[4],m[5]))
+    assert len(placements)==8
+    assert [(x,y) for _,x,y in placements]==[(x,y) for x in (120,3080,6020,8980) for y in (8880,9600)]
+    return quit_states,wallpaper_states,placements
+
 def build(data,output,jar):
     version,defs,frames=source(data,vector_menu=True);output.mkdir(parents=True,exist_ok=True)
     from extract_menu import pack as pack_menu
     (output/'menu.pkm').write_bytes(pack_menu(data,frames))
     native,overlays,splits,extra=native_art(data,frames)
+    quit_states,wallpaper_states,wallpaper_places=native_buttons(data)
     # Raster only the depth runs that remain after native conversion.
     variants=set()
     for frame in frames:
         for cid,_,alpha,flt,_ in frame:
-            if not alpha or (cid in native and not flt):continue
+            if not alpha or (cid in native and not flt) or (cid==115 and alpha==256 and not flt):continue
             parts=splits.get(cid) if alpha==256 and not flt else None
             if parts:
                 variants.update((cid,flt,key) for kind,key in parts if kind=='raster')
@@ -170,15 +192,18 @@ def build(data,output,jar):
     for table,dest in ((native,mesh_slots),(overlays,overlay_slots)):
         for cid,batches in sorted(table.items()):
             dest[cid]=len(metadata);metadata.append((1,1));meshes.append(batches)
+    button_slots={};button_meshes=[]
+    for selector,states in [(255,quit_states)]+[(i,wallpaper_states) for i,_,_ in wallpaper_places]:
+        button_slots[selector]=len(metadata);metadata.append((1,1));button_meshes.append((selector,states))
     from extract_thumbnails import extract as extract_thumbnails
     thumbnails=extract_thumbnails(data);jpeg_start=len(metadata);direct={}
     for sid,rows in thumbnails.items():
         direct[sid]=[]
         for cid,x,y,w,h,iw,ih,raw in rows:
             idx=len(metadata);metadata.append((iw,ih));(output/f'{idx}.jpg').write_bytes(raw);direct[sid].append((idx,x,y,w,h))
-    packed=bytearray(b'PFG4'+struct.pack('<HH',len(metadata),len(frames)))
+    packed=bytearray(b'PFG5'+struct.pack('<HH',len(metadata),len(frames)))
     mesh_ids=set(mesh_slots.values())|set(overlay_slots.values())
-    for i,(w,h) in enumerate(metadata):packed+=struct.pack('<HHB',w,h,2 if i in mesh_ids else int(i>=jpeg_start))
+    for i,(w,h) in enumerate(metadata):packed+=struct.pack('<HHB',w,h,3 if i in button_slots.values() else 2 if i in mesh_ids else int(i>=jpeg_start))
     for f,frame in enumerate(frames,1):
         placements=[];menu_after=255
         for cid,mat,alpha,flt,born in frame:
@@ -186,6 +211,11 @@ def build(data,output,jar):
             if cid in mesh_slots and not flt:
                 x,y=(0,0) if cid==77 else mat[4:]
                 placements.append((mesh_slots[cid],x,y,20,20,alpha));continue
+            if cid==115 and alpha==256 and not flt:
+                placements.append((button_slots[255],mat[4],mat[5],20,20,256));continue
+            if cid==136:
+                assert alpha==256 and not flt
+                placements.extend((button_slots[i],mat[4]+x,mat[5]+y,20,20,256) for i,x,y in wallpaper_places)
             n=(f-born)%4 if cid==51 else 0
             parts=splits.get(cid) if alpha==256 and not flt else None
             if parts:
@@ -216,6 +246,14 @@ def build(data,output,jar):
             assert vertices and len(vertices)%3==0
             packed+=struct.pack('<4BI',*rgba,len(vertices))
             for x,y in vertices:packed+=struct.pack('<ff',x/20,y/20)
+    for selector,states in button_meshes:
+        packed.append(selector)
+        for batches in states:
+            packed+=struct.pack('<H',len(batches))
+            for rgba,vertices in batches:
+                assert vertices and len(vertices)%3==0
+                packed+=struct.pack('<4BI',*rgba,len(vertices))
+                for x,y in vertices:packed+=struct.pack('<ff',x/20,y/20)
     assert len(packed)<=8*1024*1024
     (output/'timeline.pfg').write_bytes(packed)
     print('native vector root characters:',sorted(mesh_slots),'depth-split text sprites:',sorted(splits),'mesh runs:',len(overlay_slots))
