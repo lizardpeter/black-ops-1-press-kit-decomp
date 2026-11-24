@@ -1,0 +1,25 @@
+name: Private verified SWF source handoff
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/swf-source-handoff.yml']
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download verified original SWFs
+        run: |
+          python3 tools/fetch_originals.py launcher /tmp/originals
+          python3 tools/fetch_originals.py presskit /tmp/originals
+      - uses: actions/upload-artifact@v4
+        with:
+          name: original-swf-source
+          path: /tmp/originals/*.swf
+          retention-days: 3
+          compression-level: 0
+          if-no-files-found: error
