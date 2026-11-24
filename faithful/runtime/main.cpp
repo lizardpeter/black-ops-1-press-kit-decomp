@@ -1,4 +1,7 @@
 #include "presskit/timeline.hpp"
+#ifdef PRESSKIT_ENHANCED_CPP
+#include "presskit/enhanced.hpp"
+#endif
 #include "presskit/hit_test.hpp"
 #include "presskit/background.hpp"
 #include <QApplication>
@@ -44,7 +47,11 @@ class PressKit : public QWidget {
     QString error;
 public:
     explicit PressKit(QString path,bool testing):root(QDir(path).absolutePath()),smoke(testing){
+#ifdef PRESSKIT_ENHANCED_CPP
+        setWindowTitle("Call of Duty: Black Ops — Press Kit (Enhanced C++)");
+#else
         setWindowTitle("Call of Duty: Black Ops — Press Kit");
+#endif
         resize(1280,720);setMouseTracking(true);setFocusPolicy(Qt::StrongFocus);
         shell.load(root+"/art/launcher/1.png");
         layered=QFileInfo::exists(root+"/art/foreground/75.png")&&QFileInfo::exists(root+"/art/background/221.png");
@@ -161,7 +168,7 @@ protected:
         case HitKind::thumbnail:timeline.select_screenshot(h.id);break;
         case HitKind::close_media:timeline.close_media();break;
         case HitKind::previous:loadImage(timeline.gallery.previous_release());break;
-        case HitKind::next:loadImage(timeline.gallery.next_release());break;
+        case HitKind::next:loadImage(nextImage());break;
         case HitKind::play_pause:if(player.playbackState()==QMediaPlayer::PlayingState)player.pause();else player.play();break;
         case HitKind::seek:{const auto pt=stage(e->position());player.setPosition(qint64(player.duration()*std::clamp((pt.x()-241)/785,0.0,1.0)));break;}
         default:break;
@@ -174,7 +181,7 @@ protected:
             if(!timeline.close_media()){if(timeline.scene()==Scene::intro){player.stop();timeline.intro_complete();}else close();}
         }else if(timeline.scene()==Scene::gallery){
             if(e->key()==Qt::Key_Left)loadImage(timeline.gallery.key_down(37));
-            else if(e->key()==Qt::Key_Right)loadImage(timeline.gallery.key_down(39));
+            else if(e->key()==Qt::Key_Right)loadImage(nextImage());
         }else if(timeline.scene()==Scene::video_player&&e->key()==Qt::Key_Space){
             if(player.playbackState()==QMediaPlayer::PlayingState)player.pause();else player.play();
         }
@@ -252,6 +259,13 @@ private:
             }
         }
         auto r=timeline.gallery.xml_loaded(!xml.hasError(),images);loadImage(r);
+    }
+    std::optional<ImageRequest> nextImage(){
+#ifdef PRESSKIT_ENHANCED_CPP
+        return presskit::enhanced::next_when_ready(timeline.gallery);
+#else
+        return timeline.gallery.next_release();
+#endif
     }
     void loadImage(const std::optional<ImageRequest>& r){
         if(!r||r->index<0||r->index>=int(timeline.gallery.images.size()))return;
