@@ -2,7 +2,8 @@ use presskit_core::{App,Effect,Hit,Scene,Stage};
 use presskit_renderer::{Renderer,Layer};
 use std::{sync::Arc,path::PathBuf,time::Instant};
 use winit::{application::ApplicationHandler,event::{WindowEvent,ElementState,MouseButton},event_loop::{ActiveEventLoop,EventLoop},window::{Window,WindowId}};
-const DEV_SHADER:&str=include_str!("../../../shaders/dev_fallback.wgsl");
+const VERTEX:&str=include_str!("../../../shaders/generated/vertex.wgsl");
+const FRAGMENT:&str=include_str!("../../../shaders/generated/fragment.wgsl");
 struct Gpu{
     window:Arc<Window>,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,config:wgpu::SurfaceConfiguration,renderer:Renderer,
     art:Option<Layer>,bg:Option<Layer>,last_art:String,last_bg:u16
@@ -16,7 +17,7 @@ impl Gpu{
         let caps=surface.get_capabilities(&adapter);
         if let Some(f)=caps.formats.iter().find(|f|f.is_srgb()){config.format=*f;}
         surface.configure(&device,&config);
-        let renderer=Renderer::new(&device,config.format,DEV_SHADER,DEV_SHADER,"vertexMain","fragmentMain");
+        let renderer=Renderer::new(&device,config.format,VERTEX,FRAGMENT,"vertexMain","fragmentMain");
         Self{window,surface,device,queue,config,renderer,art:None,bg:None,last_art:String::new(),last_bg:0}
     }
     fn resize(&mut self,w:u32,h:u32){if w>0&&h>0{self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}

@@ -1,5 +1,4 @@
-//! Portable texture compositor. Initial development shader is explicit fallback;
-//! compile Slang with tools/compile_shaders.py before using the production path.
+//! Portable texture compositor. Shader sources are offline Slang output.
 use wgpu::util::DeviceExt;
 #[repr(C)]
 #[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
