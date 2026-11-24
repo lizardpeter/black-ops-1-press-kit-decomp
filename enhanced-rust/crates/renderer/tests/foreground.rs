@@ -6,14 +6,14 @@ fn source_foreground_gpu_matches_all_105_reference_frames(){
  let Ok(assets)=std::env::var("PRESSKIT_FG_ASSETS") else{eprintln!("set PRESSKIT_FG_ASSETS to art/foreground-source and PRESSKIT_FG_REFERENCE to art/foreground");return;};
  let reference=std::env::var("PRESSKIT_FG_REFERENCE").expect("PRESSKIT_FG_REFERENCE");
  let assets=Path::new(&assets);let reference=Path::new(&reference);let bytes=std::fs::read(assets.join("timeline.pfg")).unwrap();
- let timeline=ForegroundTimeline::read(&bytes).unwrap();assert_eq!(timeline.count(),49);
+ let timeline=ForegroundTimeline::read(&bytes).unwrap();if bytes[3]==b'3'{assert_eq!((0..timeline.count()).filter(|&i|timeline.filename(i).ends_with(".jpg")).count(),26);}else{assert_eq!(timeline.count(),49);}
  pollster::block_on(async{
   let instance=wgpu::Instance::default();let adapter=instance.request_adapter(&Default::default()).await.unwrap();eprintln!("foreground GPU adapter: {:?}",adapter.get_info());
   let (d,q)=adapter.request_device(&wgpu::DeviceDescriptor::default(),None).await.unwrap();
   let r=Renderer::new(&d,&q,wgpu::TextureFormat::Rgba8UnormSrgb,include_str!("../../../shaders/generated/vertex.wgsl"),include_str!("../../../shaders/generated/fragment.wgsl"),"vertexMain","fragmentMain");
   let mut art=ForegroundArt::new(timeline);
   if art.needs_menu(){art.install_menu(&std::fs::read(assets.join("menu.pkm")).unwrap()).unwrap();}
-  for i in art.missing(){let im=image::open(assets.join(format!("{i}.png"))).unwrap().into_rgba8();art.install(i,r.layer(&d,&q,im.as_raw(),im.width(),im.height(),[0.,0.,1.,1.])).unwrap();}
+  for i in art.missing(){let im=image::open(assets.join(art.filename(i))).unwrap().into_rgba8();art.install(i,r.layer(&d,&q,im.as_raw(),im.width(),im.height(),[0.,0.,1.,1.])).unwrap();}
   let size=wgpu::Extent3d{width:1280,height:720,depth_or_array_layers:1};
   let target=d.create_texture(&wgpu::TextureDescriptor{label:Some("foreground reference target"),size,mip_level_count:1,sample_count:1,dimension:wgpu::TextureDimension::D2,format:wgpu::TextureFormat::Rgba8UnormSrgb,usage:wgpu::TextureUsages::RENDER_ATTACHMENT|wgpu::TextureUsages::COPY_SRC,view_formats:&[]});let view=target.create_view(&Default::default());
   let buffer=d.create_buffer(&wgpu::BufferDescriptor{label:Some("foreground readback"),size:1280*720*4,usage:wgpu::BufferUsages::COPY_DST|wgpu::BufferUsages::MAP_READ,mapped_at_creation:false});
@@ -30,7 +30,7 @@ fn source_foreground_gpu_matches_all_105_reference_frames(){
    let mae=sum/(1280.*720.*3.);if mae>worst.1{worst=(frame,mae);}
   }
   eprintln!("worst foreground GPU gamma MAE: frame {} {:.4}/255",worst.0,worst.1);assert!(worst.1<1.5);
-  if bytes[3]==b'2'{
+  if matches!(bytes[3],b'2'|b'3'){
    let pack=MenuPack::read(&std::fs::read(assets.join("menu.pkm")).unwrap()).unwrap();let white=r.layer(&d,&q,&[255,255,255,255],1,1,[0.,0.,1280.,720.]);
    for (group,y,normal,down) in [(1u8,240usize,[153u8;3],[102u8;3]),(2,190,[167,165,166],[123,121,121])]{
     for (selected,pressed,expected) in [(0,false,normal),(1,false,[255;3]),(1,true,down)]{

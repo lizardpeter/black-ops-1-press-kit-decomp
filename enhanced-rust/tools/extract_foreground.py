@@ -33,6 +33,9 @@ def source(data, vector_menu=False):
                 replacement=strip_buttons(d) if vector_menu else None
                 d2=strip_sprite(d) if replacement is None else replacement
             else:d2=d
+            if vector_menu and c==39:
+                from extract_thumbnails import strip
+                d2=strip(d2)
             defs.append(tag(c,d2))
         if c in (26,70):
             r=Bits(d);flags=r.u8();f2=r.u8() if c==70 else 0;depth=r.u16();old=live.get(depth) if flags&1 else None
@@ -86,18 +89,31 @@ def build(data,output,jar):
             assets[key]=(digests[digest],box[0]-ORIGIN[0],box[1]-ORIGIN[1])
     # Original #77 is an opaque black rectangle extending beyond all four stage edges.
     black=len(metadata);metadata.append((1,1));Image.new('RGBA',(1,1),(0,0,0,255)).save(output/f'{black}.png')
-    packed=bytearray(b'PFG2'+struct.pack('<HH',len(metadata),len(frames)))
-    for w,h in metadata:packed+=struct.pack('<HH',w,h)
+    from extract_thumbnails import extract as extract_thumbnails
+    thumbnails=extract_thumbnails(data);jpeg_start=len(metadata);direct={}
+    for sid,rows in thumbnails.items():
+        direct[sid]=[]
+        for cid,x,y,w,h,iw,ih,raw in rows:
+            idx=len(metadata);metadata.append((iw,ih));(output/f'{idx}.jpg').write_bytes(raw);direct[sid].append((idx,x,y,w,h))
+    packed=bytearray(b'PFG3'+struct.pack('<HH',len(metadata),len(frames)))
+    for i,(w,h) in enumerate(metadata):packed+=struct.pack('<HHB',w,h,int(i>=jpeg_start))
     for f,frame in enumerate(frames,1):
-        placements=[]
+        placements=[];menu_after=255
         for cid,mat,alpha,flt,born in frame:
             if not alpha:continue
             if cid==77:placements.append((black,0,0,25600,14400,alpha));continue
             n=(f-born)%4 if cid==51 else 0
             a=assets[cid,flt,n]
             if a is None:continue
+            if cid in direct and cid!=136:
+                assert not flt and alpha==256
+                placements.extend((idx,mat[4]+x,mat[5]+y,w,h,alpha) for idx,x,y,w,h in direct[cid])
             idx,x,y=a;w,h=metadata[idx];placements.append((idx,mat[4]+20*x,mat[5]+20*y,w*20,h*20,alpha))
-        packed+=struct.pack('<B',len(placements))
+            if cid==136:
+                assert not flt and alpha==256
+                placements.extend((idx,mat[4]+x,mat[5]+y,w,h,alpha) for idx,x,y,w,h in direct[cid])
+            if cid in (157,220):menu_after=len(placements)
+        packed+=struct.pack('<BB',len(placements),menu_after)
         for a in placements:packed+=struct.pack('<HiiIIH',*a)
     (output/'timeline.pfg').write_bytes(packed)
     print(f'{len(metadata)} reusable cropped textures, {len(keys)} source variants, {len(packed)} timeline bytes; {sum(p.stat().st_size for p in output.iterdir())} bytes total')
