@@ -5,6 +5,7 @@ from extract_controls import Bits, EXPECTED, tags as dictionary, render_button
 from extract_background import tags
 import hashlib
 BUTTONS={157:(155,'trl_',(1,2,4,5,6)),220:(219,'scrn_',tuple(range(1,21)))}
+GROUPS={157:1,220:2,136:3}
 
 def button_placements(sprite):
     sid=struct.unpack_from('<H',sprite)[0]
@@ -30,17 +31,17 @@ def pack(data,frames):
     assert hashlib.sha256(data).hexdigest()==EXPECTED
     raw=b'FWS'+data[3:8]+zlib.decompress(data[8:]);r=Bits(raw,8);r.rect()
     sprites={struct.unpack_from('<H',d)[0]:d for c,d in tags(raw,r.at//8+4) if c==39}
-    ts=dictionary(data);out=bytearray(b'PKM2');groups=[]
+    ts=dictionary(data);out=bytearray(b'PKM3');groups=[]
     for sid in BUTTONS:
         placements=button_placements(sprites[sid]);groups.append(placements)
         out.append(len(placements))
         for row in placements:out+=struct.pack('<Bii',*row)
     for frame in frames:
-        matches=[(cid,m,a,flt) for cid,m,a,flt,_ in frame if cid in BUTTONS]
+        matches=[(cid,m,a,flt) for cid,m,a,flt,_ in frame if cid in GROUPS]
         assert len(matches)<=1
         if not matches:out.append(0);continue
         cid,m,a,flt=matches[0];assert [c for c,_,a,_,_ in frame if a][:4]==[96,80,99,cid];assert m==(1,1,0,0,10537,860) and a==256 and not flt
-        out.append(1 if cid==157 else 2)
+        out.append(GROUPS[cid])
     for sid in BUTTONS:
         for state in range(3):
             batches=render_button(ts,BUTTONS[sid][0],state);out.append(len(batches))
