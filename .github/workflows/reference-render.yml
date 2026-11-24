@@ -1,0 +1,38 @@
+name: reference-render
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/reference-render.yml']
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '21'}
+      - name: Get original movies and pinned FFDec
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          gh release download version26.5.0 --repo jindrapetrik/jpexs-decompiler --pattern ffdec_26.5.0.zip --dir /tmp
+          mkdir /tmp/ffdec
+          unzip -q /tmp/ffdec_26.5.0.zip -d /tmp/ffdec
+          python3 tools/fetch_originals.py launcher /tmp/originals
+          python3 tools/fetch_originals.py presskit /tmp/originals
+      - name: Export original frame artwork for visual comparisons
+        run: |
+          jar=$(find /tmp/ffdec -name ffdec.jar -print -quit)
+          for b in launcher presskit; do
+            mkdir -p /tmp/reference/$b
+            java -Djava.awt.headless=true -jar "$jar" -format frame:png -export frame /tmp/reference/$b /tmp/originals/$b.swf
+            test -n "$(find /tmp/reference/$b -name '*.png' -print -quit)"
+          done
+          find /tmp/reference -name '*.png' | wc -l
+      - uses: actions/upload-artifact@v4
+        with:
+          name: original-frame-reference
+          path: /tmp/reference
+          retention-days: 14

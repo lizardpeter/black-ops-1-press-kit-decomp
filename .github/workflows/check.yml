@@ -8,6 +8,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - name: Verify original AVM1 function identities
+        if: runner.os == 'Linux'
+        run: python3 tools/swf/verify_records.py analysis
       - run: cmake -S . -B build
       - run: cmake --build build --config Release
       - run: ctest --test-dir build -C Release --output-on-failure
