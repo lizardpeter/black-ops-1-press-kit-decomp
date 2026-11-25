@@ -18,6 +18,8 @@ pub struct WebPlayer{
     app:App,canvas:HtmlCanvasElement,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,
     config:wgpu::SurfaceConfiguration,renderer:Renderer,images:HashMap<String,(Layer,u64)>,video:Option<Layer>,
     photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,pack:Option<ControlPack>,launcher:Vec<Layer>,native_launcher:Option<presskit_renderer::launcher::LauncherArt>,controls:ControlCache,mouse:Option<(f64,f64)>,pressed:bool,pending_menu:Option<Hit>,
+    // Keep the owning WebGPU context alive until all surface/device resources drop.
+    _instance:wgpu::Instance,
 }
 #[wasm_bindgen]
 impl WebPlayer{
@@ -32,7 +34,7 @@ impl WebPlayer{
         if render_format!=config.format{config.view_formats.push(render_format);}
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,&queue,render_format,VS,FS,"vertexMain","fragmentMain");
-        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,launcher:vec![],native_launcher:None,controls:ControlCache::default(),mouse:None,pressed:false,pending_menu:None})
+        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,launcher:vec![],native_launcher:None,controls:ControlCache::default(),mouse:None,pressed:false,pending_menu:None,_instance:instance})
     }
     pub fn resize(&mut self,w:u32,h:u32){let (w,h)=presskit_core::layout::fit_surface(w,h,self.device.limits().max_texture_dimension_2d);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     pub fn advance(&mut self,ms:f64){

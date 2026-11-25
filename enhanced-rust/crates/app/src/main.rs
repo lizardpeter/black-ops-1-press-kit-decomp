@@ -11,21 +11,22 @@ const VERTEX:&str=include_str!("../../../shaders/generated/vertex.wgsl");
 const FRAGMENT:&str=include_str!("../../../shaders/generated/fragment.wgsl");
 struct Gpu{
     window:Arc<Window>,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,config:wgpu::SurfaceConfiguration,renderer:Renderer,
-    art:Option<Layer>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,last_art:String,video:Option<Layer>,last_video:u64,chrome:Option<Layer>,chrome_kind:Scene,pack:Option<ControlPack>,launcher:Vec<Layer>,native_launcher:Option<presskit_renderer::launcher::LauncherArt>,controls:ControlCache
+    art:Option<Layer>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,last_art:String,video:Option<Layer>,last_video:u64,chrome:Option<Layer>,chrome_kind:Scene,pack:Option<ControlPack>,launcher:Vec<Layer>,native_launcher:Option<presskit_renderer::launcher::LauncherArt>,controls:ControlCache,_instance:wgpu::Instance
 }
 impl Gpu{
     async fn new(window:Arc<Window>)->Self{
         let instance=wgpu::Instance::default();let surface=instance.create_surface(window.clone()).expect("surface");
         let adapter=instance.request_adapter(&wgpu::RequestAdapterOptions{compatible_surface:Some(&surface),..Default::default()}).await.expect("GPU adapter");
-        let (device,queue)=adapter.request_device(&wgpu::DeviceDescriptor::default(),None).await.expect("GPU device");
+        let mut descriptor=wgpu::DeviceDescriptor::default();descriptor.required_limits.max_texture_dimension_2d=adapter.limits().max_texture_dimension_2d;
+        let (device,queue)=adapter.request_device(&descriptor,None).await.expect("GPU device");
         let size=window.inner_size();let mut config=surface.get_default_config(&adapter,size.width.max(1),size.height.max(1)).expect("surface config");
         let caps=surface.get_capabilities(&adapter);
         if let Some(f)=caps.formats.iter().find(|f|f.is_srgb()){config.format=*f;}
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,&queue,config.format,VERTEX,FRAGMENT,"vertexMain","fragmentMain");
-        Self{window,surface,device,queue,config,renderer,art:None,background:None,foreground:None,last_art:String::new(),video:None,last_video:0,chrome:None,chrome_kind:Scene::Launcher,pack:None,launcher:vec![],native_launcher:None,controls:ControlCache::default()}
+        Self{window,surface,device,queue,config,renderer,art:None,background:None,foreground:None,last_art:String::new(),video:None,last_video:0,chrome:None,chrome_kind:Scene::Launcher,pack:None,launcher:vec![],native_launcher:None,controls:ControlCache::default(),_instance:instance}
     }
-    fn resize(&mut self,w:u32,h:u32){if w>0&&h>0{self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
+    fn resize(&mut self,w:u32,h:u32){if w>0&&h>0{let(w,h)=presskit_core::layout::fit_surface(w,h,self.device.limits().max_texture_dimension_2d);if (w,h)!=(self.config.width,self.config.height){self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}}
     fn image(&self,path:&std::path::Path,rect:[f32;4])->Option<Layer>{
         let img=image::open(path).map_err(|e|eprintln!("{}: {e}",path.display())).ok()?.into_rgba8();
         Some(self.renderer.layer(&self.device,&self.queue,img.as_raw(),img.width(),img.height(),rect))

@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
@@ -229,6 +229,27 @@ jobs:
           retention-days: 30
           compression-level: 0
           include-hidden-files: true
+
+      - name: Exercise compiled site in real Chromium WebGPU
+        working-directory: enhanced-rust
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          cd "$RUNNER_TEMP/browser"
+          npm install --no-audit --no-fund --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+          cp "$GITHUB_WORKSPACE/enhanced-rust/tools/browser_preview_test.mjs" .
+          python -m http.server 8766 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/enhanced-rust/dist" > "$RUNNER_TEMP/browser/http.log" 2>&1 &
+          node browser_preview_test.mjs "$RUNNER_TEMP/browser-screenshots"
+      - name: Retain real browser diagnostic captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-runtime-captures
+          path: |
+            ${{ runner.temp }}/browser-screenshots/
+            ${{ runner.temp }}/browser/http.log
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Enforce original-frame parity before production deployment
         if: steps.parity.outcome != 'success'
