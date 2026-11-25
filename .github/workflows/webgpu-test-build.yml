@@ -122,7 +122,7 @@ jobs:
             enhanced-rust/target
           key: ${{ runner.os }}-presskit-rust-1.100.0-${{ hashFiles('enhanced-rust/Cargo.lock') }}
 
-      - name: Native GPU reference and core tests
+      - name: Native GPU and core tests
         working-directory: enhanced-rust
         env:
           PRESSKIT_COLOR_MANAGED: "1"
@@ -139,7 +139,22 @@ jobs:
           sudo apt-get install -y -qq mesa-vulkan-drivers
           cargo test -p presskit-core
           cargo test -p presskit-renderer --lib --test background --test resolution -- --nocapture
-          cargo test -p presskit-renderer --test foreground -- --nocapture
+
+      # A reference mismatch must block production deployment, but not a
+      # compiled WASM preview or browser-side regression tests.
+      - name: Original-frame GPU parity gate
+        id: parity
+        continue-on-error: true
+        working-directory: enhanced-rust
+        env:
+          PRESSKIT_COLOR_MANAGED: "1"
+          PRESSKIT_FG_ASSETS: ${{ runner.temp }}/runtime/art/foreground-source
+          PRESSKIT_FG_REFERENCE: ${{ runner.temp }}/reference/art/foreground
+          PRESSKIT_LAUNCHER_ASSETS: ${{ runner.temp }}/runtime/art
+          PRESSKIT_GPU_DIAGNOSTICS: ${{ runner.temp }}/gpu-diagnostics
+          WGPU_BACKEND: vulkan
+          XDG_RUNTIME_DIR: /tmp/presskit-xdg
+        run: cargo test -p presskit-renderer --test foreground -- --nocapture
 
       - name: Retain GPU comparison diagnostics
         if: always()
@@ -186,6 +201,8 @@ jobs:
           {
             echo "Black Ops press kit — Rust/WebGPU self-contained browser build"
             echo "Commit: $GITHUB_SHA"
+            echo "Original-frame GPU parity: ${{ steps.parity.outcome }}"
+            if [ "${{ steps.parity.outcome }}" != success ]; then echo "UNVALIDATED PREVIEW: do not deploy"; fi
             echo "Original payload: 44 files / 409,146,676 bytes"
             echo "All media is same-origin and loaded on demand; no runtime R2 requests."
           } > dist/BUILD_INFO.txt
@@ -206,12 +223,18 @@ jobs:
       - name: Upload self-contained browser build
         uses: actions/upload-artifact@v4
         with:
-          name: webgpu-self-contained-site
+          name: ${{ steps.parity.outcome == 'success' && 'webgpu-self-contained-site' || 'webgpu-unvalidated-preview' }}
           path: enhanced-rust/dist/
           if-no-files-found: error
           retention-days: 30
           compression-level: 0
           include-hidden-files: true
+
+      - name: Enforce original-frame parity before production deployment
+        if: steps.parity.outcome != 'success'
+        run: |
+          echo '::error::Original-frame GPU parity failed. Compiled preview is available, but deployment is blocked.'
+          exit 1
 
   deploy:
     needs: build
