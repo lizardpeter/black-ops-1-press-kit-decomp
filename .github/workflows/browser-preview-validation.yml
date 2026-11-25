@@ -1,0 +1,43 @@
+name: browser-preview-validation
+on:
+  workflow_dispatch:
+  push:
+    branches: [validation/browser-preview]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download exact compiled preview from run 45541327727
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/site"
+          gh run download 45541327727 --name webgpu-unvalidated-preview --dir "$RUNNER_TEMP/site"
+          grep -F cfe83e42d9a790f5027856a9f031e68a2a0d4178 "$RUNNER_TEMP/site/BUILD_INFO.txt"
+      - name: Exercise actual browser WebGPU runtime
+        run: |
+          mkdir -p "$RUNNER_TEMP/browser"
+          cd "$RUNNER_TEMP/browser"
+          npm install --no-audit --no-fund --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+          cp "$GITHUB_WORKSPACE/enhanced-rust/tools/browser_preview_test.mjs" .
+          python3 -m http.server 8766 --bind 127.0.0.1 --directory "$RUNNER_TEMP/site" > "$RUNNER_TEMP/browser/http.log" 2>&1 &
+          node browser_preview_test.mjs "$RUNNER_TEMP/screenshots"
+      - name: Retain actual browser screenshots and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-preview-captures
+          path: |
+            ${{ runner.temp }}/screenshots/
+            ${{ runner.temp }}/browser/http.log
+          if-no-files-found: ignore
+          retention-days: 7
