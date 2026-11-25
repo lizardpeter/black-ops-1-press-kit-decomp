@@ -25,7 +25,8 @@ impl WebPlayer{
         let instance=wgpu::Instance::new(&wgpu::InstanceDescriptor{backends:wgpu::Backends::BROWSER_WEBGPU,..Default::default()});
         let surface=instance.create_surface(wgpu::SurfaceTarget::Canvas(canvas.clone())).map_err(error)?;
         let adapter=instance.request_adapter(&wgpu::RequestAdapterOptions{compatible_surface:Some(&surface),..Default::default()}).await.ok_or_else(||JsValue::from_str("WebGPU adapter unavailable"))?;
-        let (device,queue)=adapter.request_device(&wgpu::DeviceDescriptor::default(),None).await.map_err(error)?;
+        let mut descriptor=wgpu::DeviceDescriptor::default();descriptor.required_limits.max_texture_dimension_2d=adapter.limits().max_texture_dimension_2d;
+        let (device,queue)=adapter.request_device(&descriptor,None).await.map_err(error)?;
         let mut config=surface.get_default_config(&adapter,canvas.width().max(1),canvas.height().max(1)).ok_or_else(||JsValue::from_str("surface configuration unavailable"))?;
         let render_format=config.format.add_srgb_suffix();
         if render_format!=config.format{config.view_formats.push(render_format);}
@@ -33,7 +34,7 @@ impl WebPlayer{
         let renderer=Renderer::new(&device,&queue,render_format,VS,FS,"vertexMain","fragmentMain");
         Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,launcher:vec![],native_launcher:None,controls:ControlCache::default(),mouse:None,pressed:false,pending_menu:None})
     }
-    pub fn resize(&mut self,w:u32,h:u32){let w=w.max(1);let h=h.max(1);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
+    pub fn resize(&mut self,w:u32,h:u32){let (w,h)=presskit_core::layout::fit_surface(w,h,self.device.limits().max_texture_dimension_2d);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     pub fn advance(&mut self,ms:f64){
         if let Some(hit)=self.pending_menu{
             if let Some(target)=self.app.steady_menu_frame(hit){

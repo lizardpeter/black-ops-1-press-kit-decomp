@@ -54,3 +54,19 @@ pub fn hit_media(scene:Scene,x:f64,y:f64,cy:f64)->Hit{
     }
     Hit::None
 }
+
+/// Bound the backing surface by device limits while preserving its aspect ratio.
+pub fn fit_surface(w:u32,h:u32,limit:u32)->(u32,u32){
+ let (w,h,limit)=(w.max(1),h.max(1),limit.max(1));let longest=w.max(h);
+ if longest<=limit{return (w,h);}
+ let scale=|v:u32|((u64::from(v)*u64::from(limit)/u64::from(longest))as u32).max(1);
+ (scale(w),scale(h))
+}
+#[cfg(test)]mod surface_tests{
+ use super::*;
+ #[test]fn physical_surface_preserves_4k_and_8k_within_limits(){
+  assert_eq!(fit_surface(3840,2160,8192),(3840,2160));assert_eq!(fit_surface(7680,4320,8192),(7680,4320));
+  assert_eq!(fit_surface(7680,4320,4096),(4096,2304));assert_eq!(fit_surface(4320,7680,4096),(2304,4096));
+  assert_eq!(fit_surface(0,0,8192),(1,1));
+ }
+}
