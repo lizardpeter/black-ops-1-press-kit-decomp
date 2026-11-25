@@ -14,20 +14,35 @@ page.on('response',r=>{if(r.status()>=400)badRequests.push(r.status()+' '+r.url(
 const state=()=>page.evaluate(()=>({scene:window.presskit?.player.scene(),frame:window.presskit?.player.frame(),ready:window.presskit?.player.ready(),status:document.querySelector('#status').textContent,history:window.presskit?.frameHistory}));
 const wait=async(scene,frame)=>{await page.waitForFunction(([scene,frame])=>window.presskit?.player.scene()===scene&&window.presskit.player.frame()===frame&&window.presskit.player.ready(),[scene,frame],{timeout:60000});};
 const pixelChecks=[];
-async function shot(name){
- const buf=await page.screenshot({path:out+'/'+name+'.png',timeout:60000});
- const png=PNG.sync.read(buf);
+function pixelStats(png,name){
  let lit=0,opaque=0;const colors=new Set();
  for(let i=0;i<png.data.length;i+=4){
    const [r,g,b,a]=[png.data[i],png.data[i+1],png.data[i+2],png.data[i+3]];
    if(a>=240)opaque++;
    if(a>=240&&Math.max(r,g,b)>32){lit++;colors.add((r<<16)|(g<<8)|b);}
  }
- const total=png.width*png.height;const stats={name,width:png.width,height:png.height,lit:lit/total,opaque:opaque/total,colors:colors.size};
- pixelChecks.push(stats);console.log(JSON.stringify(stats));
- // Logical navigation and a valid surface size cannot prove rendering.
- // A blank or transparent capture must fail the production gate.
- assert.ok(stats.lit>0.015&&stats.opaque>0.9&&stats.colors>100,'Missing visible GPU artwork: '+JSON.stringify(stats));
+ const total=png.width*png.height;return {name,width:png.width,height:png.height,lit:lit/total,opaque:opaque/total,colors:colors.size};
+}
+function visible(stats){return stats.lit>0.015&&stats.opaque>0.9&&stats.colors>100;}
+async function shot(name){
+ const buf=await page.screenshot({path:out+'/'+name+'.png',timeout:60000});
+ const png=PNG.sync.read(buf);
+ const stats=pixelStats(png,name);pixelChecks.push(stats);console.log(JSON.stringify(stats));
+ if(!visible(stats)){
+   // Independently inspect the GPU-rendered image, not a DOM canvas snapshot.
+   try{
+     const stage=await page.evaluate(async()=>{
+       const capture=window.presskit.player.capture_stage();
+       const [width,height,data]=await Promise.race([capture,new Promise((_,reject)=>setTimeout(()=>reject(Error('GPU readback timed out')),10000))]);
+       let binary='';for(let p=0;p<data.length;p+=32768)binary+=String.fromCharCode(...data.subarray(p,p+32768));
+       return {width,height,base64:btoa(binary)};
+     });
+     const image=new PNG({width:stage.width,height:stage.height});image.data=Buffer.from(stage.base64,'base64');
+     await writeFile(out+'/'+name+'-gpu-stage.png',PNG.sync.write(image));
+     const gpu=pixelStats(image,name+'-gpu-stage');pixelChecks.push(gpu);console.log(JSON.stringify(gpu));
+   }catch(e){console.error('Stage GPU readback failed:',String(e));}
+ }
+ assert.ok(visible(stats),'Missing visible GPU artwork: '+JSON.stringify(stats));
 }
 async function click(x,y){const r=await page.locator('#gpu').boundingBox();await page.mouse.click(r.x+x*r.width/1280,r.y+y*r.height/720);}
 try{

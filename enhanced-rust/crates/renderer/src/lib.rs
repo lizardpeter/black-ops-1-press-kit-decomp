@@ -118,7 +118,7 @@ impl Renderer{
         let width=w.round().max(1.) as u32;let height=h.round().max(1.) as u32;
         let mut intermediate=self.stage_target.borrow_mut();
         if intermediate.as_ref().is_none_or(|v|v.texture.width()!=width||v.texture.height()!=height){
-            let texture=self.device.create_texture(&wgpu::TextureDescriptor{label:Some("gamma-encoded stage target"),size:wgpu::Extent3d{width,height,depth_or_array_layers:1},mip_level_count:1,sample_count:1,dimension:wgpu::TextureDimension::D2,format:wgpu::TextureFormat::Rgba8Unorm,usage:wgpu::TextureUsages::RENDER_ATTACHMENT|wgpu::TextureUsages::TEXTURE_BINDING,view_formats:&[]});
+            let texture=self.device.create_texture(&wgpu::TextureDescriptor{label:Some("gamma-encoded stage target"),size:wgpu::Extent3d{width,height,depth_or_array_layers:1},mip_level_count:1,sample_count:1,dimension:wgpu::TextureDimension::D2,format:wgpu::TextureFormat::Rgba8Unorm,usage:wgpu::TextureUsages::RENDER_ATTACHMENT|wgpu::TextureUsages::TEXTURE_BINDING|wgpu::TextureUsages::COPY_SRC,view_formats:&[]});
             let view=texture.create_view(&Default::default());
             let binding=self.device.create_bind_group(&wgpu::BindGroupDescriptor{label:Some("stage presentation"),layout:&self.layout,entries:&[wgpu::BindGroupEntry{binding:0,resource:wgpu::BindingResource::TextureView(&view)},wgpu::BindGroupEntry{binding:1,resource:wgpu::BindingResource::Sampler(&self.sampler)},wgpu::BindGroupEntry{binding:2,resource:wgpu::BindingResource::TextureView(&view)}]});
             let vertices=self.device.create_buffer_init(&wgpu::util::BufferInitDescriptor{label:Some("stage presentation quad"),contents:bytemuck::cast_slice(&Self::quad([0.,0.,1280.,720.],[if self.target_srgb{1.}else{0.},-2.],[1.;4])),usage:wgpu::BufferUsages::VERTEX});
@@ -133,6 +133,11 @@ impl Renderer{
         if filters.is_empty(){self.pass_load(encoder,attachment,pipeline,layers,[0.,0.,width as f32,height as f32],wgpu::LoadOp::Clear(wgpu::Color::BLACK),None,resolve);}
         else{self.render_groups(encoder,attachment,resolve,layers,filters,width,height);}
         self.pass(encoder,target,&self.presentation,&[stage],[x,y,w,h]);
+    }
+    /// Snapshot the resolved physical-pixel stage, before canvas/surface presentation.
+    /// Cloning the handle does not copy pixels or affect the normal render loop.
+    pub fn stage_texture(&self)->Option<wgpu::Texture>{
+        self.stage_target.borrow().as_ref().map(|stage|stage.texture.clone())
     }
     fn msaa_view(&self,cache:&std::cell::RefCell<Option<wgpu::Texture>>,width:u32,height:u32,enabled:bool)->Option<wgpu::TextureView>{
         let mut entry=cache.borrow_mut();if !enabled{*entry=None;return None;}

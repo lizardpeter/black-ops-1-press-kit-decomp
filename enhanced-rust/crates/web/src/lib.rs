@@ -124,6 +124,30 @@ impl WebPlayer{
         let scene=self.app.scene();if scene==Scene::Gallery&&self.photo.is_empty(){return false;}
         self.ready()
     }
+    /// Explicit diagnostic only: resolve the actual GPU stage into tightly
+    /// packed RGBA bytes. Never hold a mutable WebPlayer borrow across await.
+    pub fn capture_stage(&self)->Result<js_sys::Promise,JsValue>{
+        let t=self.renderer.stage_texture().ok_or_else(||JsValue::from_str("No rendered stage"))?;
+        let (w,h)=(t.width(),t.height());
+        let row=(w*4).div_ceil(256)*256;
+        let buffer=self.device.create_buffer(&wgpu::BufferDescriptor{label:Some("stage diagnostic readback"),size:u64::from(row)*u64::from(h),usage:wgpu::BufferUsages::COPY_DST|wgpu::BufferUsages::MAP_READ,mapped_at_creation:false});
+        let mut e=self.device.create_command_encoder(&Default::default());
+        e.copy_texture_to_buffer(wgpu::TexelCopyTextureInfo{texture:&t,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},wgpu::TexelCopyBufferInfo{buffer:&buffer,layout:wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(row),rows_per_image:Some(h)}},wgpu::Extent3d{width:w,height:h,depth_or_array_layers:1});
+        self.queue.submit([e.finish()]);
+        Ok(js_sys::Promise::new(&mut |resolve,reject|{
+            let readback=buffer.clone();
+            buffer.slice(..).map_async(wgpu::MapMode::Read,move |result|{
+                if let Err(e)=result{let _=reject.call1(&JsValue::UNDEFINED,&error(e));return;}
+                let bytes=readback.slice(..).get_mapped_range();
+                let mut rgba=Vec::with_capacity((w*h*4)as usize);
+                for line in bytes.chunks_exact(row as usize){rgba.extend_from_slice(&line[..w as usize*4]);}
+                drop(bytes);readback.unmap();
+                let array=js_sys::Uint8Array::from(rgba.as_slice());
+                let value=Array::of3(&JsValue::from(w),&JsValue::from(h),&array.into());
+                let _=resolve.call1(&JsValue::UNDEFINED,&value.into());
+            });
+        }))
+    }
     pub fn cache_bytes(&self)->f64{self.images.values().map(|(l,_)|u64::from(l.texture.width())*u64::from(l.texture.height())*4).sum::<u64>() as f64}
     fn visible_paths(&mut self)->Vec<String>{
         let mut paths=self.paths();
