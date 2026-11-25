@@ -15,22 +15,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Download exact compiled preview from run 45541327727
+      - name: Download exact compiled preview from run 45548889256
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p "$RUNNER_TEMP/site"
-          gh run download 45541327727 --name webgpu-unvalidated-preview --dir "$RUNNER_TEMP/site"
-          grep -F cfe83e42d9a790f5027856a9f031e68a2a0d4178 "$RUNNER_TEMP/site/BUILD_INFO.txt"
+          gh run download 45548889256 --name webgpu-unvalidated-preview --dir "$RUNNER_TEMP/site"
+          grep -F 3d9ba543ffe51d68703f011a17bc3c6badb1cd39 "$RUNNER_TEMP/site/BUILD_INFO.txt"
       - name: Exercise actual browser WebGPU runtime
         run: |
           mkdir -p "$RUNNER_TEMP/browser"
           cd "$RUNNER_TEMP/browser"
-          npm install --no-audit --no-fund --ignore-scripts playwright@1.56.1
+          npm install --no-audit --no-fund --ignore-scripts playwright@1.56.1 pngjs@7.0.0
           npx playwright install --with-deps chromium
-          cp "$GITHUB_WORKSPACE/enhanced-rust/tools/browser_preview_test.mjs" .
+          cp "$GITHUB_WORKSPACE/enhanced-rust/tools/browser_presentation_probe.mjs" .
           python3 -m http.server 8766 --bind 127.0.0.1 --directory "$RUNNER_TEMP/site" > "$RUNNER_TEMP/browser/http.log" 2>&1 &
-          node browser_preview_test.mjs "$RUNNER_TEMP/screenshots"
+          node browser_presentation_probe.mjs "$RUNNER_TEMP/screenshots"
       - name: Retain actual browser screenshots and diagnostic logs
         if: always()
         uses: actions/upload-artifact@v4
