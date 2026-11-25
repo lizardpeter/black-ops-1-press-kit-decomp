@@ -208,7 +208,7 @@ def build(data,output,jar):
     for kind,key,value in sidebar:
         if kind=='mesh':overlays[key]=value
     quit_states,wallpaper_states,wallpaper_places=native_buttons(data)
-    metadata=[];codecs=[];bitmap_slots={};overlay_slots={};meshes=[];button_slots={};button_meshes=[];sidebar_slots={};texture_states=[]
+    metadata=[];codecs=[];bitmap_slots={};overlay_slots={};meshes={};button_slots={};button_meshes={};sidebar_slots={};texture_states={}
     def slot(w,h,codec):
         i=len(metadata);metadata.append((w,h));codecs.append(codec);return i
     def png(im,codec=0):
@@ -218,23 +218,23 @@ def build(data,output,jar):
             # Keep the original full JPEG pixels; the renderer clips its UV.
             bitmap_slots[cid]=png(im,4)
             state=((0.,0.,571.,481.),(0.,0.,571/572,1.))
-            texture_states.append((0,[state]*3))
+            texture_states[bitmap_slots[cid]]=(0,[state]*3)
         else:bitmap_slots[cid]=png(im)
     # #51 and #53 use the same original #22 image but independent placements.
     intro_slot=png(bitmaps[22])
     for cid,batches in sorted(overlays.items()):
-        overlay_slots[cid]=slot(1,1,2);meshes.append(batches)
+        overlay_slots[cid]=slot(1,1,2);meshes[overlay_slots[cid]]=batches
     for selector,states in [(255,quit_states)]+[(i,wallpaper_states) for i,_,_ in wallpaper_places]:
-        button_slots[selector]=slot(1,1,3);button_meshes.append((selector,states))
+        button_slots[selector]=slot(1,1,3);button_meshes[button_slots[selector]]=(selector,states)
     for kind,key,value in sidebar:
         if kind=='mesh':continue
-        im,states=value;sidebar_slots[key]=png(im,4);texture_states.append((key,states))
+        im,states=value;sidebar_slots[key]=png(im,4);texture_states[sidebar_slots[key]]=(key,states)
     strip_slots={}
     for sid,rows in menu_strips.items():
         strip_slots[sid]=[]
         for kind,key,x,y,w,h in rows:
             i=png(bitmaps[key],4);strip_slots[sid].append(i)
-            texture_states.append((0,[((x/20,y/20,w/20,h/20),(0.,0.,1.,1.))]*3))
+            texture_states[i]=(0,[((x/20,y/20,w/20,h/20),(0.,0.,1.,1.))]*3)
     from extract_thumbnails import extract as extract_thumbnails
     direct={}
     for sid,rows in extract_thumbnails(data).items():
@@ -297,13 +297,19 @@ def build(data,output,jar):
             assert vertices and len(vertices)%3==0
             packed.extend(struct.pack('<4BI',*rgba,len(vertices)))
             for x,y in vertices:packed.extend(struct.pack('<ff',x/20,y/20))
-    for values in meshes:batches(values)
-    for selector,states in button_meshes:
-        packed.append(selector)
-        for values in states:batches(values)
-    for selector,states in texture_states:
-        packed.append(selector)
-        for bounds,uv in states:packed+=struct.pack('<8f',*bounds,*uv)
+    # The Rust decoder consumes extension records in slot order, not codec
+    # order. A clipped bitmap can precede any mesh slot.
+    assert set(meshes)=={i for i,c in enumerate(codecs) if c==2}
+    assert set(button_meshes)=={i for i,c in enumerate(codecs) if c==3}
+    assert set(texture_states)=={i for i,c in enumerate(codecs) if c==4}
+    for i,codec in enumerate(codecs):
+        if codec==2:batches(meshes[i])
+        elif codec==3:
+            selector,states=button_meshes[i];packed.append(selector)
+            for values in states:batches(values)
+        elif codec==4:
+            selector,states=texture_states[i];packed.append(selector)
+            for bounds,uv in states:packed+=struct.pack('<8f',*bounds,*uv)
     assert len(packed)<=8*1024*1024
     (output/'timeline.pfg').write_bytes(packed)
     print(f'Native foreground: {len(frames)} frames, {len(meshes)} mesh entries, {len(button_meshes)} vector buttons, {len(texture_states)} clipped bitmap entries; no baked runtime sprites')

@@ -75,7 +75,7 @@ impl ForegroundArt{
  pub fn install_menu(&mut self,bytes:&[u8])->Result<(),&'static str>{let menu=MenuPack::read(bytes)?;self.timeline.validate_menu(&menu)?;self.menu=Some(menu);self.menu_cache=MenuCache::default();Ok(())}
  pub fn update_menu(&mut self,r:&Renderer,d:&wgpu::Device,q:&wgpu::Queue,selected:u8,pressed:bool){if let (Some(menu),Some(frame))=(&self.menu,self.last){self.menu_cache.update(menu,r,d,q,frame,selected,pressed);}
   let mesh_key=self.last.map(|f|(f,selected,pressed));
-  if self.mesh_frame!=mesh_key{self.mesh_layers.clear();if let Some(frame)=self.last{for p in self.timeline.frame(frame){let [x,y,_,_]=p.rect();if let Some((selector,states))=self.timeline.texture_states.get(&p.image){if let Some(layer)=&self.textures[p.image]{let s=states[if selected==*selector{if pressed{2}else{1}}else{0}];let [dx,dy,w,h]=s.rect;r.set_opacity_uv(q,layer,[x+dx,y+dy,w,h],p.alpha as f32/256.,s.uv);}continue;}if !self.timeline.is_mesh(p.image){continue;}let batches=if let Some((selector,states))=self.timeline.buttons.get(&p.image){&states[if selected==*selector{if pressed{2}else{1}}else{0}]}else{&self.timeline.meshes[p.image]};let layers=batches.iter().filter_map(|b|{let points:Vec<_>=b.vertices.iter().map(|v|[v[0]+x,v[1]+y]).collect();r.mesh_with_opacity(d,b.rgba,&points,p.alpha as f32/256.)}).collect();self.mesh_layers.insert(p.image,layers);}}self.mesh_frame=mesh_key;}}
+  if self.mesh_frame!=mesh_key{self.mesh_layers.clear();if let Some(frame)=self.last{for p in self.timeline.frame(frame){let [x,y,_,_]=p.rect();if let Some((selector,states))=self.timeline.texture_states.get(&p.image){if let Some(layer)=&self.textures[p.image]{let s=states[if *selector!=0&&selected==*selector{if pressed{2}else{1}}else{0}];let [dx,dy,w,h]=s.rect;r.set_opacity_uv(q,layer,[x+dx,y+dy,w,h],p.alpha as f32/256.,s.uv);}continue;}if !self.timeline.is_mesh(p.image){continue;}let batches=if let Some((selector,states))=self.timeline.buttons.get(&p.image){&states[if selected==*selector{if pressed{2}else{1}}else{0}]}else{&self.timeline.meshes[p.image]};let layers=batches.iter().filter_map(|b|{let points:Vec<_>=b.vertices.iter().map(|v|[v[0]+x,v[1]+y]).collect();r.mesh_with_opacity(d,b.rgba,&points,p.alpha as f32/256.)}).collect();self.mesh_layers.insert(p.image,layers);}}self.mesh_frame=mesh_key;}}
  pub fn install(&mut self,i:usize,layer:Layer)->Result<(),&'static str>{if self.timeline.is_mesh(i){return Err("mesh slot cannot receive a texture");}if self.timeline.dimensions.get(i)!=Some(&(layer.texture.width(),layer.texture.height())){return Err("unexpected sprite dimensions");}if self.textures[i].is_some()&&self.last.is_some_and(|f|self.timeline.frame(f).iter().any(|p|p.image==i)){self.last=None;self.mesh_frame=None;}self.textures[i]=Some(layer);Ok(())}
  pub fn missing(&self)->Vec<usize>{self.textures.iter().enumerate().filter_map(|(i,v)|(v.is_none()&&!self.timeline.is_mesh(i)).then_some(i)).collect()}
  pub fn missing_frame(&self,frame:u16)->Vec<usize>{self.timeline.frame(frame).iter().filter_map(|p|(self.textures[p.image].is_none()&&!self.timeline.is_mesh(p.image)).then_some(p.image)).collect()}
@@ -116,5 +116,20 @@ impl ForegroundArt{
   let mut b=fixture();b.pop();assert!(ForegroundTimeline::read(&b).is_err());
   let mut b=fixture();let n=b.len();b[n-4..].copy_from_slice(&f32::NAN.to_le_bytes());assert!(ForegroundTimeline::read(&b).is_err());
   let mut b=fixture();b[12]=255;assert!(ForegroundTimeline::read(&b).is_err());
+ }
+}
+
+#[cfg(test)]mod interleaved_tests{
+ use super::*;
+ #[test]fn pfg7_decodes_interleaved_extension_slots(){
+  let mut b=b"PFG7\x03\0\x69\0".to_vec();
+  b.extend([2,0,2,0,4,1,0,1,0,2,1,0,1,0,3]);
+  for _ in 0..105{b.extend([0,255,0]);}
+  b.push(0);
+  for _ in 0..3{for v in [0f32,0.,1.,1.,0.,0.,0.5,1.]{b.extend(v.to_le_bytes());}}
+  let batch=|b:&mut Vec<u8>|{b.extend(1u16.to_le_bytes());b.extend([255;4]);b.extend(3u32.to_le_bytes());for v in [0f32,0.,1.,0.,0.,1.]{b.extend(v.to_le_bytes());}};
+  batch(&mut b);b.push(1);b.extend(0u16.to_le_bytes());batch(&mut b);batch(&mut b);
+  let t=ForegroundTimeline::read(&b).unwrap();
+  assert_eq!(t.texture_states[&0].1[0].uv,[0.,0.,0.5,1.]);assert_eq!(t.meshes[1].len(),1);assert_eq!(t.buttons[&2].0,1);
  }
 }
