@@ -37,3 +37,27 @@ fn native_subpixel_geometry_is_rasterized_at_1440p_and_4k(){
   }
  });
 }
+
+// The browser canvas uses the raw preferred unorm format rather than an sRGB
+// alias. It must receive the same encoded RGB values as a native sRGB target.
+#[test]
+fn raw_browser_surface_matches_srgb_native_surface(){
+ pollster::block_on(async{
+  let i=wgpu::Instance::default();let a=i.request_adapter(&Default::default()).await.expect("GPU");
+  let(d,q)=a.request_device(&Default::default(),None).await.unwrap();
+  let mut output=Vec::new();
+  for format in [wgpu::TextureFormat::Rgba8UnormSrgb,wgpu::TextureFormat::Rgba8Unorm,wgpu::TextureFormat::Bgra8Unorm]{
+   let r=Renderer::new(&d,&q,format,include_str!("../../../shaders/generated/vertex.wgsl"),include_str!("../../../shaders/generated/fragment.wgsl"),"vertexMain","fragmentMain");
+   let layer=r.layer(&d,&q,&[183,71,24,255],1,1,[0.,0.,1280.,720.]);
+   let t=d.create_texture(&wgpu::TextureDescriptor{label:Some("browser presentation format"),size:wgpu::Extent3d{width:64,height:36,depth_or_array_layers:1},mip_level_count:1,sample_count:1,dimension:wgpu::TextureDimension::D2,format,usage:wgpu::TextureUsages::RENDER_ATTACHMENT|wgpu::TextureUsages::COPY_SRC,view_formats:&[]});
+   let buf=d.create_buffer(&wgpu::BufferDescriptor{label:None,size:256,usage:wgpu::BufferUsages::COPY_DST|wgpu::BufferUsages::MAP_READ,mapped_at_creation:false});
+   let mut e=d.create_command_encoder(&Default::default());
+   r.render(&mut e,&t.create_view(&Default::default()),&[&layer],[0.,0.,64.,36.]);
+   e.copy_texture_to_buffer(wgpu::TexelCopyTextureInfo{texture:&t,mip_level:0,origin:wgpu::Origin3d{x:32,y:18,z:0},aspect:wgpu::TextureAspect::All},wgpu::TexelCopyBufferInfo{buffer:&buf,layout:wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(256),rows_per_image:Some(1)}},wgpu::Extent3d{width:1,height:1,depth_or_array_layers:1});
+   q.submit([e.finish()]);let slice=buf.slice(..);let(tx,rx)=std::sync::mpsc::channel();slice.map_async(wgpu::MapMode::Read,move|v|tx.send(v).unwrap());d.poll(wgpu::Maintain::Wait);rx.recv().unwrap().unwrap();
+   let bytes=slice.get_mapped_range();let mut pixel=[bytes[0],bytes[1],bytes[2],bytes[3]];if format==wgpu::TextureFormat::Bgra8Unorm{pixel.swap(0,2);}
+   eprintln!("{format:?}: {pixel:?}");output.push(pixel);drop(bytes);buf.unmap();
+  }
+  for pixel in output{for (value,expected) in pixel.into_iter().zip([183u8,71,24,255]){assert!(value.abs_diff(expected)<=1,"presented color changed");}}
+ });
+}

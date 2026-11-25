@@ -30,10 +30,19 @@ impl WebPlayer{
         let mut descriptor=wgpu::DeviceDescriptor::default();descriptor.required_limits.max_texture_dimension_2d=adapter.limits().max_texture_dimension_2d;
         let (device,queue)=adapter.request_device(&descriptor,None).await.map_err(error)?;
         let mut config=surface.get_default_config(&adapter,canvas.width().max(1),canvas.height().max(1)).ok_or_else(||JsValue::from_str("surface configuration unavailable"))?;
-        let render_format=config.format.add_srgb_suffix();
-        if render_format!=config.format{config.view_formats.push(render_format);}
+        // Browser canvases expect their advertised native format (normally
+        // Bgra8Unorm) with sRGB-encoded channels. The resolved stage already
+        // contains those channels, so do not reinterpret the canvas as an
+        // sRGB texture view. The desktop host can still use sRGB attachments.
+        config.view_formats.clear();
+        if surface.get_capabilities(&adapter).alpha_modes.contains(&wgpu::CompositeAlphaMode::Opaque){
+            config.alpha_mode=wgpu::CompositeAlphaMode::Opaque;
+        }
+        let (w,h)=presskit_core::layout::fit_surface(config.width,config.height,device.limits().max_texture_dimension_2d);
+        config.width=w;config.height=h;
+        canvas.set_width(w);canvas.set_height(h);
         surface.configure(&device,&config);
-        let renderer=Renderer::new(&device,&queue,render_format,VS,FS,"vertexMain","fragmentMain");
+        let renderer=Renderer::new(&device,&queue,config.format,VS,FS,"vertexMain","fragmentMain");
         Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,launcher:vec![],native_launcher:None,controls:ControlCache::default(),mouse:None,pressed:false,pending_menu:None,_instance:instance})
     }
     pub fn resize(&mut self,w:u32,h:u32){let (w,h)=presskit_core::layout::fit_surface(w,h,self.device.limits().max_texture_dimension_2d);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
@@ -186,7 +195,7 @@ impl WebPlayer{
         for p in &paths{if let Some((layer,used))=self.images.get_mut(p){*used=self.serial;if p.contains("_controls/")&&self.control_y!=self.app.controls.y as f32{self.renderer.reposition(&self.device,layer,[200.,self.app.controls.y as f32,880.,90.]);}}}
         self.control_y=self.app.controls.y as f32;
         let frame=match self.surface.get_current_texture(){Ok(f)=>f,Err(wgpu::SurfaceError::Lost|wgpu::SurfaceError::Outdated)=>{self.surface.configure(&self.device,&self.config);return Ok(());},Err(e)=>return Err(error(e))};
-        let view=frame.texture.create_view(&wgpu::TextureViewDescriptor{format:Some(self.config.format.add_srgb_suffix()),..Default::default()});let mut encoder=self.device.create_command_encoder(&Default::default());
+        let view=frame.texture.create_view(&wgpu::TextureViewDescriptor::default());let mut encoder=self.device.create_command_encoder(&Default::default());
         let stage=Stage::fit(self.config.width.into(),self.config.height.into());let mut layers=vec![];let mut filters=vec![];
         if self.layered&&self.app.frame>=56&&!matches!(self.app.scene(),Scene::Video|Scene::Gallery){if let Some(bg)=&mut self.background{bg.update(&self.renderer,&self.device,&self.queue,self.app.background.frame);layers.extend(bg.layers(self.app.background.frame));}}
         if fg_on{let (fg,spans)=self.foreground.as_ref().unwrap().layers_and_filters();let offset=layers.len();filters.extend(spans.into_iter().map(|mut s|{s.start+=offset;s.end+=offset;s}));layers.extend(fg);}

@@ -4,7 +4,7 @@ import {PNG} from 'pngjs';
 import {mkdir,writeFile} from 'node:fs/promises';
 const out=process.argv[2];
 await mkdir(out,{recursive:true});
-const browser=await chromium.launch({channel:'chromium',headless:true,args:['--enable-unsafe-webgpu','--enable-unsafe-swiftshader','--use-angle=swiftshader','--enable-features=Vulkan','--disable-vulkan-surface','--autoplay-policy=no-user-gesture-required']});
+const browser=await chromium.launch({channel:'chromium',headless:true,args:['--enable-unsafe-webgpu','--enable-unsafe-swiftshader','--use-angle=swiftshader','--enable-features=Vulkan','--autoplay-policy=no-user-gesture-required']});
 const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1,locale:'en-US'});
 const faults=[],messages=[],badRequests=[];
 await page.addInitScript(()=>{window.addEventListener('unhandledrejection',e=>console.error('Unhandled rejection',e.reason));});
