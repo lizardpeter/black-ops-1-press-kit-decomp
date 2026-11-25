@@ -17,3 +17,10 @@ for engine in ('ffdec','ruffle'):
     # A vertical 15px box blur cannot erase the interior of a large masked button.
     # This measures evidence without changing the production parity threshold.
     if b/p<.1:print(f'{engine}: masked button interiors lost during filtering')
+
+plain=load('sidebar-plain-ffdec.png');flat=load('sidebar-flat-plain-ffdec.png');blur=load('sidebar-flat-blur-ffdec.png')
+mae=sum(ImageStat.Stat(ImageChops.difference(plain,flat)).mean)/3
+print(f'Flattened mask reference plain MAE {mae:.5f}/255; blurred button energy {energy(blur):.4f}/{energy(flat):.4f}')
+assert mae<0.15,'reference rewrite changed unfiltered source art'
+assert energy(blur)>0.8*energy(flat),'reference rewrite does not repair filtered button loss'
+assert ImageChops.difference(flat,blur).getbbox() is not None,'reference rewrite lost blur'

@@ -31,7 +31,7 @@ jobs:
           curl --fail --location --retry 3 -o "$RUNNER_TEMP/ffdec.zip" https://github.com/jindrapetrik/jpexs-decompiler/releases/download/version26.5.0/ffdec_26.5.0.zip
           unzip -q "$RUNNER_TEMP/ffdec.zip" -d "$RUNNER_TEMP/ffdec"
           jar="$(find "$RUNNER_TEMP/ffdec" -name ffdec.jar -print -quit)"
-          for scene in sidebar-plain sidebar-blur; do
+          for scene in sidebar-plain sidebar-blur sidebar-flat-plain sidebar-flat-blur; do
             mkdir -p "$RUNNER_TEMP/fixture/$scene"
             java -Djava.awt.headless=true -jar "$jar" -format frame:png -export frame "$RUNNER_TEMP/fixture/$scene" "$RUNNER_TEMP/fixture/$scene.swf"
             cp "$(find "$RUNNER_TEMP/fixture/$scene" -name '*.png' -print -quit)" "$RUNNER_TEMP/fixture/$scene-ffdec.png"
