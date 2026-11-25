@@ -13,7 +13,7 @@ page.on('console',m=>{messages.push(m.type()+': '+m.text());if(m.type()==='error
 page.on('response',r=>{if(r.status()>=400)badRequests.push(r.status()+' '+r.url());});
 const state=()=>page.evaluate(()=>({scene:window.presskit?.player.scene(),frame:window.presskit?.player.frame(),ready:window.presskit?.player.ready(),status:document.querySelector('#status').textContent,history:window.presskit?.frameHistory}));
 const wait=async(scene,frame)=>{await page.waitForFunction(([scene,frame])=>window.presskit?.player.scene()===scene&&window.presskit.player.frame()===frame&&window.presskit.player.ready(),[scene,frame],{timeout:60000});};
-const pixelChecks=[];
+const pixelChecks=[],presentationFailures=[];
 function pixelStats(png,name){
  let lit=0,opaque=0;const colors=new Set();
  for(let i=0;i<png.data.length;i+=4){
@@ -24,25 +24,45 @@ function pixelStats(png,name){
  const total=png.width*png.height;return {name,width:png.width,height:png.height,lit:lit/total,opaque:opaque/total,colors:colors.size};
 }
 function visible(stats){return stats.lit>0.015&&stats.opaque>0.9&&stats.colors>100;}
+async function saveCapture(name,image){
+ const stats=pixelStats(image,name);pixelChecks.push(stats);console.log(JSON.stringify(stats));
+ await writeFile(out+'/'+name+'.png',PNG.sync.write(image));return stats;
+}
 async function shot(name){
- const buf=await page.screenshot({path:out+'/'+name+'.png',timeout:60000});
- const png=PNG.sync.read(buf);
- const stats=pixelStats(png,name);pixelChecks.push(stats);console.log(JSON.stringify(stats));
- if(!visible(stats)){
-   // Independently inspect the GPU-rendered image, not a DOM canvas snapshot.
-   try{
-     const stage=await page.evaluate(async()=>{
-       const capture=window.presskit.player.capture_stage();
-       const [width,height,data]=await Promise.race([capture,new Promise((_,reject)=>setTimeout(()=>reject(Error('GPU readback timed out')),10000))]);
-       let binary='';for(let p=0;p<data.length;p+=32768)binary+=String.fromCharCode(...data.subarray(p,p+32768));
-       return {width,height,base64:btoa(binary)};
-     });
-     const image=new PNG({width:stage.width,height:stage.height});image.data=Buffer.from(stage.base64,'base64');
-     await writeFile(out+'/'+name+'-gpu-stage.png',PNG.sync.write(image));
-     const gpu=pixelStats(image,name+'-gpu-stage');pixelChecks.push(gpu);console.log(JSON.stringify(gpu));
-   }catch(e){console.error('Stage GPU readback failed:',String(e));}
- }
- assert.ok(visible(stats),'Missing visible GPU artwork: '+JSON.stringify(stats));
+ // Freeze only the debug render loop; draw one final frame, request the surface
+ // copy in that same submission, and capture the canvas before a new frame.
+ let screen,stageStats;
+ try{
+  const snap=await page.evaluate(async()=>{
+   const p=window.presskit;p.capturePaused=true;
+   const supported=p.player.request_surface_capture();
+   p.player.draw(p.video,-1);
+   const canvas=document.querySelector('#gpu');
+   let canvasData=null,canvasError=null;
+   try{canvasData=canvas.toDataURL('image/png');}catch(e){canvasError=String(e);}
+   const encode=async promise=>{
+    const [width,height,data]=await Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(Error('GPU readback timed out')),15000))]);
+    let binary='';for(let p=0;p<data.length;p+=32768)binary+=String.fromCharCode(...data.subarray(p,p+32768));
+    return {width,height,base64:btoa(binary)};
+   };
+   const results=await Promise.allSettled([encode(p.player.capture_stage()),supported?encode(p.player.take_surface_capture()):Promise.reject(Error('surface COPY_SRC unsupported'))]);
+   return {canvasData,canvasError,supported,results:results.map(r=>r.status==='fulfilled'?r.value:{error:String(r.reason)})};
+  });
+  for(const [i,tag] of [[0,'gpu-stage'],[1,'gpu-surface']]){
+   const result=snap.results[i];
+   if(result.error){console.warn(tag,result.error);continue;}
+   const image=new PNG({width:result.width,height:result.height});image.data=Buffer.from(result.base64,'base64');
+   const stats=await saveCapture(name+'-'+tag,image);if(i===0)stageStats=stats;
+  }
+  if(snap.canvasData?.startsWith('data:image/png;base64,')){
+   const image=PNG.sync.read(Buffer.from(snap.canvasData.split(',')[1],'base64'));
+   await saveCapture(name+'-canvas',image);
+  }else console.warn('Canvas snapshot unavailable',snap.canvasError);
+  const buf=await page.screenshot({path:out+'/'+name+'.png',timeout:60000});
+  screen=pixelStats(PNG.sync.read(buf),name);pixelChecks.push(screen);console.log(JSON.stringify(screen));
+  if(!visible(screen))presentationFailures.push(name);
+  assert.ok(stageStats&&visible(stageStats),'Missing actual GPU stage artwork: '+name);
+ }finally{await page.evaluate(()=>{window.presskit.capturePaused=false;});}
 }
 async function click(x,y){const r=await page.locator('#gpu').boundingBox();await page.mouse.click(r.x+x*r.width/1280,r.y+y*r.height/720);}
 try{
@@ -69,8 +89,9 @@ try{
  }
  assert.deepEqual(faults,[]);assert.deepEqual(badRequests,[]);
  const status=await state();assert.equal(status.status,'');
+ assert.deepEqual(presentationFailures,[],'Browser presentation failed for one or more real captures (GPU stage captures retained)');
  console.log('Launcher, welcome, all three menus, menu switching, 1440p/4K resizing passed in Chromium WebGPU');
 }finally{
- await writeFile(out+'/browser-log.txt',JSON.stringify({faults,badRequests,messages,pixelChecks,state:await state().catch(()=>null)},null,2));
+ await writeFile(out+'/browser-log.txt',JSON.stringify({faults,badRequests,messages,pixelChecks,presentationFailures,state:await state().catch(()=>null)},null,2));
  await browser.close();
 }

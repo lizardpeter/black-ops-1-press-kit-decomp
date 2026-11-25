@@ -13,12 +13,42 @@ const VS:&str=include_str!("../../../shaders/generated/vertex.wgsl");
 const FS:&str=include_str!("../../../shaders/generated/fragment.wgsl");
 fn error(e:impl std::fmt::Debug)->JsValue{JsValue::from_str(&format!("{e:?}"))}
 fn pair(kind:&str,value:&str)->Array{Array::of2(&kind.into(),&value.into())}
+
+// Read back exactly the submitted texture, with no browser/compositor dependency.
+// The surface capture is opt-in; the normal frame path never maps GPU buffers.
+struct Capture{buffer:wgpu::Buffer,w:u32,h:u32,row:u32,bgra:bool}
+impl Capture{
+    fn encode(device:&wgpu::Device,e:&mut wgpu::CommandEncoder,t:&wgpu::Texture)->Self{
+        let(w,h)=(t.width(),t.height());let row=(w*4).div_ceil(256)*256;
+        let buffer=device.create_buffer(&wgpu::BufferDescriptor{label:Some("diagnostic pixel readback"),size:u64::from(row)*u64::from(h),usage:wgpu::BufferUsages::COPY_DST|wgpu::BufferUsages::MAP_READ,mapped_at_creation:false});
+        e.copy_texture_to_buffer(wgpu::TexelCopyTextureInfo{texture:t,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},wgpu::TexelCopyBufferInfo{buffer:&buffer,layout:wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(row),rows_per_image:Some(h)}},wgpu::Extent3d{width:w,height:h,depth_or_array_layers:1});
+        Self{buffer,w,h,row,bgra:matches!(t.format(),wgpu::TextureFormat::Bgra8Unorm|wgpu::TextureFormat::Bgra8UnormSrgb)}
+    }
+    fn promise(self)->js_sys::Promise{
+        let Self{buffer,w,h,row,bgra}=self;
+        js_sys::Promise::new(&mut |resolve,reject|{
+            let readback=buffer.clone();
+            buffer.slice(..).map_async(wgpu::MapMode::Read,move |result|{
+                if let Err(e)=result{let _=reject.call1(&JsValue::UNDEFINED,&error(e));return;}
+                let bytes=readback.slice(..).get_mapped_range();
+                let mut rgba=Vec::with_capacity((w*h*4)as usize);
+                for line in bytes.chunks_exact(row as usize){rgba.extend_from_slice(&line[..w as usize*4]);}
+                drop(bytes);readback.unmap();
+                if bgra{for p in rgba.chunks_exact_mut(4){p.swap(0,2);}}
+                let array=js_sys::Uint8Array::from(rgba.as_slice());
+                let value=Array::of3(&JsValue::from(w),&JsValue::from(h),&array.into());
+                let _=resolve.call1(&JsValue::UNDEFINED,&value.into());
+            });
+        })
+    }
+}
 #[wasm_bindgen]
 pub struct WebPlayer{
     app:App,canvas:HtmlCanvasElement,surface:wgpu::Surface<'static>,device:wgpu::Device,queue:wgpu::Queue,
     config:wgpu::SurfaceConfiguration,renderer:Renderer,images:HashMap<String,(Layer,u64)>,video:Option<Layer>,
     photo:String,layered:bool,serial:u64,control_y:f32,video_stamp:f64,last_foreground:Option<String>,background:Option<BackgroundArt>,foreground:Option<ForegroundArt>,pack:Option<ControlPack>,launcher:Vec<Layer>,native_launcher:Option<presskit_renderer::launcher::LauncherArt>,controls:ControlCache,mouse:Option<(f64,f64)>,pressed:bool,pending_menu:Option<Hit>,
     // Keep the owning WebGPU context alive until all surface/device resources drop.
+    capture_requested:bool,surface_capture:Option<Capture>,
     _instance:wgpu::Instance,
 }
 #[wasm_bindgen]
@@ -35,6 +65,7 @@ impl WebPlayer{
         // contains those channels, so do not reinterpret the canvas as an
         // sRGB texture view. The desktop host can still use sRGB attachments.
         config.view_formats.clear();
+        if surface.get_capabilities(&adapter).usages.contains(wgpu::TextureUsages::COPY_SRC){config.usage|=wgpu::TextureUsages::COPY_SRC;}
         if surface.get_capabilities(&adapter).alpha_modes.contains(&wgpu::CompositeAlphaMode::Opaque){
             config.alpha_mode=wgpu::CompositeAlphaMode::Opaque;
         }
@@ -43,7 +74,7 @@ impl WebPlayer{
         canvas.set_width(w);canvas.set_height(h);
         surface.configure(&device,&config);
         let renderer=Renderer::new(&device,&queue,config.format,VS,FS,"vertexMain","fragmentMain");
-        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,launcher:vec![],native_launcher:None,controls:ControlCache::default(),mouse:None,pressed:false,pending_menu:None,_instance:instance})
+        Ok(Self{app:App::default(),canvas,surface,device,queue,config,renderer,images:HashMap::new(),video:None,photo:String::new(),layered,serial:0,control_y:-1.,video_stamp:-1.,last_foreground:None,background:None,foreground:None,pack:None,launcher:vec![],native_launcher:None,controls:ControlCache::default(),mouse:None,pressed:false,pending_menu:None,capture_requested:false,surface_capture:None,_instance:instance})
     }
     pub fn resize(&mut self,w:u32,h:u32){let (w,h)=presskit_core::layout::fit_surface(w,h,self.device.limits().max_texture_dimension_2d);if (w,h)!=(self.config.width,self.config.height){self.canvas.set_width(w);self.canvas.set_height(h);self.config.width=w;self.config.height=h;self.surface.configure(&self.device,&self.config);}}
     pub fn advance(&mut self,ms:f64){
@@ -137,25 +168,17 @@ impl WebPlayer{
     /// packed RGBA bytes. Never hold a mutable WebPlayer borrow across await.
     pub fn capture_stage(&self)->Result<js_sys::Promise,JsValue>{
         let t=self.renderer.stage_texture().ok_or_else(||JsValue::from_str("No rendered stage"))?;
-        let (w,h)=(t.width(),t.height());
-        let row=(w*4).div_ceil(256)*256;
-        let buffer=self.device.create_buffer(&wgpu::BufferDescriptor{label:Some("stage diagnostic readback"),size:u64::from(row)*u64::from(h),usage:wgpu::BufferUsages::COPY_DST|wgpu::BufferUsages::MAP_READ,mapped_at_creation:false});
         let mut e=self.device.create_command_encoder(&Default::default());
-        e.copy_texture_to_buffer(wgpu::TexelCopyTextureInfo{texture:&t,mip_level:0,origin:wgpu::Origin3d::ZERO,aspect:wgpu::TextureAspect::All},wgpu::TexelCopyBufferInfo{buffer:&buffer,layout:wgpu::TexelCopyBufferLayout{offset:0,bytes_per_row:Some(row),rows_per_image:Some(h)}},wgpu::Extent3d{width:w,height:h,depth_or_array_layers:1});
-        self.queue.submit([e.finish()]);
-        Ok(js_sys::Promise::new(&mut |resolve,reject|{
-            let readback=buffer.clone();
-            buffer.slice(..).map_async(wgpu::MapMode::Read,move |result|{
-                if let Err(e)=result{let _=reject.call1(&JsValue::UNDEFINED,&error(e));return;}
-                let bytes=readback.slice(..).get_mapped_range();
-                let mut rgba=Vec::with_capacity((w*h*4)as usize);
-                for line in bytes.chunks_exact(row as usize){rgba.extend_from_slice(&line[..w as usize*4]);}
-                drop(bytes);readback.unmap();
-                let array=js_sys::Uint8Array::from(rgba.as_slice());
-                let value=Array::of3(&JsValue::from(w),&JsValue::from(h),&array.into());
-                let _=resolve.call1(&JsValue::UNDEFINED,&value.into());
-            });
-        }))
+        let capture=Capture::encode(&self.device,&mut e,&t);
+        self.queue.submit([e.finish()]);Ok(capture.promise())
+    }
+    pub fn request_surface_capture(&mut self)->bool{
+        self.surface_capture=None;
+        self.capture_requested=self.config.usage.contains(wgpu::TextureUsages::COPY_SRC);
+        self.capture_requested
+    }
+    pub fn take_surface_capture(&mut self)->Result<js_sys::Promise,JsValue>{
+        self.surface_capture.take().map(Capture::promise).ok_or_else(||JsValue::from_str("Surface capture unavailable"))
     }
     pub fn cache_bytes(&self)->f64{self.images.values().map(|(l,_)|u64::from(l.texture.width())*u64::from(l.texture.height())*4).sum::<u64>() as f64}
     fn visible_paths(&mut self)->Vec<String>{
@@ -204,6 +227,7 @@ impl WebPlayer{
         if self.app.scene()==Scene::Launcher{if let Some(a)=&self.native_launcher{layers.extend(a.layers());}else if self.images.contains_key("art/launcher/1.png"){layers.extend(self.launcher.iter());}}
         layers.extend(self.controls.layers().iter());
         self.renderer.render_filtered(&mut encoder,&view,&layers,&filters,[stage.x as f32,stage.y as f32,(1280.*stage.scale) as f32,(720.*stage.scale) as f32]);
+        if std::mem::take(&mut self.capture_requested){self.surface_capture=Some(Capture::encode(&self.device,&mut encoder,&frame.texture));}
         self.queue.submit([encoder.finish()]);frame.present();Ok(())
     }
 }
