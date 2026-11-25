@@ -1,0 +1,188 @@
+name: corrected-full-reference-validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [validation/corrected-reference]
+    paths:
+      - '**'
+      - 'target.toml'
+      - 'records/originals.tsv'
+      - 'tools/fetch_originals.py'
+      - 'tools/prepare_player_assets.py'
+      - 'tools/swf/analyze.py'
+      - '.github/workflows/webgpu-test-build.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: black-ops-1-corrected-reference
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Rust and WebAssembly target
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.100.0'
+          targets: wasm32-unknown-unknown
+
+      - name: Install asset tools
+        run: |
+          python -m venv "$RUNNER_TEMP/presskit-venv"
+          echo "$RUNNER_TEMP/presskit-venv/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/presskit-venv/bin/python" -m pip install pillow
+
+      - name: Download offline SWF artwork rasterizer
+        run: |
+          curl --fail --location --retry 3 \
+            --output "$RUNNER_TEMP/ffdec_26.5.0.zip" \
+            https://github.com/jindrapetrik/jpexs-decompiler/releases/download/version26.5.0/ffdec_26.5.0.zip
+          mkdir "$RUNNER_TEMP/ffdec"
+          unzip -q "$RUNNER_TEMP/ffdec_26.5.0.zip" -d "$RUNNER_TEMP/ffdec"
+          echo "FFDEC_JAR=$(find "$RUNNER_TEMP/ffdec" -name ffdec.jar -print -quit)" >> "$GITHUB_ENV"
+
+      - name: Fetch and verify only the two original SWFs
+        run: |
+          python tools/fetch_originals.py launcher "$RUNNER_TEMP/originals"
+          python tools/fetch_originals.py presskit "$RUNNER_TEMP/originals"
+
+      - name: Inventory original vector text placements
+        working-directory: enhanced-rust
+        run: python tools/inspect_text_instances.py "$RUNNER_TEMP/originals/presskit.swf"
+
+      - name: Prepare launcher and original embedded audio
+        run: |
+          mkdir -p "$RUNNER_TEMP/launcher-export" "$RUNNER_TEMP/reference/art/launcher" "$RUNNER_TEMP/reference/art/sounds"
+          java -Djava.awt.headless=true -jar "$FFDEC_JAR" \
+            -format frame:png -export frame \
+            "$RUNNER_TEMP/launcher-export" "$RUNNER_TEMP/originals/launcher.swf"
+          python - <<'PY'
+          import os, sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools')
+          from prepare_player_assets import normalize, sound_export
+          root=Path(os.environ['RUNNER_TEMP'])
+          normalize(root/'launcher-export', root/'reference/art/launcher', 1)
+          sound_export(root/'originals/presskit.swf', root/'reference/art/sounds')
+          PY
+
+      - name: Build compact runtime artwork without copying external media
+        run: |
+          python enhanced-rust/tools/prepare_compact_assets.py \
+            "$RUNNER_TEMP/originals/presskit.swf" \
+            "$RUNNER_TEMP/reference" \
+            "$RUNNER_TEMP/runtime" \
+            --ffdec-jar "$FFDEC_JAR" \
+            --launcher-swf "$RUNNER_TEMP/originals/launcher.swf" \
+            --no-payload
+          mkdir -p enhanced-rust/web/assets
+          cp -a "$RUNNER_TEMP/runtime/art" enhanced-rust/web/assets/
+
+      - name: Export original foreground reference for GPU parity
+        run: |
+          python tools/swf/layers.py "$RUNNER_TEMP/originals/presskit.swf" "$RUNNER_TEMP/reference-swfs"
+          python enhanced-rust/tools/sidebar_reference.py "$RUNNER_TEMP/originals/presskit.swf" "$RUNNER_TEMP/sidebar-fixtures"
+          for scene in sidebar-plain sidebar-flat-plain sidebar-flat-blur; do
+            mkdir -p "$RUNNER_TEMP/sidebar-fixtures/$scene"
+            java -Djava.awt.headless=true -jar "$FFDEC_JAR" -format frame:png -export frame "$RUNNER_TEMP/sidebar-fixtures/$scene" "$RUNNER_TEMP/sidebar-fixtures/$scene.swf"
+            cp "$(find "$RUNNER_TEMP/sidebar-fixtures/$scene" -name '*.png' -print -quit)" "$RUNNER_TEMP/sidebar-fixtures/$scene.png"
+          done
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from PIL import Image,ImageChops,ImageStat
+          root=Path(os.environ['RUNNER_TEMP'])/'sidebar-fixtures'
+          images=[Image.open(root/(s+'.png')).convert('RGB') for s in ('sidebar-plain','sidebar-flat-plain','sidebar-flat-blur')]
+          plain,flat,blur=images
+          assert plain.size==flat.size==blur.size==(1280,720)
+          assert ImageChops.difference(plain,flat).getbbox() is None,'mask rewrite must be pixel-exact without blur'
+          assert ImageChops.difference(flat,blur).getbbox() is not None,'blur must remain active'
+          regions=[(250,145,410,211),(250,267,410,333),(250,389,410,455)]
+          energy=lambda im:sum(sum(ImageStat.Stat(im.crop(r)).mean) for r in regions)/9
+          assert energy(flat)>5 and energy(blur)>0.8*energy(flat),'mask rewrite must retain filtered buttons'
+          print('Verified reference-only rewrite: pixel-exact plain sidebar; blur retains buttons')
+          PY
+          python enhanced-rust/tools/sidebar_reference.py "$RUNNER_TEMP/originals/presskit.swf" "$RUNNER_TEMP/reference-swfs/foreground.swf" "$RUNNER_TEMP/reference-swfs/foreground-corrected.swf"
+          mkdir -p "$RUNNER_TEMP/foreground-export" "$RUNNER_TEMP/reference/art/foreground"
+          java -Djava.awt.headless=true -jar "$FFDEC_JAR" -ignorebackground -format frame:png -export frame \
+            "$RUNNER_TEMP/foreground-export" "$RUNNER_TEMP/reference-swfs/foreground-corrected.swf"
+          python - <<'PY'
+          import os,sys
+          from pathlib import Path
+          sys.path.insert(0,'tools')
+          from prepare_player_assets import normalize
+          root=Path(os.environ['RUNNER_TEMP'])
+          normalize(root/'foreground-export',root/'reference/art/foreground',105)
+          PY
+
+      - name: Cache Rust build dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            enhanced-rust/target
+          key: ${{ runner.os }}-presskit-rust-1.100.0-${{ hashFiles('enhanced-rust/Cargo.lock') }}
+
+      - name: Native GPU and core tests
+        working-directory: enhanced-rust
+        env:
+          PRESSKIT_COLOR_MANAGED: "1"
+          PRESSKIT_FG_ASSETS: ${{ runner.temp }}/runtime/art/foreground-source
+          PRESSKIT_FG_REFERENCE: ${{ runner.temp }}/reference/art/foreground
+          PRESSKIT_LAUNCHER_ASSETS: ${{ runner.temp }}/runtime/art
+          PRESSKIT_GPU_DIAGNOSTICS: ${{ runner.temp }}/gpu-diagnostics
+          WGPU_BACKEND: vulkan
+          XDG_RUNTIME_DIR: /tmp/presskit-xdg
+        run: |
+          mkdir -p "$XDG_RUNTIME_DIR"
+          chmod 700 "$XDG_RUNTIME_DIR"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq mesa-vulkan-drivers
+          cargo test -p presskit-core
+          cargo test -p presskit-renderer --lib --test background --test resolution -- --nocapture
+
+      # A reference mismatch must block production deployment, but not a
+      # compiled WASM preview or browser-side regression tests.
+      - name: Original-frame GPU parity gate
+        id: parity
+        working-directory: enhanced-rust
+        env:
+          PRESSKIT_COLOR_MANAGED: "1"
+          PRESSKIT_FG_ASSETS: ${{ runner.temp }}/runtime/art/foreground-source
+          PRESSKIT_FG_REFERENCE: ${{ runner.temp }}/reference/art/foreground
+          PRESSKIT_LAUNCHER_ASSETS: ${{ runner.temp }}/runtime/art
+          PRESSKIT_GPU_DIAGNOSTICS: ${{ runner.temp }}/gpu-diagnostics
+          WGPU_BACKEND: vulkan
+          XDG_RUNTIME_DIR: /tmp/presskit-xdg
+        run: cargo test -p presskit-renderer --test foreground -- --nocapture
+
+      - name: Retain GPU comparison diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gpu-reference-diagnostics
+          path: ${{ runner.temp }}/gpu-diagnostics/
+          if-no-files-found: ignore
+          retention-days: 7
+
