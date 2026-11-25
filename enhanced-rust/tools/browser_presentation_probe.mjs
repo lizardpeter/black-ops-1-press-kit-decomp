@@ -1,20 +1,24 @@
 import {chromium} from 'playwright';
+import {existsSync} from 'node:fs';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {PNG} from 'pngjs';
 const out=process.argv[2];await mkdir(out,{recursive:true});
 const base=['--enable-unsafe-webgpu','--enable-unsafe-swiftshader'];
 const variants=[
- ['explicit-swiftshader',[...base,'--use-angle=swiftshader','--use-webgpu-adapter=swiftshader']],
- ['swiftshader',[...base,'--use-angle=swiftshader']],
- ['vulkan',[...base,'--use-angle=swiftshader','--enable-features=Vulkan','--disable-vulkan-surface']],
- ['default',base],
+ ['bundled-headed',true,[...base,'--use-angle=swiftshader','--use-webgpu-adapter=swiftshader']],
+ ['bundled-headed-vulkan',true,[...base,'--enable-features=Vulkan']],
+ ['bundled-headless',false,[...base,'--use-angle=swiftshader']],
 ];
+if(existsSync('/usr/bin/google-chrome')){
+ variants.unshift(['system-chrome-headed',true,[...base,'--use-angle=swiftshader','--use-webgpu-adapter=swiftshader'],'/usr/bin/google-chrome']);
+ variants.unshift(['system-chrome-headless',false,[...base,'--use-angle=swiftshader','--use-webgpu-adapter=swiftshader'],'/usr/bin/google-chrome']);
+}
 function stats(buf){const p=PNG.sync.read(buf);let bright=0,opaque=0,red=0;const colors=new Set();for(let i=0;i<p.data.length;i+=4){const [r,g,b,a]=p.data.subarray(i,i+4);bright+=Math.max(r,g,b)>32;opaque+=a===255;red+=r>200&&g<25&&b<25;if(a>240&&Math.max(r,g,b)>32)colors.add((r<<16)|(g<<8)|b);}const n=p.width*p.height;return {w:p.width,h:p.height,bright:bright/n,opaque:opaque/n,red:red/n,colors:colors.size};}
 let results=[];
-for(const [name,args] of variants){
+for(const [name,headed,args,executablePath] of variants){
  let browser;const result={name,args,errors:[]};
  try{
-  browser=await chromium.launch({channel:'chromium',headless:true,args});
+  browser=await chromium.launch({...(executablePath?{executablePath}:{channel:'chromium'}),headless:!headed,args});
   // Fresh page and fresh GPU device, with no WASM module or app initialization.
   const direct=await browser.newPage({viewport:{width:640,height:360},deviceScaleFactor:1});
   direct.on('console',m=>console.log(name,'direct',m.type(),m.text()));
@@ -28,7 +32,7 @@ for(const [name,args] of variants){
     const format=navigator.gpu.getPreferredCanvasFormat();
     const ctx=c.getContext('webgpu');
     ctx.configure({device:d,format,alphaMode:'opaque',usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC});
-    const t=ctx.getCurrentTexture();
+    const t=ctx.getCurrentTexture();window.keepGPU=[a,d,ctx,t];
     const off=d.createTexture({size:[4,4],format,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC});
     const b=d.createBuffer({size:512,usage:GPUBufferUsage.MAP_READ|GPUBufferUsage.COPY_DST});
     const e=d.createCommandEncoder();
@@ -36,7 +40,7 @@ for(const [name,args] of variants){
       const p=e.beginRenderPass({colorAttachments:[{view:tex.createView(),clearValue:{r:1,g:0,b:0,a:1},loadOp:'clear',storeOp:'store'}]});p.end();
     }
     for(const [tex,offset] of [[off,0],[t,256]])e.copyTextureToBuffer({texture:tex},{buffer:b,offset,bytesPerRow:256},{width:1,height:1});
-    d.queue.submit([e.finish()]);await b.mapAsync(GPUMapMode.READ);
+    window.keepGPU.push(off,b);d.queue.submit([e.finish()]);await b.mapAsync(GPUMapMode.READ);
     const bytes=new Uint8Array(b.getMappedRange());const offscreen=[...bytes.slice(0,4)],surface=[...bytes.slice(256,260)];b.unmap();
     const validation=await d.popErrorScope();window.keepGPU=[a,d,ctx,t];
     return {format,offscreen,surface,validation:validation?.message??null,errors,adapter:{vendor:a.info.vendor,architecture:a.info.architecture,device:a.info.device,description:a.info.description}};
@@ -54,6 +58,8 @@ for(const [name,args] of variants){
   await page.waitForFunction(()=>window.presskit?.player.ready(),{},{timeout:20000});
   await page.waitForTimeout(500);
   result.app=stats(await page.screenshot({path:out+'/'+name+'-app.png'}));
+  const snap=await page.evaluate(()=>document.querySelector('#gpu').toDataURL());
+  const canvas=Buffer.from(snap.split(',')[1],'base64');await writeFile(out+'/'+name+'-canvas.png',canvas);result.canvas=stats(canvas);
   result.app.ok=result.errors.length===0&&result.app.bright>0.015&&result.app.opaque>0.9&&result.app.colors>100;
  }catch(e){result.error=String(e);}
  finally{await browser?.close();results.push(result);console.log(JSON.stringify(result));}

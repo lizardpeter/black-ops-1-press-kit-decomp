@@ -15,13 +15,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Download exact compiled preview from run 45548889256
+      - name: Download exact compiled preview from run 45550832550
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p "$RUNNER_TEMP/site"
-          gh run download 45548889256 --name webgpu-unvalidated-preview --dir "$RUNNER_TEMP/site"
-          grep -F 3d9ba543ffe51d68703f011a17bc3c6badb1cd39 "$RUNNER_TEMP/site/BUILD_INFO.txt"
+          gh run download 45550832550 --name webgpu-self-contained-site --dir "$RUNNER_TEMP/site"
+          grep -F c99f3dad783107066e0e8f8615607ddd295a4271 "$RUNNER_TEMP/site/BUILD_INFO.txt"
       - name: Exercise actual browser WebGPU runtime
         run: |
           mkdir -p "$RUNNER_TEMP/browser"
@@ -30,7 +30,9 @@ jobs:
           npx playwright install --with-deps chromium
           cp "$GITHUB_WORKSPACE/enhanced-rust/tools/browser_presentation_probe.mjs" .
           python3 -m http.server 8766 --bind 127.0.0.1 --directory "$RUNNER_TEMP/site" > "$RUNNER_TEMP/browser/http.log" 2>&1 &
-          node browser_presentation_probe.mjs "$RUNNER_TEMP/screenshots"
+          google-chrome --version || true
+          command -v Xvfb
+          xvfb-run -a node browser_presentation_probe.mjs "$RUNNER_TEMP/screenshots"
       - name: Retain actual browser screenshots and diagnostic logs
         if: always()
         uses: actions/upload-artifact@v4
