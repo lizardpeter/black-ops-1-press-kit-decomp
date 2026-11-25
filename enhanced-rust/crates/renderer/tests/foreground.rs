@@ -6,7 +6,7 @@ fn source_foreground_gpu_matches_all_105_reference_frames(){
  let Ok(assets)=std::env::var("PRESSKIT_FG_ASSETS") else{eprintln!("set PRESSKIT_FG_ASSETS to art/foreground-source and PRESSKIT_FG_REFERENCE to art/foreground");return;};
  let reference=std::env::var("PRESSKIT_FG_REFERENCE").expect("PRESSKIT_FG_REFERENCE");
  let assets=Path::new(&assets);let reference=Path::new(&reference);let bytes=std::fs::read(assets.join("timeline.pfg")).unwrap();
- let timeline=ForegroundTimeline::read(&bytes).unwrap();if matches!(bytes[3],b'3'|b'4'|b'5'|b'6'|b'7'){assert_eq!((0..timeline.count()).filter(|&i|timeline.filename(i).ends_with(".jpg")).count(),26);}else{assert_eq!(timeline.count(),49);}
+ let timeline=ForegroundTimeline::read(&bytes).unwrap();if matches!(bytes[3],b'3'|b'4'|b'5'|b'6'|b'7'){let expected=if bytes[3]==b'7'&&std::env::var_os("PRESSKIT_COLOR_MANAGED").is_some(){20}else{26};assert_eq!((0..timeline.count()).filter(|&i|timeline.filename(i).ends_with(".jpg")).count(),expected);}else{assert_eq!(timeline.count(),49);}
  pollster::block_on(async{
   let instance=wgpu::Instance::default();let adapter=instance.request_adapter(&Default::default()).await.unwrap();eprintln!("foreground GPU adapter: {:?}",adapter.get_info());
   let (d,q)=adapter.request_device(&wgpu::DeviceDescriptor::default(),None).await.unwrap();

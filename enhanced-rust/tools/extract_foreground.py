@@ -236,11 +236,19 @@ def build(data,output,jar):
             i=png(bitmaps[key],4);strip_slots[sid].append(i)
             texture_states[i]=(0,[((x/20,y/20,w/20,h/20),(0.,0.,1.,1.))]*3)
     from extract_thumbnails import extract as extract_thumbnails
-    direct={}
+    from source_color import decode_rgb
+    direct={};profiled=[]
     for sid,rows in extract_thumbnails(data).items():
         direct[sid]=[]
         for cid,x,y,w,h,iw,ih,raw in rows:
-            i=slot(iw,ih,1);(output/f'{i}.jpg').write_bytes(raw);direct[sid].append((i,x,y,w,h))
+            im,profile=decode_rgb(raw)
+            assert im.size==(iw,ih)
+            if profile:
+                assert profile=='Adobe RGB (1998)'
+                profiled.append(cid);i=png(im)
+            else:i=slot(iw,ih,1);(output/f'{i}.jpg').write_bytes(raw)
+            direct[sid].append((i,x,y,w,h))
+    assert sorted(profiled)==[133,137,138,139,140,141],profiled
     packed=bytearray(b'PFG7'+struct.pack('<HH',len(metadata),len(frames)))
     for (w,h),codec in zip(metadata,codecs):packed+=struct.pack('<HHB',w,h,codec)
     for f,frame in enumerate(frames,1):

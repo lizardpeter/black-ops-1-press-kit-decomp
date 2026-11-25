@@ -2,6 +2,7 @@
 """Source-only launcher meshes and clipped original bitmap states. No rasterized launcher UI."""
 import hashlib,io,struct,zlib
 from PIL import Image
+from source_color import decode_rgb
 from extract_controls import Bits,render_character,transform,edges
 from extract_background import tags
 from extract_thumbnails import rectangles
@@ -29,7 +30,7 @@ def build(data,png,pack,jar):
             alpha=zlib.decompress(d[6+n:]);assert len(alpha)==im.width*im.height
             im.putalpha(Image.frombytes('L',im.size,alpha))
         else:
-            assert c==21;im=Image.open(io.BytesIO(d[2:])).convert('RGBA')
+            assert c==21;im,profile=decode_rgb(d[2:]);assert profile=='Adobe RGB (1998)';im=im.convert('RGBA')
         assert (w,h)==(im.width*20,im.height*20)
         return im,(x,y,w,h)
     def clip(rect,mask):
