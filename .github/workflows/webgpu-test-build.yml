@@ -46,12 +46,11 @@ jobs:
           toolchain: '1.100.0'
           targets: wasm32-unknown-unknown
 
-      - name: Install build tools
+      - name: Install asset tools
         run: |
           python -m venv "$RUNNER_TEMP/presskit-venv"
           echo "$RUNNER_TEMP/presskit-venv/bin" >> "$GITHUB_PATH"
-          "$RUNNER_TEMP/presskit-venv/bin/python" -m pip install --upgrade pip pillow
-          cargo install wasm-bindgen-cli --version 0.2.130 --locked
+          "$RUNNER_TEMP/presskit-venv/bin/python" -m pip install pillow
 
       - name: Download offline SWF artwork rasterizer
         run: |
@@ -113,6 +112,9 @@ jobs:
           root=Path(os.environ['RUNNER_TEMP'])
           normalize(root/'foreground-export',root/'reference/art/foreground',105)
           PY
+
+      - name: Install WASM build tool
+        run: cargo install wasm-bindgen-cli --version 0.2.130 --locked
 
       - name: Download and verify all 44 original R2 payload files
         working-directory: enhanced-rust

@@ -213,7 +213,13 @@ def build(data,output,jar):
         i=len(metadata);metadata.append((w,h));codecs.append(codec);return i
     def png(im,codec=0):
         i=slot(*im.size,codec);im.save(output/f'{i}.png',optimize=True);return i
-    for cid,im in sorted(bitmaps.items()):bitmap_slots[cid]=png(im)
+    for cid,im in sorted(bitmaps.items()):
+        if cid==103:
+            # Keep the original full JPEG pixels; the renderer clips its UV.
+            bitmap_slots[cid]=png(im,4)
+            state=((0.,0.,571.,481.),(0.,0.,571/572,1.))
+            texture_states.append((0,[state]*3))
+        else:bitmap_slots[cid]=png(im)
     # #51 and #53 use the same original #22 image but independent placements.
     intro_slot=png(bitmaps[22])
     for cid,batches in sorted(overlays.items()):

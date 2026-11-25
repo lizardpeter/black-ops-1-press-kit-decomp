@@ -44,11 +44,13 @@ def extract(data):
                     path=paths[0];assert len(path)==4 and all(c is None for _,c,_ in path)
                     xs=sorted({a[0] for a,_,_ in path});ys=sorted({a[1] for a,_,_ in path})
                     assert len(xs)==len(ys)==2 and mat[4:]==(xs[0],ys[0])
-                    im=image(i);assert (xs[1]-xs[0],ys[1]-ys[0])==(im.width*20,im.height*20)
+                    im=image(i);w,h=xs[1]-xs[0],ys[1]-ys[0]
+                    # Source #104 clips one column of JPEG #103 (572x481).
+                    assert (w,h)==(im.width*20,im.height*20) or (cid,i,w,h,im.size)==(104,103,11420,9620,(572,481)),(cid,i,w,h,im.size)
                     assert m[2:4]==(0,0) and m[0]>0 and m[1]>0
                     if not scaled:assert m[:4]==(1,1,0,0)
                     x,y=transform(m,(xs[0],ys[0]))
-                    out.append(('bitmap',i,x,y,im.width*20*m[0],im.height*20*m[1]))
+                    out.append(('bitmap',i,x,y,w*m[0],h*m[1]))
                 else:
                     batches.append((fill,tessellate(paths,.2)))
         if batches:
