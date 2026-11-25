@@ -113,6 +113,31 @@ jobs:
           normalize(root/'foreground-export',root/'reference/art/foreground',105)
           PY
 
+      - name: Cache Rust build dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            enhanced-rust/target
+          key: ${{ runner.os }}-presskit-rust-1.100.0-${{ hashFiles('enhanced-rust/Cargo.lock') }}
+
+      - name: Native GPU reference and core tests
+        working-directory: enhanced-rust
+        env:
+          PRESSKIT_FG_ASSETS: ${{ runner.temp }}/runtime/art/foreground-source
+          PRESSKIT_FG_REFERENCE: ${{ runner.temp }}/reference/art/foreground
+          PRESSKIT_LAUNCHER_ASSETS: ${{ runner.temp }}/runtime/art
+          WGPU_BACKEND: vulkan
+          XDG_RUNTIME_DIR: /tmp/presskit-xdg
+        run: |
+          mkdir -p "$XDG_RUNTIME_DIR"
+          chmod 700 "$XDG_RUNTIME_DIR"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq mesa-vulkan-drivers
+          cargo test -p presskit-core
+          cargo test -p presskit-renderer --lib --test background --test foreground -- --nocapture
+
       - name: Install WASM build tool
         run: cargo install wasm-bindgen-cli --version 0.2.130 --locked
 
@@ -134,8 +159,6 @@ jobs:
           PRESSKIT_LAUNCHER_ASSETS: ${{ runner.temp }}/runtime/art
         run: |
           sh tools/build_web.sh
-          cargo test --offline -p presskit-core
-          cargo test -p presskit-renderer --lib --test background --test foreground -- --nocapture
           node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/wasm-core.test.mjs
 
       - name: Assemble self-contained static website

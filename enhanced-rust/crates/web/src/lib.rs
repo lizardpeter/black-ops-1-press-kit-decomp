@@ -96,6 +96,7 @@ impl WebPlayer{
             for target in [81,91,101]{p.ahead.extend(self.menu_target_missing(target));}
         }
         if self.pack.is_some(){p.current.retain(|s|!s.contains("_controls/"));p.ahead.retain(|s|!s.contains("_controls/"));}
+        if self.native_launcher.is_some(){p.current.retain(|s|s!="art/launcher/1.png");p.ahead.retain(|s|s!="art/launcher/1.png");}
         p
     }
     fn menu_target_missing(&self,target:u16)->Vec<String>{

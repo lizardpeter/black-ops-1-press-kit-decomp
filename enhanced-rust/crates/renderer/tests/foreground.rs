@@ -38,7 +38,7 @@ fn source_foreground_gpu_matches_all_105_reference_frames(){
    for selected in [1,2]{
     launcher.update(&r,&q,selected,false);let hover=draw(&launcher.layers().collect::<Vec<_>>(),&[]);
     launcher.update(&r,&q,selected,true);let down=draw(&launcher.layers().collect::<Vec<_>>(),&[]);
-    assert_ne!(hover,normal,"launcher hover bitmap state");assert_ne!(down,hover,"launcher press bitmap state");
+    assert_ne!(hover,normal,"launcher hover bitmap state");assert_eq!(down,hover,"original button #8 shares its over/down bitmap record (flags 6)");
    }
    launcher.update(&r,&q,0,false);assert_eq!(draw(&launcher.layers().collect::<Vec<_>>(),&[]),normal);
   }
