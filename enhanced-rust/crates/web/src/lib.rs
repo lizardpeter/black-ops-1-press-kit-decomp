@@ -56,7 +56,7 @@ impl WebPlayer{
     pub fn pointer(&mut self){self.app.controls.activity();}
     pub fn pointer_at(&mut self,x:f64,y:f64,pressed:bool){self.pointer();self.mouse=Stage::fit(self.config.width.into(),self.config.height.into()).point(x,y);self.pressed=pressed;}
     pub fn install_background(&mut self,bytes:&[u8])->Result<(),JsValue>{self.background=Some(BackgroundArt::new(BackgroundTimeline::read(bytes).map_err(error)?));Ok(())}
-    pub fn install_foreground(&mut self,bytes:&[u8])->Result<(),JsValue>{self.foreground=Some(ForegroundArt::new(ForegroundTimeline::read(bytes).map_err(error)?));Ok(())}
+    pub fn install_foreground(&mut self,bytes:&[u8])->Result<bool,JsValue>{let art=ForegroundArt::new(ForegroundTimeline::read(bytes).map_err(error)?);let menu_required=art.needs_menu();self.foreground=Some(art);Ok(menu_required)}
     pub fn install_menu(&mut self,bytes:&[u8])->Result<(),JsValue>{self.foreground.as_mut().ok_or_else(||JsValue::from_str("foreground missing"))?.install_menu(bytes).map_err(error)}
     pub fn install_launcher(&mut self,bytes:&[u8])->Result<(),JsValue>{if bytes.starts_with(b"PKL2"){self.native_launcher=Some(presskit_renderer::launcher::LauncherArt::read(bytes,&self.renderer,&self.device,&self.queue).map_err(error)?);}else{let pack=ControlPack::read_launcher(bytes).map_err(error)?;self.launcher=pack.launcher_layers(&self.renderer,&self.device,&self.queue);}Ok(())}
     pub fn install_controls(&mut self,bytes:&[u8])->Result<(),JsValue>{self.pack=Some(ControlPack::read(bytes).map_err(error)?);self.controls.clear();Ok(())}

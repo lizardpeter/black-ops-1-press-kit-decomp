@@ -28,8 +28,9 @@ fn native_subpixel_geometry_is_rasterized_at_1440p_and_4k(){
    q.submit([enc.finish()]);let slice=buf.slice(..);let(tx,rx)=std::sync::mpsc::channel();slice.map_async(wgpu::MapMode::Read,move|v|tx.send(v).unwrap());d.poll(wgpu::Maintain::Wait);rx.recv().unwrap().unwrap();let pixels=slice.get_mapped_range();
    let red=|x:u32|pixels[x as usize*4];
    for start in [100*scale,101*scale]{
-    assert!(red(start)>250,"{w}x{h}: native subpixel stripe disappeared");
-    for gap in 1..scale{assert!(red(start+gap)<5,"{w}x{h}: stripe blurred into adjacent pixels");}
+    let edge=red(start);assert!(edge>=125,"{w}x{h}: native subpixel stripe disappeared");
+    if scale==2{assert!(edge<250,"1440p fractional coverage not antialiased");}
+    assert!(red(start+scale-1)<5,"{w}x{h}: gap between stripes filled");
    }
    assert!(red(100*scale-1)<5);eprintln!("{w}x{h}: native subpixel geometry and resize readback passed");
    drop(pixels);buf.unmap();

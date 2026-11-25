@@ -138,7 +138,8 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq mesa-vulkan-drivers
           cargo test -p presskit-core
-          cargo test -p presskit-renderer --lib --test background --test resolution --test foreground -- --nocapture
+          cargo test -p presskit-renderer --lib --test background --test resolution -- --nocapture
+          cargo test -p presskit-renderer --test foreground -- --nocapture
 
       - name: Retain GPU comparison diagnostics
         if: always()
@@ -171,14 +172,14 @@ jobs:
           PRESSKIT_LAUNCHER_ASSETS: ${{ runner.temp }}/runtime/art
         run: |
           sh tools/build_web.sh
-          node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/wasm-core.test.mjs
+          node --test web/asset-queue.test.mjs web/asset-urls.test.mjs web/source-foreground.test.mjs web/wasm-core.test.mjs
 
       - name: Assemble self-contained static website
         working-directory: enhanced-rust
         run: |
           rm -rf dist
           mkdir -p dist
-          cp web/index.html web/main.js web/asset-queue.mjs web/asset-urls.mjs dist/
+          cp web/index.html web/main.js web/asset-queue.mjs web/asset-urls.mjs web/source-foreground.mjs dist/
           cp -a web/pkg dist/pkg
           cp -a web/assets dist/assets
           touch dist/.nojekyll
