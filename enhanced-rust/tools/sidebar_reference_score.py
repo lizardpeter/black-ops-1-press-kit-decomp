@@ -1,0 +1,19 @@
+"""Measure the source mask/blur fixture independently of the runtime renderer."""
+import sys
+from pathlib import Path
+from PIL import Image,ImageFilter,ImageChops,ImageStat
+root=Path(sys.argv[1])
+# Three button interiors exclude header/footer and mask edges.
+regions=[(250,145,410,211),(250,267,410,333),(250,389,410,455)]
+def load(name):
+    im=Image.open(root/name).convert('RGB');assert im.size==(1280,720);return im
+def energy(im):return sum(sum(ImageStat.Stat(im.crop(r)).mean) for r in regions)/9
+for engine in ('ffdec','ruffle'):
+    plain=load('sidebar-plain-'+engine+'.png')
+    blur=load('sidebar-blur-'+engine+'.png')
+    p,b=energy(plain),energy(blur)
+    assert p>5,(engine,'empty unfiltered button reference',p)
+    print(f'{engine}: plain button mean {p:.3f}; filtered {b:.3f}; retained {b/p:.3%}')
+    # A vertical 15px box blur cannot erase the interior of a large masked button.
+    # This measures evidence without changing the production parity threshold.
+    if b/p<.1:print(f'{engine}: masked button interiors lost during filtering')
