@@ -101,9 +101,31 @@ jobs:
       - name: Export original foreground reference for GPU parity
         run: |
           python tools/swf/layers.py "$RUNNER_TEMP/originals/presskit.swf" "$RUNNER_TEMP/reference-swfs"
+          python enhanced-rust/tools/sidebar_reference.py "$RUNNER_TEMP/originals/presskit.swf" "$RUNNER_TEMP/sidebar-fixtures"
+          for scene in sidebar-plain sidebar-flat-plain sidebar-flat-blur; do
+            mkdir -p "$RUNNER_TEMP/sidebar-fixtures/$scene"
+            java -Djava.awt.headless=true -jar "$FFDEC_JAR" -format frame:png -export frame "$RUNNER_TEMP/sidebar-fixtures/$scene" "$RUNNER_TEMP/sidebar-fixtures/$scene.swf"
+            cp "$(find "$RUNNER_TEMP/sidebar-fixtures/$scene" -name '*.png' -print -quit)" "$RUNNER_TEMP/sidebar-fixtures/$scene.png"
+          done
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from PIL import Image,ImageChops,ImageStat
+          root=Path(os.environ['RUNNER_TEMP'])/'sidebar-fixtures'
+          images=[Image.open(root/(s+'.png')).convert('RGB') for s in ('sidebar-plain','sidebar-flat-plain','sidebar-flat-blur')]
+          plain,flat,blur=images
+          assert plain.size==flat.size==blur.size==(1280,720)
+          assert ImageChops.difference(plain,flat).getbbox() is None,'mask rewrite must be pixel-exact without blur'
+          assert ImageChops.difference(flat,blur).getbbox() is not None,'blur must remain active'
+          regions=[(250,145,410,211),(250,267,410,333),(250,389,410,455)]
+          energy=lambda im:sum(sum(ImageStat.Stat(im.crop(r)).mean) for r in regions)/9
+          assert energy(flat)>5 and energy(blur)>0.8*energy(flat),'mask rewrite must retain filtered buttons'
+          print('Verified reference-only rewrite: pixel-exact plain sidebar; blur retains buttons')
+          PY
+          python enhanced-rust/tools/sidebar_reference.py "$RUNNER_TEMP/originals/presskit.swf" "$RUNNER_TEMP/reference-swfs/foreground.swf" "$RUNNER_TEMP/reference-swfs/foreground-corrected.swf"
           mkdir -p "$RUNNER_TEMP/foreground-export" "$RUNNER_TEMP/reference/art/foreground"
           java -Djava.awt.headless=true -jar "$FFDEC_JAR" -ignorebackground -format frame:png -export frame \
-            "$RUNNER_TEMP/foreground-export" "$RUNNER_TEMP/reference-swfs/foreground.swf"
+            "$RUNNER_TEMP/foreground-export" "$RUNNER_TEMP/reference-swfs/foreground-corrected.swf"
           python - <<'PY'
           import os,sys
           from pathlib import Path
@@ -235,7 +257,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/browser"
           cd "$RUNNER_TEMP/browser"
-          npm install --no-audit --no-fund --ignore-scripts playwright@1.56.1
+          npm install --no-audit --no-fund --ignore-scripts playwright@1.56.1 pngjs@7.0.0
           npx playwright install --with-deps chromium
           cp "$GITHUB_WORKSPACE/enhanced-rust/tools/browser_preview_test.mjs" .
           python -m http.server 8766 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/enhanced-rust/dist" > "$RUNNER_TEMP/browser/http.log" 2>&1 &

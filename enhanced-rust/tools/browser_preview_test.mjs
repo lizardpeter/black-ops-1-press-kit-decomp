@@ -1,5 +1,6 @@
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
+import {PNG} from 'pngjs';
 import {mkdir,writeFile} from 'node:fs/promises';
 const out=process.argv[2];
 await mkdir(out,{recursive:true});
@@ -12,7 +13,22 @@ page.on('console',m=>{messages.push(m.type()+': '+m.text());if(m.type()==='error
 page.on('response',r=>{if(r.status()>=400)badRequests.push(r.status()+' '+r.url());});
 const state=()=>page.evaluate(()=>({scene:window.presskit?.player.scene(),frame:window.presskit?.player.frame(),ready:window.presskit?.player.ready(),status:document.querySelector('#status').textContent,history:window.presskit?.frameHistory}));
 const wait=async(scene,frame)=>{await page.waitForFunction(([scene,frame])=>window.presskit?.player.scene()===scene&&window.presskit.player.frame()===frame&&window.presskit.player.ready(),[scene,frame],{timeout:60000});};
-async function shot(name){await page.screenshot({path:out+'/'+name+'.png',timeout:60000});}
+const pixelChecks=[];
+async function shot(name){
+ const buf=await page.screenshot({path:out+'/'+name+'.png',timeout:60000});
+ const png=PNG.sync.read(buf);
+ let lit=0,opaque=0;const colors=new Set();
+ for(let i=0;i<png.data.length;i+=4){
+   const [r,g,b,a]=[png.data[i],png.data[i+1],png.data[i+2],png.data[i+3]];
+   if(a>=240)opaque++;
+   if(a>=240&&Math.max(r,g,b)>32){lit++;colors.add((r<<16)|(g<<8)|b);}
+ }
+ const total=png.width*png.height;const stats={name,width:png.width,height:png.height,lit:lit/total,opaque:opaque/total,colors:colors.size};
+ pixelChecks.push(stats);console.log(JSON.stringify(stats));
+ // Logical navigation and a valid surface size cannot prove rendering.
+ // A blank or transparent capture must fail the production gate.
+ assert.ok(stats.lit>0.015&&stats.opaque>0.9&&stats.colors>100,'Missing visible GPU artwork: '+JSON.stringify(stats));
+}
 async function click(x,y){const r=await page.locator('#gpu').boundingBox();await page.mouse.click(r.x+x*r.width/1280,r.y+y*r.height/720);}
 try{
  await page.goto('http://127.0.0.1:8766/?debug=1');
@@ -40,6 +56,6 @@ try{
  const status=await state();assert.equal(status.status,'');
  console.log('Launcher, welcome, all three menus, menu switching, 1440p/4K resizing passed in Chromium WebGPU');
 }finally{
- await writeFile(out+'/browser-log.txt',JSON.stringify({faults,badRequests,messages,state:await state().catch(()=>null)},null,2));
+ await writeFile(out+'/browser-log.txt',JSON.stringify({faults,badRequests,messages,pixelChecks,state:await state().catch(()=>null)},null,2));
  await browser.close();
 }
